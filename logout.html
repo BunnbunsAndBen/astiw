@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Logging out... - ASTiW</title>
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="dark.css" id="themer">
+	<script src="script.js"></script>
+	<script>
+		window.onload = function() {colors();};
+		var sesses = JSON.parse(localStorage.getItem('astiw_sesses'));
+		var jsonurl = 'https://api.stibarc.gq/logout.sjs';
+		var r = new XMLHttpRequest();
+		r.addEventListener('load', function() {
+			var sesses = JSON.parse(localStorage.getItem('astiw_sesses'));
+			var usernames = JSON.parse(localStorage.getItem('astiw_usernames'));
+			sesses.splice(0, 1);
+			usernames.splice(0, 1);
+			localStorage.setItem('astiw_sesses', JSON.stringify(sesses));
+			localStorage.setItem('astiw_usernames', JSON.stringify(usernames));
+			window.location.href = 'index.html';
+		});
+		r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+		r.open('post', jsonurl, true);
+		r.send('sess=' + sesses[0]);
+	</script>
+</head>
+<body>
+	<main style="text-align:center;">
+		Logging out...
+	</main>
+</body>
+</html>

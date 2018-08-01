@@ -1,0 +1,15 @@
+:root {
+	--bg: #97DEF3;
+	--content: black;
+	--content-bg: white;
+	--header-bg: #4AB8C9;
+	--border: black;
+	--rollover: white;
+	--other-rollover: white;
+	--probably-same-as-content: black;
+	--tb-back: white;
+	--tb-rollover-border: blue;
+	--tb-hint: gray;
+	--link: blue;
+	--opposing: white;
+}

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Loading... - ASTiW</title>
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="dark.css" id="themer">
+	<script src="script.js"></script>
+	<script>
+		var stuf;
+		var id;
+		var comments = [];
+		var loggedIn;
+		var pushed = false;
+		var oktoleave = false;
+		var inter;
+		var commCount;
+		
+		window.onbeforeunload = function() {
+			if (!oktoleave && (isSet(document.getElementById('commentBox').value) || document.getElementById('editText').style.display != 'none')) {
+				return true;
+			}
+		};
+		
+		function load() {
+			loggedIn = isSet(localStorage.getItem('astiw_sesses')) && JSON.parse(localStorage.getItem('astiw_sesses')).length > 0;
+			if (loggedIn) {
+				document.getElementById('commentBox').style.display = 'initial';
+				document.getElementById('comment').style.display = 'block';
+				document.getElementById('youArentLoggedIn').style.display = 'none';
+			}
+			id = getAllUrlParams().id;
+			var jsonurl = 'https://api.stibarc.gq/getpost.sjs?id=' + id;
+			var r = new XMLHttpRequest();
+			var rv = new XMLHttpRequest();
+			var rc = new XMLHttpRequest();			
+			r.addEventListener('load', function() {
+				stuf = JSON.parse(r.responseText);
+				document.getElementById('nameThing').innerHTML = stuf.title.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+				document.title = stuf.title + ' - ASTiW';
+				document.getElementById('metaThing').innerHTML = 'Posted by <a class="classic" href="user.html?id=' + stuf.poster + '">' + stuf.poster + '</a><span id="verified" style="color:lime; display:none;"> &#x2611;&#xFE0E;</span> at ' + stuf.postdate + (stuf.edited ? ' (edited)' : '');
+				document.getElementById('postText').innerHTML = stuf.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>');
+				var jsonurlv = 'https://api.stibarc.gq/checkverify.sjs?id=' + stuf.poster;
+				rv.open('get', jsonurlv, true);
+				rv.send();
+			});
+			rv.addEventListener('load', function() {
+				var ans = rv.responseText.split('\n')[0];
+				if (ans == 'true') {
+					document.getElementById('verified').style.display = 'initial';
+				}
+				if (isSet(stuf.attachment) && stuf.attachment != 'none') {
+					document.getElementById('imgThing').style.display = 'initial';
+				}
+				rc.open('get', 'https://api.stibarc.gq/getcomments.sjs?id=' + id, true);
+				rc.send();
+			});
+			rc.addEventListener('load', function() {
+				if (rc.responseText != 'undefined\n') {
+					var objComments = JSON.parse(rc.responseText);
+					for (key in objComments) {
+						comments.push([objComments[key].content, objComments[key].poster]);
+					}
+					if (!(localStorage.getItem('astiw_dir') == 'true')) {
+						comments.reverse();
+					} else {
+						document.getElementById('flipper').innerHTML = '<a href="javascript:flip(\'new\');" class="classic">OLDEST FIRST &#x25b2;</a>';
+					}
+					if (comments.length == 1) {
+						document.getElementById('postMenu').innerHTML = '1 comment';
+					} else {
+						document.getElementById('postMenu').innerHTML = comments.length.toString() + ' comments';
+					}
+					commCount = comments.length;
+					placeComments();
+				} else {
+					document.getElementById('postMenu').innerHTML = '0 comments';
+					var noComments = document.createElement('p');
+					noComments.innerHTML = 'No comments';
+					noComments.style.color = 'var(--border)';
+					noComments.style.textAlign = 'center';
+					document.getElementById('comments').appendChild(noComments);
+					commCount = 0;
+				}
+				if (isSet(localStorage.getItem('astiw_usernames'))) {
+					var myName = JSON.parse(localStorage.getItem('astiw_usernames'))[0];
+					if (stuf.poster == myName) {
+						document.getElementById('postMenu').innerHTML += ' &#xb7; <span id="editLink"><a class="classic" href="javascript:editPost();">&#x270E;&#xFE0E; Edit</a></span>';
+					}
+				}
+				document.getElementById('rm').removeChild(document.getElementById('loader2'));
+				document.getElementById('main').style.display = 'block';
+				if (!(localStorage.getItem('astiw_roi') == 'true')) {
+					inter = setInterval(checkNewComms, 500);
+				}
+			});
+			r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+			rv.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+			rc.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+			r.open('get', jsonurl, true);
+			r.send();
+		};
+		
+		function placeComments() {
+			var commentsDiv = document.getElementById('comments');
+			commentsDiv.innerHTML = '';
+			var placable;
+			for (i = 0; i < comments.length; i++) {
+				placable = document.createElement('div');
+				placable.style.marginTop = '16px';
+				placable.innerHTML = '<p class="small"><a class="classic" href="user.html?id=' + comments[i][1] + '">' + (comments[i][1] == stuf.poster ? '<b>' : '') + comments[i][1] + '</a>' + (comments[i][1] == stuf.poster ? ' (OP)</b>' : '') + '</p><p style="margin:9px 0px;">' + comments[i][0].replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>') + '</p>' + (loggedIn ? ('<p class="small"><a class="classic" href="javascript:reply(\'' + comments[i][1] + '\')"><b>&larr; Reply</b></a></p>') : '');
+				commentsDiv.appendChild(placable);
+			}
+		};
+		
+		function flip(dir) {
+			if (dir == 'old') {
+				document.getElementById('flipper').innerHTML = '<a href="javascript:flip(\'new\');" class="classic">OLDEST FIRST &#x25b2;</a>';
+			} else if (dir == 'new') {
+				document.getElementById('flipper').innerHTML = '<a href="javascript:flip(\'old\');" class="classic">NEWEST FIRST &#x25bc;</a>';
+			}
+			if (comments.length > 0) {
+				comments.reverse();
+				placeComments();
+			}
+		};
+		
+		function reply(someone) {
+			document.getElementById('commentBox').value += '@' + someone + ' ';
+			document.getElementById('commentBox').focus();
+		};
+		
+		function comment() {
+			var ysure = true;
+			if (document.getElementById('editText').style.display != 'none') {
+				ysure = confirm('Posting this comment will discard the edit to the post, continue?');
+			}
+			if (ysure) {
+				var again = localStorage.getItem('astiw_cancommentagain');
+				if (!isSet(again)) {
+					again = 0;
+				}
+				var text = document.getElementById('commentBox').value;
+				if (isSet(text)) {
+					if (new Date().getTime() >= again) {
+						pushed = true;
+						document.getElementById('comment').style.display = 'none';
+						document.getElementById('commentBox').disabled = true;
+						var ldr = document.createElement('div');
+						ldr.className = 'loader';
+						ldr.id = 'loader';
+						ldr.style.margin = '0 0 16px 0';
+						document.getElementById('contain').appendChild(ldr);
+						var n = new Date().getTime() + 15000;
+						localStorage.setItem('astiw_cancommentagain', n);
+						var sess = JSON.parse(localStorage.getItem('astiw_sesses'))[0];
+						var jsonurl = 'https://api.stibarc.gq/newcomment.sjs';
+						var r = new XMLHttpRequest();
+						r.addEventListener('load', function() {
+							oktoleave = true;
+							window.location.reload();
+						});
+						r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+						r.open('post', jsonurl, true);
+						r.send('sess=' + sess + '&postid=' + id + '&content=' + encodeURIComponent(text).replace(/%0A/g, '%0D%0A'));
+					} else {
+						var left = again - new Date().getTime();
+						left = Math.round(left / 1000);
+						document.getElementById('wait').innerHTML = 'You can post again in ' + left.toString() + ' seconds';
+						document.getElementById('wait').style.display = 'initial';
+					}
+				} else {
+					document.getElementById('empty').style.display = 'initial';
+				}
+			}
+		};
+		
+		function loadImg() {
+			var imgId = stuf.attachment;
+			document.getElementById('viewImg').style.display = 'none';
+			if (!isSet(localStorage.getItem('astiw_cache' + imgId))) {
+				var ldr = document.createElement('div');
+				ldr.className = 'loader';
+				ldr.id = 'loader3';
+				ldr.style.margin = 'auto';
+				document.getElementById('imgThing').appendChild(ldr);
+				var jsonurl = 'https://api.stibarc.gq/getimage.sjs?id=' + imgId;
+				var r = new XMLHttpRequest();
+				r.addEventListener('load', function() {
+					var img = document.createElement('img');
+					img.src = r.responseText;
+					img.style.display = 'block';
+					img.style.margin = 'auto';
+					img.style.maxWidth = '100%';
+					var tmp = r.responseText.split('');
+					tmp = tmp[0] + tmp[1] + tmp[2] + tmp[3] + tmp[4];
+					if (tmp == 'data:') {
+						localStorage.setItem('astiw_cache' + imgId, r.responseText);
+					}
+					document.getElementById('imgThing').removeChild(document.getElementById('loader3'));
+					document.getElementById('imgThing').appendChild(img);
+				});
+				r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+				r.open('get', jsonurl, true);
+				r.send();
+			} else {
+				var img = document.createElement('img');
+				img.src = localStorage.getItem('astiw_cache' + imgId);
+				img.style.display = 'block';
+				img.style.margin = 'auto';
+				img.style.maxWidth = '100%';
+				document.getElementById('imgThing').appendChild(img);
+			}
+		};
+		
+		function editPost() {
+			document.getElementById('editLink').innerHTML = '&#x270E;&#xFE0E; Editing';
+			document.getElementById('nameThing').style.display = 'none';
+			document.getElementById('postText').style.display = 'none';
+			var ldr = document.createElement('div');
+			ldr.className = 'loader';
+			ldr.id = 'loader4';
+			ldr.style.margin = 'auto';
+			document.getElementById('oof').appendChild(ldr);
+			var jsonurl = 'https://api.stibarc.gq/getpost.sjs?id=' + id;
+			var r = new XMLHttpRequest();
+			r.addEventListener('load', function() {
+				var goodContent  = JSON.parse(r.responseText);
+				document.getElementById('editTitle').value = goodContent.title;
+				document.getElementById('editText').value = goodContent.content;
+				document.getElementById('oof').removeChild(document.getElementById('loader4'));
+				document.getElementById('editTitle').style.display = 'block';
+				document.getElementById('editText').style.display = 'initial';
+				document.getElementById('contain2').style.display = 'initial';
+			});
+			r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+			r.open('get', jsonurl, true);
+			r.send();
+		};
+		
+		function cancelEdit() {
+			if (confirm('Are you sure you want to discard your edit?')) {
+				document.getElementById('editTitle').style.display = 'none';
+				document.getElementById('editText').style.display = 'none';
+				document.getElementById('contain2').style.display = 'none';
+				document.getElementById('editEmpty').style.display = 'none';
+				document.getElementById('editTitle').value = '';
+				document.getElementById('editText').value = '';
+				document.getElementById('editLink').innerHTML = '<a class="classic" href="javascript:editPost();">&#x270E;&#xFE0E; Edit</a>';
+				document.getElementById('nameThing').style.display = '';
+				document.getElementById('postText').style.display = '';
+			}
+		};
+		
+		function saveEdit() {
+			if (isSet(document.getElementById('commentBox').value) ? confirm('Saving this edit will discard the comment, continue?') : true) {
+				document.getElementById('editEmpty').style.display = 'none';
+				var title = document.getElementById('editTitle').value;
+				var text = document.getElementById('editText').value;
+				var sess = JSON.parse(localStorage.getItem('astiw_sesses'))[0];
+				if (isSet(title) && isSet(text) && title.trim() != '' && text.trim() != '') {
+					document.getElementById('save').style.display = 'none';
+					document.getElementById('cancel').style.display = 'none';
+					document.getElementById('editTitle').disabled = true;
+					document.getElementById('editText').disabled = true;
+					var ldr = document.createElement('div');
+					ldr.className = 'loader';
+					ldr.id = 'loader5';
+					ldr.style.margin = '0 0 16px 0';
+					document.getElementById('contain2').appendChild(ldr);
+					var jsonurl = 'https://api.stibarc.gq/editpost.sjs';
+					var r = new XMLHttpRequest();
+					r.addEventListener('load', function() {
+						oktoleave = true;
+						window.location.reload();
+					});
+					r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+					r.open('post', jsonurl, true);
+					r.send('sess=' + sess + '&id=' + id + '&title=' + encodeURIComponent(title) + '&content=' + encodeURIComponent(text).replace(/%0A/g, '%0D%0A'));
+				} else {
+					document.getElementById('editEmpty').style.display = 'initial';
+				}
+			}
+		};
+		
+		function checkNewComms() {
+			var jsonurl = 'https://api.stibarc.gq/getcomments.sjs?id=' + id;
+			var r = new XMLHttpRequest();
+			r.addEventListener('load', function() {
+				var thingy;
+				if (r.responseText != 'undefined\n') {
+					var objComments = JSON.parse(r.responseText);
+					var thingy = 0;
+					for (key in objComments) {
+						thingy++;
+					}
+				} else {
+					thingy = 0;
+				}
+				if (thingy > commCount) {
+					document.getElementById('refreshMarker').style.display = 'block';
+					clearInterval(inter);
+				}
+			});
+			r.addEventListener('error', function() {});
+			r.open('get', jsonurl, true);
+			r.send();
+		};
+	</script>
+</head>
+<body>
+	<nav><a id="title" href="index.html">ASTiW</a><input type="search" id="search" class="txf" placeholder="Search"><a href="newpost.html" class="mi ib">+</a><a href="javascript:openMenu();" class="mi">&#8943;</a><a href="javascript:openUserMenu();" id="usermenu" class="mi ib rightmost"></a><a href="register.html" class="lb" id="register">REGISTER</a><a href="login.html" class="lb rightmost">LOG IN</a></nav>
+	<div id="refreshMarker" onclick="window.location.reload();">&#8635; Reload to see new comment(s)</div>
+	<div class="dbg" id="usermenubox">
+		<div class="dialog">
+			<a href="javascript:closeUserMenu();" class="closeButton">&times;</a>
+			<h3>Account menu</h3>
+			<div style="margin-top:16px;"><a class="othbut" id="userMenuProfButton">View profile</a></div>
+			<!-- <div style="margin-top:16px;"><a class="othbut" href="editprofile.html">Edit profile</a></div>
+			--><p><a class="classic" href="changepassword.html">Change password</a></p>
+			<p>Use official STiBaRC software, such as the <a href="https://stibarc.gq/" class="classic">STiBaRC website</a>, to edit your profile</p>
+			<p><a class="classic" href="mailto:herronjo110@gmail.com?subject=STiBaRC%20User%20Verification%20Request">Request user verification</a></p>
+			<h4>Switch account</h4>
+			<ul style="padding:0 0 0 20px;" id="accounts">
+			</ul>
+			<div style="margin-top:16px;"><a class="othbut" href="login.html">Add account</a></div>
+			<div style="margin-top:16px;"><a class="othbut" href="logout.html">Log out</a></div>
+			<p><a class="classic" href="register.html">Register a new account</a></p>
+		</div>
+	</div>
+	<div class="dbg" id="menubox">
+		<div class="dialog">
+			<a href="javascript:closeMenu();" class="closeButton">&times;</a>
+			<h3>ASTiW settings</h3>
+			<h4 style="margin-bottom:calc(1.33em - 16px);">Toggles</h4>
+			<div><button class="othbut" onclick="toggleSetting('dir');" id="toggleDir" style="margin-right:8px; margin-top:16px;">Default comment order: [value]</button><button class="othbut" onclick="toggleSetting('roi');" id="toggleROI" style="margin-top:16px;">Requests on intervals: [value]</button></div>
+			<p class="small"><a href="javascript:explanation();" class="classic">What is requests on intervals</a></p>
+			<p class="small">Settings may require a reload to take effect</p>
+			<h4 style="margin-bottom:calc(1.33em - 16px);">Change theme (not fully functional)</h4>
+			<div><button class="othbut" onclick="chtheme('dark');" style="margin-right:8px; margin-top:16px;">Dark (default)</button><button class="othbut" onclick="chtheme('light');" style="margin-right:8px; margin-top:16px;">Light</button><button class="othbut" onclick="chtheme('stibarc');" style="margin-top:16px;">STiBaRC</button></div>
+			<h4>Clear data</h4>
+			<p>If something isn't working correctly you can <a href="javascript:clearData();" class="classic">clear data</a>. (This will not log out your sess(es))</p>
+			<h4>About</h4>
+			<p>Created by savaka<br/>
+			Based on the <a href="https://stibarc.gq/" target="_blank" class="classic">STiBaRC website</a></p>
+			<p>ASTiW connects to the STiBaRC service; by using it you accept the STiBaRC <a href="https://stibarc.gq/privacy.html" target="_blank" class="classic">Privacy Policy</a></p>
+		</div>
+	</div>
+	<main id="rm">
+		<div id="main" style="display:none;" class="stdc">
+			<p id="metaThing" class="small"></p>
+			<h3 id="nameThing"></h3>
+			<p id="postText" style="white-space:pre-wrap;"></p>
+			<div id="oof"></div>
+			<input type="text" id="editTitle" class="txf" placeholder="Title" style="width:calc(100% - 32px); display:none; margin-top:16px; margin-bottom:16px;">
+			<textarea class="txf" id="editText" style="height:108px; width:calc(100% - 32px); margin-bottom:16px; display:none;" placeholder="Text"></textarea>
+			<div id="contain2" style="display:none;"><button id="save" onclick="saveEdit();" class="libut" style="margin-bottom:16px; margin-right:16px;">SAVE</button><button id="cancel" onclick="cancelEdit();" class="othbut" style="margin-bottom:16px;">CANCEL</button></div>
+			<p class="small" style="color:red; display:none;" id="editEmpty">A title and text are required</p>
+			<div id="imgThing" style="display:none; text-align:center;"><button id="viewImg" onclick="loadImg();" class="tkob" style="margin:0; display:initial;">SHOW IMAGE</button></div>
+			<b><p class="small" id="postMenu"></p></b>
+			<p id="youArentLoggedIn" style="margin-top:0;"><a href="register.html" class="classic">Register</a> or <a href="login.html" class="classic">log in</a> to leave a comment!</p>
+			<textarea class="txf" id="commentBox" style="display:none; height:108px; width:calc(100% - 32px); margin-bottom:16px;" placeholder="Comment"></textarea>
+			<div id="contain"><button id="comment" onclick="if (!pushed) {comment(id);}" class="libut" style="display:none; margin-bottom:16px;">COMMENT</button></div>
+			<p class="small" style="color:red; display:none;" id="wait">You can comment again in [seconds] seconds</p>
+			<p class="small" style="color:red; display:none;" id="empty">Comment text is required</p>
+			<p class="small" id="flipper" style="margin-top:16px;"><a href="javascript:flip('old');" class="classic">NEWEST FIRST &#x25bc;</a></p>
+			<hr style="border-width:1px 0px 0px 0px; border-color:var(--border); border-style:solid;">
+			<div id="comments"></div>
+		</div>
+		<div class="loader" id="loader2"></div>
+	</main>
+</body>
+</html>

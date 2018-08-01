@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Create Post - ASTiW</title>
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="dark.css" id="themer">
+	<script src="script.js"></script>
+	<script>
+		var attachedfile = 'none';
+		var oktoleave = false;
+		
+		window.onbeforeunload = function() {
+			if (!oktoleave && (isSet(document.getElementById('postTitle').value) || isSet(document.getElementById('postText').value))) {
+				return true;
+			}
+		}
+		
+		function load() {
+			var sesses = localStorage.getItem('astiw_sesses');
+			if (isSet(sesses) && JSON.parse(sesses).length > 0) {
+				document.getElementById('rm').removeChild(document.getElementById('loader2'));
+				document.getElementById('nameThing').style.display = '';
+				document.getElementById('main').style.display = 'block';
+			} else {
+				window.location.href = 'login.html';
+			}
+			document.getElementById("file").addEventListener('change',readFile,false); //for the image thing
+		};
+		
+		function post() {
+			document.getElementById('wait').style.display = 'none';
+			document.getElementById('empty').style.display = 'none';
+			var title = document.getElementById('postTitle').value;
+			var text = document.getElementById('postText').value;
+			var sess = JSON.parse(localStorage.getItem('astiw_sesses'))[0];
+			var again = localStorage.getItem('astiw_canpostagain');
+			if (!isSet(again)) {
+				again = 0;
+			}
+			if (isSet(title) && isSet(text) && title.trim() != '' && text.trim() != '') {
+				if (new Date().getTime() >= again) {
+					document.getElementById('post').style.display = 'none';
+					document.getElementById('postTitle').disabled = true;
+					document.getElementById('postText').disabled = true;
+					var ldr = document.createElement('div');
+					ldr.className = 'loader';
+					ldr.id = 'loader';
+					ldr.style.margin = '0 0 16px 0';
+					document.getElementById('contain').appendChild(ldr);
+					var n = new Date().getTime() + 15000;
+					localStorage.setItem("astiw_canpostagain", n);
+					var jsonurl = 'https://api.stibarc.gq/postpost.sjs';
+					var r = new XMLHttpRequest();
+					r.addEventListener('load', function() {
+						oktoleave = true;
+						window.location.href = 'post.html?id=' + r.responseText;
+					});
+					r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+					r.open('post', jsonurl, true);
+					r.send('sess=' + sess + '&title=' + encodeURIComponent(title) + '&image=' + attachedfile + '&content=' + encodeURIComponent(text).replace(/%0A/g, '%0D%0A'));
+				} else {
+					var left = again - new Date().getTime();
+					left = Math.round(left / 1000);
+					document.getElementById('wait').innerHTML = 'You can post again in ' + left.toString() + ' seconds';
+					document.getElementById('wait').style.display = 'initial';
+				}
+			} else {
+				document.getElementById('empty').style.display = 'initial';
+			}
+		};
+		
+		// begin image thing
+		
+		function removeImageFunction() {
+			attachedfile = 'none';
+			document.getElementById('imageadded').style.display = 'none';
+			document.getElementById('imageadd').style.display = '';
+		};
+		
+		function uploadPart(file,part,callback) {
+			var xmlHttp = new XMLHttpRequest();
+			xmlHttp.open("POST", "https://api.stibarc.gq/uploadparts.sjs", false);
+			xmlHttp.send("cont=true&file="+file+"&content=" + encodeURIComponent(part));
+			try {
+				if (xmlHttp.responseText.split("\n")[0] == "GOOD") {
+					callback("Good");
+				} else {
+					var xmlHttp = new XMLHttpRequest();
+					xmlHttp.open("POST", "https://api.stibarc.gq/uploadparts.sjs", false);
+					xmlHttp.send("cont=true&file="+file+"&content=" + encodeURIComponent(part));
+					try {
+						if (xmlHttp.responseText.split("\n")[0] == "GOOD") {
+							callback("Good");
+						} else {
+							callback("Error");
+						}
+					} catch(err) {
+						callback("Error");
+					}
+				}
+			} catch(err) {
+				callback("Error");
+			}
+		}
+
+		function readFile(evt) {
+			document.getElementById("post").disabled = true;
+			document.getElementById("imageadd").style.display = 'none';
+			document.getElementById("pleasewait").style.display = '';
+			document.getElementById("error").style.display = "none";
+			var f = evt.target.files[0];
+			if(f) {
+				var r = new FileReader();
+				r.onload = function(e) {
+					var contents = e.target.result;
+					document.getElementById("imageprogress").style.display = '';
+					if (contents.length <= 98000) {
+						console.log("Good");
+						var xmlHttp = new XMLHttpRequest();
+						xmlHttp.open("POST", "https://api.stibarc.gq/uploadparts.sjs", false);
+						xmlHttp.send("content=" + encodeURIComponent(contents));
+						document.getElementById("imageprogress").setAttribute("max",1);
+						document.getElementById("imageprogress").setAttribute("value",1);
+						attachedfile = xmlHttp.responseText;
+						document.getElementById("pleasewait").style.display = 'none';
+						document.getElementById("imageprogress").style.display = 'none';
+						document.getElementById("imageadded").style.display = '';
+					} else {
+						var bad = false;
+						var xmlHttp = new XMLHttpRequest();
+						xmlHttp.open("POST", "https://api.stibarc.gq/uploadparts.sjs", false);
+						var stuff = contents.match(/.{1,98000}/g);
+						var totalParts = stuff.length;
+						document.getElementById("imageprogress").setAttribute("max",totalParts);
+						xmlHttp.send("content=" + encodeURIComponent(stuff[0]));
+						var file = xmlHttp.responseText.split("\n")[0];
+						if (xmlHttp.responseText.split("\n")[0] != "ERR" && xmlHttp.responseText.split("\n")[0] != "") {
+							bad = false;
+						} else {
+							var xmlHttp = new XMLHttpRequest();
+							xmlHttp.open("POST", "https://api.stibarc.gq/uploadparts.sjs", false);
+							xmlHttp.send("content=" + encodeURIComponent(stuff[0]));
+							var file = xmlHttp.responseText.split("\n")[0];
+							if (xmlHttp.responseText.split("\n")[0] == "GOOD") {
+								bad = false;
+							} else {
+								bad = true;
+							}
+						}
+						if (bad == false) {
+							console.log(file);
+							document.getElementById("imageprogress").setAttribute("value",1);
+							for (var i = 1; i < stuff.length; i++) {
+								if (bad == false) {
+									uploadPart(file,stuff[i],function(msg) {
+										if ((msg) == "Error") {
+											console.log("bad");
+											bad = true;
+										}
+										console.log((i+1)+"/"+stuff.length);
+									});
+									document.getElementById("imageprogress").setAttribute("value",(i+1));
+								}
+							}
+							if (bad == false) {
+								attachedfile = file;
+							} else {
+								document.getElementById("imageadd").style.display = "";
+								document.getElementById("error").style.display = "";
+							}
+						} else {
+							document.getElementById("imageadd").style.display = "";
+							document.getElementById("error").style.display = "";
+						}
+					}
+					if (bad == false) {
+						document.getElementById("pleasewait").style.display = 'none';
+						document.getElementById("imageprogress").style.display = 'none';
+						document.getElementById("imageadded").style.display = '';
+					}
+				}
+				r.readAsDataURL(f);
+			}
+			document.getElementById("post").disabled = false;
+		}
+		
+		// end image thing
+	</script>
+</head>
+<body>
+	<nav><a id="title" href="index.html">ASTiW</a><input type="search" id="search" class="txf" placeholder="Search"><a href="newpost.html" class="mi ib">+</a><a href="javascript:openMenu();" class="mi">&#8943;</a><a href="javascript:openUserMenu();" id="usermenu" class="mi ib rightmost"></a><a href="register.html" class="lb" id="register">REGISTER</a><a href="login.html" class="lb rightmost">LOG IN</a></nav>
+	<div class="dbg" id="usermenubox">
+		<div class="dialog">
+			<a href="javascript:closeUserMenu();" class="closeButton">&times;</a>
+			<h3>Account menu</h3>
+			<div style="margin-top:16px;"><a class="othbut" id="userMenuProfButton">View profile</a></div>
+			<!-- <div style="margin-top:16px;"><a class="othbut" href="editprofile.html">Edit profile</a></div>
+			--><p><a class="classic" href="changepassword.html">Change password</a></p>
+			<p>Use official STiBaRC software, such as the <a href="https://stibarc.gq/" class="classic">STiBaRC website</a>, to edit your profile</p>
+			<p><a class="classic" href="mailto:herronjo110@gmail.com?subject=STiBaRC%20User%20Verification%20Request">Request user verification</a></p>
+			<h4>Switch account</h4>
+			<ul style="padding:0 0 0 20px;" id="accounts">
+			</ul>
+			<div style="margin-top:16px;"><a class="othbut" href="login.html">Add account</a></div>
+			<div style="margin-top:16px;"><a class="othbut" href="logout.html">Log out</a></div>
+			<p><a class="classic" href="register.html">Register a new account</a></p>
+		</div>
+	</div>
+	<div class="dbg" id="menubox">
+		<div class="dialog">
+			<a href="javascript:closeMenu();" class="closeButton">&times;</a>
+			<h3>ASTiW settings</h3>
+			<h4 style="margin-bottom:calc(1.33em - 16px);">Toggles</h4>
+			<div><button class="othbut" onclick="toggleSetting('dir');" id="toggleDir" style="margin-right:8px; margin-top:16px;">Default comment order: [value]</button><button class="othbut" onclick="toggleSetting('roi');" id="toggleROI" style="margin-top:16px;">Requests on intervals: [value]</button></div>
+			<p class="small"><a href="javascript:explanation();" class="classic">What is requests on intervals</a></p>
+			<p class="small">Settings may require a reload to take effect</p>
+			<h4 style="margin-bottom:calc(1.33em - 16px);">Change theme (not fully functional)</h4>
+			<div><button class="othbut" onclick="chtheme('dark');" style="margin-right:8px; margin-top:16px;">Dark (default)</button><button class="othbut" onclick="chtheme('light');" style="margin-right:8px; margin-top:16px;">Light</button><button class="othbut" onclick="chtheme('stibarc');" style="margin-top:16px;">STiBaRC</button></div>
+			<h4>Clear data</h4>
+			<p>If something isn't working correctly you can <a href="javascript:clearData();" class="classic">clear data</a>. (This will not log out your sess(es))</p>
+			<h4>About</h4>
+			<p>Created by savaka<br/>
+			Based on the <a href="https://stibarc.gq/" target="_blank" class="classic">STiBaRC website</a></p>
+			<p>ASTiW connects to the STiBaRC service; by using it you accept the STiBaRC <a href="https://stibarc.gq/privacy.html" target="_blank" class="classic">Privacy Policy</a></p>
+		</div>
+	</div>
+	<main id="rm">
+		<h3 style="display:none;" id="nameThing">Create post</h3>
+		<div id="main" class="stdc" style="display:none;">
+			<input type="text" id="postTitle" class="txf" placeholder="Title" style="width:calc(100% - 32px); display:block; margin-top:16px; margin-bottom:16px;">
+			<textarea class="txf" id="postText" style="height:108px; width:calc(100% - 32px);" placeholder="Text"></textarea>
+			<h4>Upload image (beta?)</h4>
+			<!-- begin image thing -->
+			<div id="error" style="display:none">Error uploading image!</div>
+			<div id="imageadd">Attach image: <input type="file" id="file" name="file" accept="image/*" /></div>
+			<div id="pleasewait" style="display:none">Please wait for image to upload...</div>
+			<progress id="imageprogress" style="display:none"></progress>
+			<div id="imageadded" style="display:none">Image added <button id="removeimage" onclick="removeImageFunction();">remove</button></div><br/>
+			<!-- end image thing -->
+			<div id="contain"><button id="post" onclick="post();" class="libut" style="display:block; margin-bottom:16px;">POST</button></div>
+			<p class="small" style="color:red; display:none;" id="wait">You can post again in [seconds] seconds</p>
+			<p class="small" style="color:red; display:none;" id="empty">A title and text are required</p>
+		</div>
+		<div class="loader" id="loader2"></div>
+	</main>
+</body>
+</html>

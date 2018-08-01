@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Register - ASTiW</title>
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="dark.css" id="themer">
+	<script src="script.js"></script>
+	<script>
+		var okaytoleave = false;
+		
+		window.onbeforeunload = function() {
+			if (!okaytoleave && (isSet(document.getElementById('username').value) || isSet(document.getElementById('password').value) || isSet(document.getElementById('confirmpassword').value) || isSet(document.getElementById('name').value) || isSet(document.getElementById('email').value) || isSet(document.getElementById('birthday').value))) {
+				return true;
+			}
+		};
+		
+		function register() {
+			document.getElementById('bad').style.display = 'none';
+			document.getElementById('empty').style.display = 'none';
+			document.getElementById('mismatch').style.display = 'none';
+			document.getElementById('spaces').style.display = 'none';
+			var username = document.getElementById('username').value;
+			var password = document.getElementById('password').value;
+			var confirmpassword = document.getElementById('confirmpassword').value;
+			var name = document.getElementById('name').value;
+			var email = document.getElementById('email').value;
+			var birthday = document.getElementById('birthday').value;
+			var showname = document.getElementById('showname').innerHTML == 'Public';
+			var showemail = document.getElementById('showemail').innerHTML == 'Public';
+			var showbirthday = document.getElementById('showbirthday').innerHTML == 'Public';
+			if (isSet(username) && isSet(password) && isSet(confirmpassword)) {
+				if (username.indexOf(' ') == -1) {
+					if (password == confirmpassword) {
+						document.getElementById('registerButton').style.display = 'none';
+						document.getElementById('username').disabled = true;
+						document.getElementById('password').disabled = true;
+						document.getElementById('confirmpassword').disabled = true;
+						document.getElementById('name').disabled = true;
+						document.getElementById('email').disabled = true;
+						document.getElementById('birthday').disabled = true;
+						document.getElementById('showname').disabled = true;
+						document.getElementById('showemail').disabled = true;
+						document.getElementById('showbirthday').disabled = true;
+						var ldr = document.createElement('div');
+						ldr.className = 'loader';
+						ldr.id = 'loader';
+						ldr.style.margin = '0 0 16px 0';
+						document.getElementById('contain').appendChild(ldr);
+						var jsonurl = 'https://api.stibarc.gq/createuser.sjs';
+						var r = new XMLHttpRequest();
+						r.addEventListener('load', function() {
+							ans = r.responseText;
+							if (ans == 'Created\n') {
+								okaytoleave = true;
+								window.location.href = 'login.html';
+							} else {
+								document.getElementById('username').disabled = false;
+								document.getElementById('password').disabled = false;
+								document.getElementById('confirmpassword').disabled = false;
+								document.getElementById('name').disabled = false;
+								document.getElementById('email').disabled = false;
+								document.getElementById('birthday').disabled = false;
+								document.getElementById('showname').disabled = false;
+								document.getElementById('showemail').disabled = false;
+								document.getElementById('showbirthday').disabled = false;
+								document.getElementById('bad').style.display = 'initial';
+								document.getElementById('contain').removeChild(document.getElementById('loader'));
+								document.getElementById('registerButton').style.display = 'initial';
+							}
+						});
+						r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+						r.open('post', jsonurl, true);
+						r.send('username=' + username + '&password=' + password + '&password2=' + confirmpassword + '&name=' + name + '&email=' + email + '&birthday=' + birthday + (showname ? '&showname=true' : '') + (showemail ? '&showemail=true' : '') + (showbirthday ? '&showbday=true' : ''));
+					} else {
+						document.getElementById('mismatch').style.display = 'initial';
+					}
+				} else {
+					document.getElementById('spaces').style.display = 'initial';
+				}
+			} else {
+				document.getElementById('empty').style.display = 'initial';
+			}
+		};
+		
+		function load() {
+			document.getElementById('rm').removeChild(document.getElementById('loader2'));
+			document.getElementById('eugh').style.display = '';
+			document.getElementById('main').style.display = 'block';
+		};
+		
+		function toggleShow(field) {
+			var bttn = document.getElementById('show' + field);
+			if (bttn.innerHTML == 'Private') {
+				bttn.innerHTML = 'Public';
+			} else {
+				bttn.innerHTML = 'Private';
+			}
+		};
+	</script>
+</head>
+<body>
+	<nav><a id="title" href="index.html">ASTiW</a><input type="search" id="search" class="txf" placeholder="Search"><a href="newpost.html" class="mi ib">+</a><a href="javascript:openMenu();" class="mi">&#8943;</a><a href="javascript:openUserMenu();" id="usermenu" class="mi ib rightmost"></a><a href="register.html" class="lb" id="register">REGISTER</a><a href="login.html" class="lb rightmost">LOG IN</a></nav>
+	<div class="dbg" id="usermenubox">
+		<div class="dialog">
+			<a href="javascript:closeUserMenu();" class="closeButton">&times;</a>
+			<h3>Account menu</h3>
+			<div style="margin-top:16px;"><a class="othbut" id="userMenuProfButton">View profile</a></div>
+			<!-- <div style="margin-top:16px;"><a class="othbut" href="editprofile.html">Edit profile</a></div>
+			--><p><a class="classic" href="changepassword.html">Change password</a></p>
+			<p>Use official STiBaRC software, such as the <a href="https://stibarc.gq/" class="classic">STiBaRC website</a>, to edit your profile</p>
+			<p><a class="classic" href="mailto:herronjo110@gmail.com?subject=STiBaRC%20User%20Verification%20Request">Request user verification</a></p>
+			<h4>Switch account</h4>
+			<ul style="padding:0 0 0 20px;" id="accounts">
+			</ul>
+			<div style="margin-top:16px;"><a class="othbut" href="login.html">Add account</a></div>
+			<div style="margin-top:16px;"><a class="othbut" href="logout.html">Log out</a></div>
+			<p><a class="classic" href="register.html">Register a new account</a></p>
+		</div>
+	</div>
+	<div class="dbg" id="menubox">
+		<div class="dialog">
+			<a href="javascript:closeMenu();" class="closeButton">&times;</a>
+			<h3>ASTiW settings</h3>
+			<h4 style="margin-bottom:calc(1.33em - 16px);">Toggles</h4>
+			<div><button class="othbut" onclick="toggleSetting('dir');" id="toggleDir" style="margin-right:8px; margin-top:16px;">Default comment order: [value]</button><button class="othbut" onclick="toggleSetting('roi');" id="toggleROI" style="margin-top:16px;">Requests on intervals: [value]</button></div>
+			<p class="small"><a href="javascript:explanation();" class="classic">What is requests on intervals</a></p>
+			<p class="small">Settings may require a reload to take effect</p>
+			<h4 style="margin-bottom:calc(1.33em - 16px);">Change theme (not fully functional)</h4>
+			<div><button class="othbut" onclick="chtheme('dark');" style="margin-right:8px; margin-top:16px;">Dark (default)</button><button class="othbut" onclick="chtheme('light');" style="margin-right:8px; margin-top:16px;">Light</button><button class="othbut" onclick="chtheme('stibarc');" style="margin-top:16px;">STiBaRC</button></div>
+			<h4>Clear data</h4>
+			<p>If something isn't working correctly you can <a href="javascript:clearData();" class="classic">clear data</a>. (This will not log out your sess(es))</p>
+			<h4>About</h4>
+			<p>Created by savaka<br/>
+			Based on the <a href="https://stibarc.gq/" target="_blank" class="classic">STiBaRC website</a></p>
+			<p>ASTiW connects to the STiBaRC service; by using it you accept the STiBaRC <a href="https://stibarc.gq/privacy.html" target="_blank" class="classic">Privacy Policy</a></p>
+		</div>
+	</div>
+	<main id="rm">
+		<h3 id="eugh" style="display:none;">Register a STiBaRC account</h3>
+		<div class="stdc" style="display:none;" id="main">
+			<p class="tfl">Username <span style="color:red;">*</span></p>
+			<input type="text" id="username" class="txf" placeholder="Username (no spaces)" style="display:block; margin-bottom:16px;">
+			<p class="tfl">Password <span style="color:red;">*</span></p>
+			<input type="password" id="password" class="txf" placeholder="Password" style="display:block; margin-bottom:16px;">
+			<p class="tfl">Confirm password <span style="color:red;">*</span></p>
+			<input type="password" id="confirmpassword" class="txf" placeholder="Confirm password" style="display:block; margin-bottom:16px;">
+			<p class="tfl">Name</p>
+			<div style="display:block; margin-bottom:10px;"><input type="text" id="name" class="txf" placeholder="Name" style="margin-right:16px; margin-bottom:6px;"><button id="showname" class="othbut" onclick="toggleShow('name');" style="margin-bottom:6px;">Private</button></div>
+			<p class="tfl">Email</p>
+			<div style="display:block; margin-bottom:10px;"><input type="text" id="email" class="txf" placeholder="Email" style="margin-right:16px; margin-bottom:6px;"><button id="showemail" class="othbut" onclick="toggleShow('email');" style="margin-bottom:6px;">Private</button></div>
+			<p class="tfl">Birthday</p>
+			<div style="display:block; margin-bottom:10px;"><input type="text" id="birthday" class="txf" placeholder="Birthday" style="margin-right:16px; margin-bottom:6px;"><button id="showbirthday" class="othbut" onclick="toggleShow('birthday');" style="margin-bottom:6px;">Private</button></div>
+			<p>By registering a STiBaRC account you accept the STiBaRC <a href="https://stibarc.gq/privacy.html" target="_blank" class="classic">Privacy Policy</a></p>
+			<p>After registering you will be directed to the login page to log in to your account</p>
+			<div id="contain"><button id="registerButton" onclick="register();" class="libut" style="display:block; margin-bottom:16px;">REGISTER</button></div>
+			<p class="small" style="color:red; display:none;" id="bad">Registration failed</p>
+			<p class="small" style="color:red; display:none;" id="empty">Please enter a username and password</p>
+			<p class="small" style="color:red; display:none;" id="mismatch">Passwords do not match</p>
+			<p class="small" style="color:red; display:none;" id="spaces">Username may not contain spaces</p>
+			<p>Already have a STiBaRC account? <a href="login.html" class="classic">Log in!</a></p>
+		</div>
+		<div class="loader" id="loader2"></div>
+	</main>
+</body>
+</html>

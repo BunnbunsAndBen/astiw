@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Profile - ASTiW</title>
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="dark.css" id="themer">
+	<script src="script.js"></script>
+	<script>
+		var term;
+		
+		function addRecent(item, b) {
+			var i = item.indexOf(':');
+			var splits = [item.slice(0, i), item.slice(i + 1)];
+			var main = document.getElementById('main');
+			var el = document.createElement('a');
+			el.href = 'post.html?id=' + splits[0];
+			el.className = 'recentLinks';
+			if (b) {
+				el.innerHTML = '<div class="recent bb"><b>' + splits[1] +'</b></div>'
+			} else {
+				el.innerHTML = '<div class="recent"><b>' + splits[1] +'</b></div>'
+			}
+			main.appendChild(el);
+		};
+		
+		function importantLoad() {
+			term = getAllUrlParams(window.location.href).id;
+			document.getElementById('username').value = term;
+			document.title = term + ' - ASTiW';
+		};
+		
+		function load() {
+			document.getElementById('username').innerHTML = term + '<span id="verified" style="color:lime; display:none;"> &#x2611;&#xFE0E;</span>';
+			/* if (term == JSON.parse(localStorage.getItem('astiw_usernames'))[0]) {
+				var editproflink = document.createElement('p');
+				editproflink.className = 'small';
+				editproflink.innerHTML = '<b><a class="classic" href="editprofile.html">&#x270E;&#xFE0E; Edit</a></b>';
+				document.getElementById('detail').appendChild(editproflink);
+			} */
+			var jsonurl = 'https://api.stibarc.gq/getuser.sjs?id=' + term;
+			var r = new XMLHttpRequest();
+			var rv = new XMLHttpRequest();
+			var rp = new XMLHttpRequest();
+			r.addEventListener('load', function() {
+				var rsp = r.responseText.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+				var tmp = rsp.split('\n');
+				var rank = tmp[4].split(':')[1];
+				var name = tmp[0].split(':')[1];
+				var email = tmp[1].split(':')[1];
+				var birthday = tmp[3].split(':')[1];
+				document.getElementById('rank').innerHTML = 'Rank: ' + rank;
+				if (name != 'Not shown' && name != 'Not set') {
+					document.getElementById('name').innerHTML = 'Name: ' + name;
+				} else {
+					document.getElementById('detailList').removeChild(document.getElementById('name'));
+				}
+				if (email != 'Not shown' && email != 'Not set') {
+					document.getElementById('email').innerHTML = 'Email: <a class="classic" href="mailto:' + email + '">' + email + '</a>';
+				} else {
+					document.getElementById('detailList').removeChild(document.getElementById('email'));
+				}
+				if (birthday != 'Not shown' && birthday != 'Not set') {
+					document.getElementById('birthday').innerHTML = 'Birthday: ' + birthday;
+				} else {
+					document.getElementById('detailList').removeChild(document.getElementById('birthday'));
+				}
+				if (isSet(tmp[5])) {
+					var bio = '';
+					for (i = 6; i < tmp.length; i++) {
+						bio = bio + tmp[i] + (i < tmp.length - 1 ? '<br/>' : '');
+					}
+					document.getElementById('bio').innerHTML = bio;
+					
+				} else {
+					document.getElementById('detail').removeChild(document.getElementById('bio'));
+				}
+				var jsonurlv = 'https://api.stibarc.gq/checkverify.sjs?id=' + term;
+				rv.open('get', jsonurlv, true);
+				rv.send();
+			});
+			rv.addEventListener('load', function() {
+				var ans = rv.responseText.split('\n')[0];
+				if (ans == 'true') {
+					document.getElementById('verified').style.display = 'initial';
+				}
+				rp.open('get', 'https://api.stibarc.gq/getuserposts.sjs?id=' + term, true);
+				rp.send();
+			});
+			rp.addEventListener('load', function() {
+				var ans = rp.responseText.split('\n');
+				ans.reverse();
+				document.getElementById('rm').removeChild(document.getElementById('loader'));
+				document.getElementById('username').style.display = '';
+				document.getElementById('detail').style.display = 'block';
+				for (i = 1; i < ans.length; i++) {
+					addRecent(ans[i], i == 1);
+				}
+			});
+			r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+			rv.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+			rp.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+			r.open('get', jsonurl, true);
+			r.send();
+		};
+	</script>
+</head>
+<body>
+	<nav><a id="title" href="index.html">ASTiW</a><input type="search" id="search" class="txf" placeholder="Search"><a href="newpost.html" class="mi ib">+</a><a href="javascript:openMenu();" class="mi">&#8943;</a><a href="javascript:openUserMenu();" id="usermenu" class="mi ib rightmost"></a><a href="register.html" class="lb" id="register">REGISTER</a><a href="login.html" class="lb rightmost">LOG IN</a></nav>
+	<div class="dbg" id="usermenubox">
+		<div class="dialog">
+			<a href="javascript:closeUserMenu();" class="closeButton">&times;</a>
+			<h3>Account menu</h3>
+			<div style="margin-top:16px;"><a class="othbut" id="userMenuProfButton">View profile</a></div>
+			<!-- <div style="margin-top:16px;"><a class="othbut" href="editprofile.html">Edit profile</a></div>
+			--><p><a class="classic" href="changepassword.html">Change password</a></p>
+			<p>Use official STiBaRC software, such as the <a href="https://stibarc.gq/" class="classic">STiBaRC website</a>, to edit your profile</p>
+			<p><a class="classic" href="mailto:herronjo110@gmail.com?subject=STiBaRC%20User%20Verification%20Request">Request user verification</a></p>
+			<h4>Switch account</h4>
+			<ul style="padding:0 0 0 20px;" id="accounts">
+			</ul>
+			<div style="margin-top:16px;"><a class="othbut" href="login.html">Add account</a></div>
+			<div style="margin-top:16px;"><a class="othbut" href="logout.html">Log out</a></div>
+			<p><a class="classic" href="register.html">Register a new account</a></p>
+		</div>
+	</div>
+	<div class="dbg" id="menubox">
+		<div class="dialog">
+			<a href="javascript:closeMenu();" class="closeButton">&times;</a>
+			<h3>ASTiW settings</h3>
+			<h4 style="margin-bottom:calc(1.33em - 16px);">Toggles</h4>
+			<div><button class="othbut" onclick="toggleSetting('dir');" id="toggleDir" style="margin-right:8px; margin-top:16px;">Default comment order: [value]</button><button class="othbut" onclick="toggleSetting('roi');" id="toggleROI" style="margin-top:16px;">Requests on intervals: [value]</button></div>
+			<p class="small"><a href="javascript:explanation();" class="classic">What is requests on intervals</a></p>
+			<p class="small">Settings may require a reload to take effect</p>
+			<h4 style="margin-bottom:calc(1.33em - 16px);">Change theme (not fully functional)</h4>
+			<div><button class="othbut" onclick="chtheme('dark');" style="margin-right:8px; margin-top:16px;">Dark (default)</button><button class="othbut" onclick="chtheme('light');" style="margin-right:8px; margin-top:16px;">Light</button><button class="othbut" onclick="chtheme('stibarc');" style="margin-top:16px;">STiBaRC</button></div>
+			<h4>Clear data</h4>
+			<p>If something isn't working correctly you can <a href="javascript:clearData();" class="classic">clear data</a>. (This will not log out your sess(es))</p>
+			<h4>About</h4>
+			<p>Created by savaka<br/>
+			Based on the <a href="https://stibarc.gq/" target="_blank" class="classic">STiBaRC website</a></p>
+			<p>ASTiW connects to the STiBaRC service; by using it you accept the STiBaRC <a href="https://stibarc.gq/privacy.html" target="_blank" class="classic">Privacy Policy</a></p>
+		</div>
+	</div>
+	<main id="rm">
+		<h3 id="username" style="display:none;"></h3>
+		<div id="detail" style="display:none; margin-bottom:24px;" class="stdc">
+			<ul id="detailList" style="padding-left:20px;">
+				<li id="name">Name: </li>
+				<li id="rank">Rank: </li>
+				<li id="email">Email: </li>
+				<li id="birthday">Birthday: </li>
+			</ul>
+			<p id="bio"></p>
+		</div>
+		<div id="main"></div>
+		<div class="loader" id="loader"></div>
+	</main>
+</body>
+</html>
