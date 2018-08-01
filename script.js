@@ -153,7 +153,7 @@ function switchUser(n) {
 };
 
 function clearData() {
-	if (confirm('Are you sure you want to clear local storage? This includes all signed in accounts, drafts, cached images, and settings')) {
+	if (confirm('Are you sure you want to clear local storage? This includes all signed in accounts, cached images, and settings')) {
 		localStorage.clear();
 		window.location.href = 'index.html';
 	}
