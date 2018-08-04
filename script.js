@@ -12,7 +12,9 @@ window.onload = function() {
 	});
 	sb.addEventListener('keydown', function(e) {
 		if (e.keyCode == 13) {
-			window.location.href = 'search.html?q=' + sb.value;
+			if (isSet(sb.value)) {
+				window.location.href = 'search.html?q=' + encodeURIComponent(sb.value);
+			}
 		}
 	});
 	if (typeof importantLoad == 'function') {
@@ -91,7 +93,7 @@ function checkSess(sess) {
 function openUserMenu() {
 	var accounts = document.getElementById('accounts');
 	var usernames = JSON.parse(localStorage.getItem('astiw_usernames'));
-	document.getElementById('userMenuProfButton').href = 'user.html?id=' + usernames[0];
+	document.getElementById('userMenuProfButton').href = 'user.html?id=' + encodeURIComponent(usernames[0]);
 	accounts.innerHTML = '<li><b>' + usernames[0] + '</b></li>';
 	var oof;
 	for (i = 1; i < usernames.length; i++) {

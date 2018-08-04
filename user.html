@@ -18,15 +18,15 @@
 			el.href = 'post.html?id=' + splits[0];
 			el.className = 'recentLinks';
 			if (b) {
-				el.innerHTML = '<div class="recent bb"><b>' + splits[1] +'</b></div>'
+				el.innerHTML = '<div class="recent bb"><b>' + splits[1].replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b></div>'
 			} else {
-				el.innerHTML = '<div class="recent"><b>' + splits[1] +'</b></div>'
+				el.innerHTML = '<div class="recent"><b>' + splits[1].replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b></div>'
 			}
 			main.appendChild(el);
 		};
 		
 		function importantLoad() {
-			term = getAllUrlParams(window.location.href).id;
+			term = decodeURIComponent(getAllUrlParams(window.location.href).id);
 			document.getElementById('username').value = term;
 			document.title = term + ' - ASTiW';
 		};

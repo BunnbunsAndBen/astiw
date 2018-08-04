@@ -8,6 +8,9 @@
 	<link rel="stylesheet" href="dark.css" id="themer">
 	<script src="script.js"></script>
 	<script>
+		var nores = false;
+		var term;
+		
 		function addRecent(item, b) {
 			var i = item.indexOf(':');
 			var splits = [item.slice(0, i), item.slice(i + 1)];
@@ -16,35 +19,56 @@
 			el.href = 'post.html?id=' + splits[0];
 			el.className = 'recentLinks';
 			if (b) {
-				el.innerHTML = '<div class="recent bb"><b>' + splits[1] +'</b></div>'
+				el.innerHTML = '<div class="recent bb"><b>' + splits[1].replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b></div>'
 			} else {
-				el.innerHTML = '<div class="recent"><b>' + splits[1] +'</b></div>'
+				el.innerHTML = '<div class="recent"><b>' + splits[1].replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b></div>'
 			}
 			main.appendChild(el);
 		};
 		
 		function importantLoad() {
-			var term = getAllUrlParams(window.location.href).q;
+			term = decodeURIComponent(getAllUrlParams(window.location.href).q);
 			document.getElementById('search').value = term;
 			document.title = '"' + term + '" - Search Results - ASTiW';
 		};
 		
 		function load() {
-			var term = getAllUrlParams(window.location.href).q;
 			document.getElementById('nameThing').innerHTML = 'Search results for "' + term + '"';
 			var jsonurl = 'https://api.stibarc.gq/postsearch.sjs?q=' + term;
 			var r = new XMLHttpRequest();
+			var ru = new XMLHttpRequest();
 			r.addEventListener('load', function() {
-				var stuf = r.responseText.split("\n");
-				stuf.splice(stuf.length - 1, 1);
-				stuf.reverse();
+				var stuf = r.responseText.split('\n');
+				if (isSet(r.responseText) && stuf[0] != 'No results') {
+					stuf.splice(stuf.length - 1, 1);
+					stuf.reverse();
+					for (i = 0; i < stuf.length; i++) {
+						addRecent(stuf[i], i == 0);
+					}
+				} else {
+					nores = true;
+				}
+				var jsonurlu = 'https://api.stibarc.gq/getuser.sjs?id=' + term;
+				ru.open('get', jsonurlu, true);
+				ru.send();
+			});
+			ru.addEventListener('load', function() {
+				var messenge = document.getElementById('messenge');
+				if (isSet(ru.responseText)) {
+					messenge.innerHTML = 'There is a user named <a class="classic" href="user.html?id=' + encodeURIComponent(term) + '">' + term + '</a>'
+					document.getElementById('info').style.display = '';
+				} else if (nores) {
+					messenge.innerHTML = 'There are no results';
+					messenge.style.color = 'var(--border)';
+					messenge.style.textAlign = 'center';
+					document.getElementById('info').style.display = '';
+				}
 				document.getElementById('rm').removeChild(document.getElementById('loader'));
 				document.getElementById('nameThing').style.display = '';
-				for (i = 0; i < stuf.length; i++) {
-					addRecent(stuf[i], i == 0);
-				}
+				document.getElementById('main').style.display = '';
 			});
 			r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+			ru.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
 			r.open('get', jsonurl, true);
 			r.send();
 		};
@@ -89,7 +113,8 @@
 	</div>
 	<main id="rm">
 		<h3 id="nameThing" style="display:none;">Search results</h3>
-		<div id="main"></div>
+		<div id="info" class="stdc" style="display:none; margin-bottom:24px;"><p id="messenge"></p></div>
+		<div id="main" style="display:none;"></div>
 		<div class="loader" id="loader"></div>
 	</main>
 </body>

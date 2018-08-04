@@ -19,9 +19,9 @@
 			el.href = 'post.html?id=' + splits[0];
 			el.className = 'recentLinks';
 			if (b) {
-				el.innerHTML = '<div class="recent bb"><b>' + splits[1] +'</b></div>'
+				el.innerHTML = '<div class="recent bb"><b>' + splits[1].replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b></div>'
 			} else {
-				el.innerHTML = '<div class="recent"><b>' + splits[1] +'</b></div>'
+				el.innerHTML = '<div class="recent"><b>' + splits[1].replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b></div>'
 			}
 			main.appendChild(el);
 			lastid = splits[0];

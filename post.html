@@ -39,7 +39,7 @@
 				stuf = JSON.parse(r.responseText);
 				document.getElementById('nameThing').innerHTML = stuf.title.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 				document.title = stuf.title + ' - ASTiW';
-				document.getElementById('metaThing').innerHTML = 'Posted by <a class="classic" href="user.html?id=' + stuf.poster + '">' + stuf.poster + '</a><span id="verified" style="color:lime; display:none;"> &#x2611;&#xFE0E;</span> at ' + stuf.postdate + (stuf.edited ? ' (edited)' : '');
+				document.getElementById('metaThing').innerHTML = 'Posted by <a class="classic" href="user.html?id=' + encodeURIComponent(stuf.poster) + '">' + stuf.poster + '</a><span id="verified" style="color:lime; display:none;"> &#x2611;&#xFE0E;</span> at ' + stuf.postdate + (stuf.edited ? ' (edited)' : '');
 				document.getElementById('postText').innerHTML = stuf.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>');
 				var jsonurlv = 'https://api.stibarc.gq/checkverify.sjs?id=' + stuf.poster;
 				rv.open('get', jsonurlv, true);
@@ -109,7 +109,7 @@
 			for (i = 0; i < comments.length; i++) {
 				placable = document.createElement('div');
 				placable.style.marginTop = '16px';
-				placable.innerHTML = '<p class="small"><a class="classic" href="user.html?id=' + comments[i][1] + '">' + (comments[i][1] == stuf.poster ? '<b>' : '') + comments[i][1] + '</a>' + (comments[i][1] == stuf.poster ? ' (OP)</b>' : '') + '</p><p style="margin:9px 0px;">' + comments[i][0].replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>') + '</p>' + (loggedIn ? ('<p class="small"><a class="classic" href="javascript:reply(\'' + comments[i][1] + '\')"><b>&larr; Reply</b></a></p>') : '');
+				placable.innerHTML = '<p class="small"><a class="classic" href="user.html?id=' + encodeURIComponent(comments[i][1]) + '">' + (comments[i][1] == stuf.poster ? '<b>' : '') + comments[i][1] + '</a>' + (comments[i][1] == stuf.poster ? ' (OP)</b>' : '') + '</p><p style="margin:9px 0px;">' + comments[i][0].replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>') + '</p>' + (loggedIn ? ('<p class="small"><a class="classic" href="javascript:reply(\'' + comments[i][1] + '\')"><b>&larr; Reply</b></a></p>') : '');
 				commentsDiv.appendChild(placable);
 			}
 		};
