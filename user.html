@@ -97,6 +97,9 @@
 				for (i = 1; i < ans.length; i++) {
 					addRecent(ans[i], i == 1);
 				}
+				if (ans.length <= 1) {
+					document.getElementById('noposts').style.display = '';
+				}
 			});
 			r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
 			rv.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
@@ -154,6 +157,7 @@
 			</ul>
 			<p id="bio"></p>
 		</div>
+		<div id="noposts" class="stdc" style="display:none;"><p style="color:var(--border); text-align:center;">This user has no posts</p></div>
 		<div id="main"></div>
 		<div class="loader" id="loader"></div>
 	</main>
