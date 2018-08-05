@@ -39,7 +39,7 @@
 				editproflink.innerHTML = '<b><a class="classic" href="editprofile.html">&#x270E;&#xFE0E; Edit</a></b>';
 				document.getElementById('detail').appendChild(editproflink);
 			} */
-			var jsonurl = 'https://api.stibarc.gq/getuser.sjs?id=' + term;
+			var jsonurl = 'https://api.stibarc.gq/getuser.sjs?id=' + encodeURIComponent(term);
 			var r = new XMLHttpRequest();
 			var rv = new XMLHttpRequest();
 			var rp = new XMLHttpRequest();
@@ -76,7 +76,7 @@
 				} else {
 					document.getElementById('detail').removeChild(document.getElementById('bio'));
 				}
-				var jsonurlv = 'https://api.stibarc.gq/checkverify.sjs?id=' + term;
+				var jsonurlv = 'https://api.stibarc.gq/checkverify.sjs?id=' + encodeURIComponent(term);
 				rv.open('get', jsonurlv, true);
 				rv.send();
 			});
@@ -85,7 +85,7 @@
 				if (ans == 'true') {
 					document.getElementById('verified').style.display = 'initial';
 				}
-				rp.open('get', 'https://api.stibarc.gq/getuserposts.sjs?id=' + term, true);
+				rp.open('get', 'https://api.stibarc.gq/getuserposts.sjs?id=' + encodeURIComponent(term), true);
 				rp.send();
 			});
 			rp.addEventListener('load', function() {
