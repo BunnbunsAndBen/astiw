@@ -27,8 +27,6 @@
 			lastid = splits[0];
 		};
 		
-		var inter;
-		
 		function load() {
 			var jsonurl = 'https://api.stibarc.gq/getposts.sjs';
 			var r = new XMLHttpRequest();
@@ -42,7 +40,7 @@
 				}
 				document.getElementById('loadmore').style.display = 'initial';
 				if (!(localStorage.getItem('astiw_roi') == 'true')) {
-					inter = setInterval(checkNewPosts, 500);
+					setTimeout(checkNewPosts, 500);
 				}
 			});
 			r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
@@ -79,7 +77,8 @@
 				var thingy = r.responseText.split(':')[0];
 				if (Number(thingy) > Number(topp)) {
 					document.getElementById('refreshMarker').style.display = 'block';
-					clearInterval(inter);
+				} else {
+					setTimeout(checkNewPosts, 500);
 				}
 			});
 			r.addEventListener('error', function() {});

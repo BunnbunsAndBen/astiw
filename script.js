@@ -197,5 +197,5 @@ function getAllUrlParams(url) {
 };
 
 function explanation() {
-	alert('Some pages send a request every 0.5 seconds to check for new content and prompt you to reload to see new content if this setting is on');
+	alert('Some pages send a request every 0.5 seconds to check for new content and prompt you to reload to see new content if this setting is on (technically they are timeouts not intervals now)');
 };

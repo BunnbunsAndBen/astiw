@@ -92,7 +92,7 @@
 				document.getElementById('rm').removeChild(document.getElementById('loader2'));
 				document.getElementById('main').style.display = 'block';
 				if (!(localStorage.getItem('astiw_roi') == 'true')) {
-					inter = setInterval(checkNewComms, 500);
+					setTimeout(checkNewComms, 500);
 				}
 			});
 			r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
@@ -301,7 +301,8 @@
 				}
 				if (thingy > commCount) {
 					document.getElementById('refreshMarker').style.display = 'block';
-					clearInterval(inter);
+				} else {
+					setTimeout(checkNewComms, 500);
 				}
 			});
 			r.addEventListener('error', function() {});
