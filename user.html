@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>Profile - ASTiW</title>
+	<title>User Profile - ASTiW</title>
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 	<link rel="stylesheet" href="style.css">
 	<link rel="stylesheet" href="dark.css" id="themer">
@@ -44,41 +44,47 @@
 			var rv = new XMLHttpRequest();
 			var rp = new XMLHttpRequest();
 			r.addEventListener('load', function() {
-				var rsp = r.responseText.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-				var tmp = rsp.split('\n');
-				var rank = tmp[4].split(':')[1];
-				var name = tmp[0].split(':')[1];
-				var email = tmp[1].split(':')[1];
-				var birthday = tmp[3].split(':')[1];
-				document.getElementById('rank').innerHTML = 'Rank: ' + rank;
-				if (name != 'Not shown' && name != 'Not set') {
-					document.getElementById('name').innerHTML = 'Name: ' + name;
-				} else {
-					document.getElementById('detailList').removeChild(document.getElementById('name'));
-				}
-				if (email != 'Not shown' && email != 'Not set') {
-					document.getElementById('email').innerHTML = 'Email: <a class="classic" href="mailto:' + email + '">' + email + '</a>';
-				} else {
-					document.getElementById('detailList').removeChild(document.getElementById('email'));
-				}
-				if (birthday != 'Not shown' && birthday != 'Not set') {
-					document.getElementById('birthday').innerHTML = 'Birthday: ' + birthday;
-				} else {
-					document.getElementById('detailList').removeChild(document.getElementById('birthday'));
-				}
-				if (isSet(tmp[5])) {
-					var bio = '';
-					for (i = 6; i < tmp.length; i++) {
-						bio = bio + tmp[i] + (i < tmp.length - 1 ? '<br/>' : '');
+				if (isSet(r.responseText)) {
+					var rsp = r.responseText.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+					var tmp = rsp.split('\n');
+					var rank = tmp[4].split(':')[1];
+					var name = tmp[0].split(':')[1];
+					var email = tmp[1].split(':')[1];
+					var birthday = tmp[3].split(':')[1];
+					document.getElementById('rank').innerHTML = 'Rank: ' + rank;
+					if (name != 'Not shown' && name != 'Not set') {
+						document.getElementById('name').innerHTML = 'Name: ' + name;
+					} else {
+						document.getElementById('detailList').removeChild(document.getElementById('name'));
 					}
-					document.getElementById('bio').innerHTML = bio;
-					
+					if (email != 'Not shown' && email != 'Not set') {
+						document.getElementById('email').innerHTML = 'Email: <a class="classic" href="mailto:' + email + '">' + email + '</a>';
+					} else {
+						document.getElementById('detailList').removeChild(document.getElementById('email'));
+					}
+					if (birthday != 'Not shown' && birthday != 'Not set') {
+						document.getElementById('birthday').innerHTML = 'Birthday: ' + birthday;
+					} else {
+						document.getElementById('detailList').removeChild(document.getElementById('birthday'));
+					}
+					if (isSet(tmp[5])) {
+						var bio = '';
+						for (i = 6; i < tmp.length; i++) {
+							bio = bio + tmp[i] + (i < tmp.length - 1 ? '<br/>' : '');
+						}
+						document.getElementById('bio').innerHTML = bio;
+						
+					} else {
+						document.getElementById('detail').removeChild(document.getElementById('bio'));
+					}
+					var jsonurlv = 'https://api.stibarc.gq/checkverify.sjs?id=' + encodeURIComponent(term);
+					rv.open('get', jsonurlv, true);
+					rv.send();
 				} else {
-					document.getElementById('detail').removeChild(document.getElementById('bio'));
+					document.getElementById('rm').removeChild(document.getElementById('loader'));
+					document.getElementById('username').style.display = '';
+					document.getElementById('notauser').style.display = '';
 				}
-				var jsonurlv = 'https://api.stibarc.gq/checkverify.sjs?id=' + encodeURIComponent(term);
-				rv.open('get', jsonurlv, true);
-				rv.send();
 			});
 			rv.addEventListener('load', function() {
 				var ans = rv.responseText.split('\n')[0];
@@ -148,6 +154,7 @@
 	</div>
 	<main id="rm">
 		<h3 id="username" style="display:none;"></h3>
+		<div id="notauser" class="stdc" style="display:none;"><p style="color:var(--border); text-align:center;">This user does not exist</p></div>
 		<div id="detail" style="display:none; margin-bottom:24px;" class="stdc">
 			<ul id="detailList" style="padding-left:20px;">
 				<li id="name">Name: </li>
