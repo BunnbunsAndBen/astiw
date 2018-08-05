@@ -34,7 +34,7 @@
 		
 		function load() {
 			document.getElementById('nameThing').innerHTML = 'Search results for "' + term + '"';
-			var jsonurl = 'https://api.stibarc.gq/postsearch.sjs?q=' + term;
+			var jsonurl = 'https://api.stibarc.gq/postsearch.sjs?q=' + encodeURIComponent(term);
 			var r = new XMLHttpRequest();
 			var ru = new XMLHttpRequest();
 			r.addEventListener('load', function() {
@@ -48,7 +48,7 @@
 				} else {
 					nores = true;
 				}
-				var jsonurlu = 'https://api.stibarc.gq/getuser.sjs?id=' + term;
+				var jsonurlu = 'https://api.stibarc.gq/getuser.sjs?id=' + encodeURIComponent(term);
 				ru.open('get', jsonurlu, true);
 				ru.send();
 			});

@@ -50,7 +50,7 @@
 				});
 				r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
 				r.open('post', jsonurl, true);
-				r.send('username=' + username + '&password=' + password);
+				r.send('username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password));
 			} else {
 				document.getElementById('empty').style.display = 'initial';
 			}
