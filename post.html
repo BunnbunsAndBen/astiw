@@ -16,6 +16,7 @@
 		var oktoleave = false;
 		var inter;
 		var commCount;
+		var holdmyverification = false;
 		
 		window.onbeforeunload = function() {
 			if (!oktoleave && (isSet(document.getElementById('commentBox').value) || document.getElementById('editText').style.display != 'none')) {
@@ -53,7 +54,8 @@
 				stuf = JSON.parse(r.responseText);
 				document.getElementById('nameThing').innerHTML = stuf.title.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 				document.title = stuf.title + ' - ASTiW';
-				document.getElementById('metaThing').innerHTML = 'Posted by <a class="classic" href="user.html?id=' + encodeURIComponent(stuf.poster) + '">' + stuf.poster + '</a><span id="verified"> &#x2611;&#xFE0E;</span> at ' + stuf.postdate + (stuf.edited ? ' (edited)' : '');
+				var currentUser = JSON.parse(localStorage.getItem('astiw_usernames'))[0];
+				document.getElementById('metaThing').innerHTML = 'Posted by <a class="classic" ' + (stuf.poster == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(stuf.poster) + '">' + stuf.poster + '</a><span id="verified"> &#x2611;&#xFE0E;</span> at ' + stuf.postdate + (stuf.edited ? ' (edited)' : '');
 				document.getElementById('postText').innerHTML = putUserLinks(stuf.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'));
 				var jsonurlv = 'https://api.stibarc.gq/checkverify.sjs?id=' + stuf.poster;
 				rv.open('get', jsonurlv, true);
@@ -63,6 +65,7 @@
 				var ans = rv.responseText.split('\n')[0];
 				if (ans == 'true') {
 					document.getElementById('verified').style.display = 'initial';
+					holdmyverification = true;
 				}
 				if (isSet(stuf.attachment) && stuf.attachment != 'none') {
 					document.getElementById('imgThing').style.display = 'initial';
@@ -124,7 +127,7 @@
 			for (i = 0; i < comments.length; i++) {
 				placable = document.createElement('div');
 				placable.style.marginTop = '16px';
-				placable.innerHTML = '<p class="small"><a class="classic" href="user.html?id=' + encodeURIComponent(comments[i][1]) + '">' + (comments[i][1] == stuf.poster ? '<b>' : '') + (comments[i][1] == currentUser ? '<span style="color:var(--you);">' : '') + comments[i][1] + '</a>' + (comments[i][1] == currentUser ? '</span>' : '') + (comments[i][1] == stuf.poster ? ' (OP)</b>' : '') + '</p><p style="margin:9px 0px;">' + putUserLinks(comments[i][0].replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>')) + '</p>' + (loggedIn ? ('<p class="small"><a class="classic" href="javascript:reply(\'' + comments[i][1] + '\')"><b>&larr; Reply</b></a></p>') : '');
+				placable.innerHTML = '<p class="small"><a class="classic" ' + (comments[i][1] == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(comments[i][1]) + '">' + (comments[i][1] == stuf.poster ? '<b>' : '') + comments[i][1] + (comments[i][1] == stuf.poster ? ' (OP)</b>' : '') + '</a>' + '</p><p style="margin:9px 0px;">' + putUserLinks(comments[i][0].replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>')) + '</p>' + (loggedIn ? ('<p class="small"><a class="classic" href="javascript:reply(\'' + comments[i][1] + '\')"><b>&larr; Reply</b></a></p>') : '');
 				commentsDiv.appendChild(placable);
 			}
 		};
@@ -274,7 +277,11 @@
 					stuf = JSON.parse(r.responseText);
 					document.getElementById('nameThing').innerHTML = stuf.title.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 					document.title = stuf.title + ' - ASTiW';
-					document.getElementById('metaThing').innerHTML = 'Posted by <a class="classic" href="user.html?id=' + encodeURIComponent(stuf.poster) + '">' + stuf.poster + '</a><span id="verified"> &#x2611;&#xFE0E;</span> at ' + stuf.postdate + (stuf.edited ? ' (edited)' : '');
+					var currentUser = JSON.parse(localStorage.getItem('astiw_usernames'))[0];
+					document.getElementById('metaThing').innerHTML = 'Posted by <a class="classic" ' + (stuf.poster == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(stuf.poster) + '">' + stuf.poster + '</a><span id="verified"> &#x2611;&#xFE0E;</span> at ' + stuf.postdate + (stuf.edited ? ' (edited)' : '');
+					if (holdmyverification) {
+						document.getElementById('verified').style.display = 'initial';
+					}
 					document.getElementById('postText').innerHTML = putUserLinks(stuf.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'));
 					document.getElementById('editLink').innerHTML = '<a class="classic" href="javascript:editPost();">&#x270E;&#xFE0E; Edit</a>';
 					document.getElementById('oof').removeChild(document.getElementById('loader4'));
