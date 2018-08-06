@@ -28,11 +28,12 @@
 			var list = inp.split(/( |<br\/>)/g);
 			var temp;
 			var tempName;
+			var currentUser = JSON.parse(localStorage.getItem('astiw_usernames'))[0];
 			for (j = 0; j < list.length; j++) {
 				if (list[j][0] == '@' && list[j].length >= 2) {
 					temp = list[j];
 					tempName = list[j].substring(1);
-					list[j] = '<a class="classic" href="user.html?id=' + encodeURIComponent(tempName) + '">' + temp + '</a>';
+					list[j] = '<a class="classic" ' + (tempName == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(tempName) + '">' + temp + '</a>';
 				}
 			}
 			return list.join('');
@@ -127,7 +128,7 @@
 			for (i = 0; i < comments.length; i++) {
 				placable = document.createElement('div');
 				placable.style.marginTop = '16px';
-				placable.innerHTML = '<p class="small"><a class="classic" ' + (comments[i][1] == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(comments[i][1]) + '">' + (comments[i][1] == stuf.poster ? '<b>' : '') + comments[i][1] + (comments[i][1] == stuf.poster ? ' (OP)</b>' : '') + '</a>' + '</p><p style="margin:9px 0px;">' + putUserLinks(comments[i][0].replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>')) + '</p>' + (loggedIn ? ('<p class="small"><a class="classic" href="javascript:reply(\'' + comments[i][1] + '\')"><b>&larr; Reply</b></a></p>') : '');
+				placable.innerHTML = '<p class="small">' + (comments[i][1] == stuf.poster ? '<b>' : '') + '<a class="classic" ' + (comments[i][1] == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(comments[i][1]) + '">' + comments[i][1] + '</a>' + (comments[i][1] == stuf.poster ? ' (OP)</b>' : '') + '</p><p style="margin:9px 0px;">' + putUserLinks(comments[i][0].replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>')) + '</p>' + (loggedIn ? ('<p class="small"><a class="classic" href="javascript:reply(\'' + comments[i][1] + '\')"><b>&larr; Reply</b></a></p>') : '');
 				commentsDiv.appendChild(placable);
 			}
 		};
