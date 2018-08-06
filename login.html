@@ -11,46 +11,51 @@
 		function login() {
 			document.getElementById('bad').style.display = 'none';
 			document.getElementById('empty').style.display = 'none';
+			document.getElementById('already').style.display = 'none';
 			var username = document.getElementById('username').value;
 			var password = document.getElementById('password').value;
 			if (isSet(username) && isSet(password)) {
-				document.getElementById('login').style.display = 'none';
-				document.getElementById('username').disabled = true;
-				document.getElementById('password').disabled = true;
-				var ldr = document.createElement('div');
-				ldr.className = 'loader';
-				ldr.id = 'loader';
-				ldr.style.margin = '0 0 16px 0';
-				document.getElementById('contain').appendChild(ldr);
-				var jsonurl = 'https://api.stibarc.gq/createsess.sjs';
-				var r = new XMLHttpRequest();
-				r.addEventListener('load', function() {
-					sess = r.responseText;
-					if (sess != 'Invalid username or password\n') {
-						var sesses = JSON.parse(localStorage.getItem('astiw_sesses'));
-						var usernames = JSON.parse(localStorage.getItem('astiw_usernames'));
-						if (!isSet(sesses)) {
-							sesses = [];
+				if (JSON.parse(localStorage.getItem('astiw_usernames')).indexOf(username) == -1) {
+					document.getElementById('login').style.display = 'none';
+					document.getElementById('username').disabled = true;
+					document.getElementById('password').disabled = true;
+					var ldr = document.createElement('div');
+					ldr.className = 'loader';
+					ldr.id = 'loader';
+					ldr.style.margin = '0 0 16px 0';
+					document.getElementById('contain').appendChild(ldr);
+					var jsonurl = 'https://api.stibarc.gq/createsess.sjs';
+					var r = new XMLHttpRequest();
+					r.addEventListener('load', function() {
+						sess = r.responseText;
+						if (sess != 'Invalid username or password\n') {
+							var sesses = JSON.parse(localStorage.getItem('astiw_sesses'));
+							var usernames = JSON.parse(localStorage.getItem('astiw_usernames'));
+							if (!isSet(sesses)) {
+								sesses = [];
+							}
+							if (!isSet(usernames)) {
+								usernames = [];
+							}
+							sesses.splice(0, 0, sess.split('\n')[0]);
+							usernames.splice(0, 0, username);
+							localStorage.setItem('astiw_sesses', JSON.stringify(sesses));
+							localStorage.setItem('astiw_usernames', JSON.stringify(usernames));
+							window.location.href = 'index.html';
+						} else {
+							document.getElementById('username').disabled = false;
+							document.getElementById('password').disabled = false;
+							document.getElementById('bad').style.display = 'initial';
+							document.getElementById('contain').removeChild(document.getElementById('loader'));
+							document.getElementById('login').style.display = 'initial';
 						}
-						if (!isSet(usernames)) {
-							usernames = [];
-						}
-						sesses.splice(0, 0, sess.split('\n')[0]);
-						usernames.splice(0, 0, username);
-						localStorage.setItem('astiw_sesses', JSON.stringify(sesses));
-						localStorage.setItem('astiw_usernames', JSON.stringify(usernames));
-						window.location.href = 'index.html';
-					} else {
-						document.getElementById('username').disabled = false;
-						document.getElementById('password').disabled = false;
-						document.getElementById('bad').style.display = 'initial';
-						document.getElementById('contain').removeChild(document.getElementById('loader'));
-						document.getElementById('login').style.display = 'initial';
-					}
-				});
-				r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
-				r.open('post', jsonurl, true);
-				r.send('username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password));
+					});
+					r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+					r.open('post', jsonurl, true);
+					r.send('username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password));
+				} else {
+					document.getElementById('already').style.display = 'initial';
+				}
 			} else {
 				document.getElementById('empty').style.display = 'initial';
 			}
@@ -121,6 +126,7 @@
 			<div id="contain"><button id="login" onclick="login();" class="libut" style="display:block; margin-bottom:16px;">LOG IN</button></div>
 			<p class="small" style="color:red; display:none;" id="bad">Incorrect username or password</p>
 			<p class="small" style="color:red; display:none;" id="empty">Please fill both fields</p>
+			<p class="small" style="color:red; display:none;" id="already">Account already added</p>
 			<p>Don't have a STiBaRC account yet? <a href="register.html" class="classic">Register!</a></p>
 			<p>ASTiW connects to the STiBaRC service; by using it you accept the STiBaRC <a href="https://stibarc.gq/privacy.html" target="_blank" class="classic">Privacy Policy</a></p>
 		</div>
