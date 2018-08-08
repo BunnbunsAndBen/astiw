@@ -280,3 +280,31 @@ h3 {
 	display: none;
 	color: var(--verified);
 }
+
+.cb {
+	float: left;
+	border-radius: 4px;
+	height: 36px;
+	width: 36px;
+	cursor: pointer;
+	margin-right: 8px;
+	outline: none;
+	background-color: var(--tb-back);
+	border-style: none;
+	color: var(--content);
+	font-size: 24px;
+}
+
+select {
+	border-radius: 4px;
+	border: 1px solid var(--border);
+	background-color: var(--content-bg);
+	outline: none;
+	color: var(--content);
+	cursor: pointer;
+	height: 36px;
+	font: inherit;
+	margin-right: 8px;
+	float: left;
+	padding: 0 9px;
+}

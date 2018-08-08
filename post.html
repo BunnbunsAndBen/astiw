@@ -214,7 +214,7 @@
 					img.style.maxWidth = '100%';
 					var tmp = r.responseText.split('');
 					tmp = tmp[0] + tmp[1] + tmp[2] + tmp[3] + tmp[4];
-					if (tmp == 'data:') {
+					if (tmp == 'data:' && localStorage.getItem('astiw_docache') != 'true') {
 						localStorage.setItem('astiw_cache' + imgId, r.responseText);
 					}
 					document.getElementById('imgThing').removeChild(document.getElementById('loader3'));

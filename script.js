@@ -1,5 +1,5 @@
 var modal;
-var modal2;
+// var modal2;
 
 window.onload = function() {
 	colors();
@@ -21,7 +21,7 @@ window.onload = function() {
 		importantLoad();
 	}
 	modal = document.getElementById('usermenubox');
-	modal2 = document.getElementById('menubox');
+	// modal2 = document.getElementById('menubox');
 	var sesses = localStorage.getItem('astiw_sesses');
 	var usernames = localStorage.getItem('astiw_usernames');
 	if (isSet(sesses)) {
@@ -55,11 +55,6 @@ function colors() {
 	if (isSet(theme)) {
 		link.href = theme;
 	}
-};
-
-function chtheme(s) {
-	localStorage.setItem('astiw_theme', s + '.css');
-	colors();
 };
 
 function notLoggedIn() {
@@ -109,35 +104,13 @@ function closeUserMenu() {
 	modal.style.display = 'none';
 };
 
-function openMenu() {
-	checkSettings();
-	modal2.style.display = 'initial';
-};
-
-function checkSettings() {
-	var dir = localStorage.getItem('astiw_dir') == 'true';
-	var roi = localStorage.getItem('astiw_roi') == 'true';
-	document.getElementById('toggleDir').innerHTML = (dir ? 'Default comment order: Oldest first' : 'Default comment order: Newest first');
-	document.getElementById('toggleROI').innerHTML = (roi ? 'Requests on intervals: OFF' : 'Requests on intervals: ON');
-};
-
-function toggleSetting(setting) {
-	var bool = localStorage.getItem('astiw_' + setting) == 'true';
-	localStorage.setItem('astiw_' + setting, (!bool).toString());
-	checkSettings();
-};
-
-function closeMenu() {
-	modal2.style.display = 'none';
-};
-
 window.onclick = function(event) {
 	if (event.target == modal) {
 		modal.style.display = 'none';
 	}
-	if (event.target == modal2) {
+	/* if (event.target == modal2) {
 		modal2.style.display = 'none';
-	}
+	} */
 };
 
 function switchUser(n) {
@@ -152,13 +125,6 @@ function switchUser(n) {
 	localStorage.setItem('astiw_sesses', JSON.stringify(sesses));
 	localStorage.setItem('astiw_usernames', JSON.stringify(usernames));
 	window.location.reload();
-};
-
-function clearData() {
-	if (confirm('Are you sure you want to clear local storage? This includes all signed in accounts, cached images, and settings')) {
-		localStorage.clear();
-		window.location.href = 'index.html';
-	}
 };
 
 function getAllUrlParams(url) {
@@ -194,8 +160,4 @@ function getAllUrlParams(url) {
 		}
 	}
 	return obj;
-};
-
-function explanation() {
-	alert('Some pages send a request every 0.5 seconds to check for new content and prompt you to reload to see new content if this setting is on (technically they are timeouts not intervals now)');
 };

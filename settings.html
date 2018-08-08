@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Settings - ASTiW</title>
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="dark.css" id="themer">
+	<script src="script.js"></script>
+	<script>
+		function load() {
+			document.getElementById('rm').removeChild(document.getElementById('loader'));
+			document.getElementById('eugh').style.display = '';
+			document.getElementById('main').style.display = '';
+			checkSettings();
+		};
+		
+		function clearData() {
+			if (confirm('Are you sure you want to clear local storage? This includes all signed in accounts, cached images, and settings')) {
+				localStorage.clear();
+				window.location.href = 'index.html';
+			}
+		};
+		
+		function toggleSetting(setting) {
+			var bool = localStorage.getItem('astiw_' + setting) == 'true';
+			localStorage.setItem('astiw_' + setting, (!bool).toString());
+			checkSettings();
+		};
+		
+		function applySetting(setting) {
+			localStorage.setItem('astiw_' + setting, document.getElementById(setting).value);
+			checkSettings();
+		};
+		
+		function checkSettings() {
+			var dir = localStorage.getItem('astiw_dir') == 'true';
+			var roi = localStorage.getItem('astiw_roi') == 'true';
+			var docache = localStorage.getItem('astiw_docache') == 'true';
+			var theme = localStorage.getItem('astiw_theme');
+			if (!isSet(theme)) {
+				theme = 'dark.css';
+			}
+			document.getElementById('dir').value = dir;
+			document.getElementById('roi').innerHTML = (!roi ? '&#x2713;' : '&times;');
+			document.getElementById('roi').style.backgroundColor = (!roi ? 'var(--link)' : 'var(--tb-back)');
+			document.getElementById('docache').innerHTML = (!docache ? '&#x2713;' : '&times;');
+			document.getElementById('docache').style.backgroundColor = (!docache ? 'var(--link)' : 'var(--tb-back)');
+			document.getElementById('theme').value = theme;
+		};
+	</script>
+</head>
+<body>
+	<nav><a id="title" href="index.html">ASTiW</a><input type="search" id="search" class="txf" placeholder="Search"><a href="newpost.html" class="mi ib">+</a><a href="settings.html" class="mi">&#8943;</a><a href="javascript:openUserMenu();" id="usermenu" class="mi ib rightmost"></a><a href="register.html" class="lb" id="register">REGISTER</a><a href="login.html" class="lb rightmost">LOG IN</a></nav>
+	<div class="dbg" id="usermenubox">
+		<div class="dialog">
+			<a href="javascript:closeUserMenu();" class="closeButton">&times;</a>
+			<h3>Account menu</h3>
+			<div style="margin-top:16px;"><a class="othbut" id="userMenuProfButton">View profile</a></div>
+			<!-- <div style="margin-top:16px;"><a class="othbut" href="editprofile.html">Edit profile</a></div>
+			--><p><a class="classic" href="changepassword.html">Change password</a></p>
+			<p>Use official STiBaRC software, such as the <a href="https://stibarc.gq/" class="classic">STiBaRC website</a>, to edit your profile</p>
+			<p><a class="classic" href="mailto:herronjo110@gmail.com?subject=STiBaRC%20User%20Verification%20Request">Request user verification</a></p>
+			<h4>Switch account</h4>
+			<ul style="padding:0 0 0 20px;" id="accounts">
+			</ul>
+			<div style="margin-top:16px;"><a class="othbut" href="login.html">Add account</a></div>
+			<div style="margin-top:16px;"><a class="othbut" href="logout.html">Log out</a></div>
+			<p><a class="classic" href="register.html">Register a new account</a></p>
+		</div>
+	</div>
+	<main id="rm">
+		<h3 id="eugh" style="display:none;">Settings</h3>
+		<div class="stdc" id="main" style="display:none;">
+			<p>Settings are stored locally and only apply to this browser</p>
+			<h4>Behavior</h4>
+			<div>
+				<select id="dir" onchange="applySetting('dir');">
+					<option value="false">NEWEST FIRST</option>
+					<option value="true">OLDEST FIRST</option>
+				</select>
+				<p style="margin-bottom:9px;">Default comment order</p>
+				<p class="small">Post pages load with comments in this order</p>
+			</div>
+			<div>
+				<button class="cb" id="roi" onclick="toggleSetting('roi');">&times;</button><p style="margin-bottom:9px;">Repeating requests</p>
+				<p class="small">Home and post pages check for new content every 0.5 seconds and display a message if there is new content</p>
+			</div>
+			<div>
+				<button class="cb" id="docache" onclick="toggleSetting('docache');">&times;</button><p style="margin-bottom:9px;">Cache images</p>
+				<p class="small">Save images to your browser to not have to load them again (turning this off does not delete already cached images)</p>
+			</div>
+			<h4>Experimental</h4>
+			<div>
+				<select id="theme" onchange="applySetting('theme'); colors();">
+					<option value="dark.css">DARK (Default)</option>
+					<option value="light.css">LIGHT</option>
+					<option value="stibarc.css">STIBARC</option>
+				</select>
+				<p style="margin-bottom:9px;">Set theme</p>
+				<p class="small">Change the colors (not fully functional)</p>
+			</div>
+			<h4>Clear data</h4>
+			<p>If something isn't working correctly you can <a href="javascript:clearData();" class="classic">clear data</a>. (This will not log out your sess(es))</p>
+			<h4>About</h4>
+			<p>Created by savaka<br/>
+			Based on the <a href="https://stibarc.gq/" target="_blank" class="classic">STiBaRC website</a></p>
+			<p>ASTiW connects to the STiBaRC service; by using it you accept the STiBaRC <a href="https://stibarc.gq/privacy.html" target="_blank" class="classic">Privacy Policy</a></p>
+		</div>
+		<div class="loader" id="loader"></div>
+	</main>
+</body>
+</html>
