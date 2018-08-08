@@ -42,10 +42,10 @@
 				theme = 'dark.css';
 			}
 			document.getElementById('dir').value = dir;
-			document.getElementById('roi').innerHTML = (!roi ? '&#x2713;' : '&times;');
-			document.getElementById('roi').style.backgroundColor = (!roi ? 'var(--link)' : 'var(--tb-back)');
-			document.getElementById('docache').innerHTML = (!docache ? '&#x2713;' : '&times;');
-			document.getElementById('docache').style.backgroundColor = (!docache ? 'var(--link)' : 'var(--tb-back)');
+			document.getElementById('roi').innerHTML = (!roi ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('roi').style.backgroundColor = (!roi ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('docache').innerHTML = (!docache ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('docache').style.backgroundColor = (!docache ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('theme').value = theme;
 		};
 	</script>
@@ -83,11 +83,11 @@
 				<p class="small">Post pages load with comments in this order</p>
 			</div>
 			<div>
-				<button class="cb" id="roi" onclick="toggleSetting('roi');">&times;</button><p style="margin-bottom:9px;">Repeating requests</p>
+				<button class="cb" id="roi" onclick="toggleSetting('roi');"></button><p style="margin-bottom:9px;">Repeating requests</p>
 				<p class="small">Home and post pages check for new content every 0.5 seconds and display a message if there is new content</p>
 			</div>
 			<div>
-				<button class="cb" id="docache" onclick="toggleSetting('docache');">&times;</button><p style="margin-bottom:9px;">Cache images</p>
+				<button class="cb" id="docache" onclick="toggleSetting('docache');"></button><p style="margin-bottom:9px;">Cache images</p>
 				<p class="small">Save images to your browser to not have to load them again (turning this off does not delete already cached images)</p>
 			</div>
 			<h4>Experimental</h4>
@@ -101,7 +101,7 @@
 				<p class="small">Change the colors (not fully functional)</p>
 			</div>
 			<h4>Clear data</h4>
-			<p>If something isn't working correctly you can <a href="javascript:clearData();" class="classic">clear data</a>. (This will not log out your sess(es))</p>
+			<p>If something isn't working you can <a href="javascript:clearData();" class="classic">clear data</a>. (This will not log out your sess(es))</p>
 			<h4>About</h4>
 			<p>Created by savaka<br/>
 			Based on the <a href="https://stibarc.gq/" target="_blank" class="classic">STiBaRC website</a></p>

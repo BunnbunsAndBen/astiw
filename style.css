@@ -289,9 +289,9 @@ h3 {
 	cursor: pointer;
 	margin-right: 8px;
 	outline: none;
-	background-color: var(--tb-back);
+	background-color: var(--cb-off);
 	border-style: none;
-	color: var(--content);
+	color: var(--cb-sign);
 	font-size: 24px;
 }
 
