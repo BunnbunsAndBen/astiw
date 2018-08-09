@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Create Theme - ASTiW</title>
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="dark.css" id="themer">
+	<script src="script.js"></script>
+	<script>
+		function load() {
+			document.getElementById('rm').removeChild(document.getElementById('loader'));
+			document.getElementById('eugh').style.display = '';
+			document.getElementById('main').style.display = '';
+		};
+	</script>
+</head>
+<body>
+	<nav><a id="title" href="index.html">ASTiW</a><input type="search" id="search" class="txf" placeholder="Search"><a href="newpost.html" class="mi ib">+</a><a href="settings.html" class="mi">&#8943;</a><a href="javascript:openUserMenu();" id="usermenu" class="mi ib rightmost"></a><a href="register.html" class="lb" id="register">REGISTER</a><a href="login.html" class="lb rightmost">LOG IN</a></nav>
+	<div id="cssshade"></div>
+	<div class="dbg" id="usermenubox">
+		<div class="dialog">
+			<a href="javascript:closeUserMenu();" class="closeButton">&times;</a>
+			<h3>Account menu</h3>
+			<div style="margin-top:16px;"><a class="othbut" id="userMenuProfButton">View profile</a></div>
+			<!-- <div style="margin-top:16px;"><a class="othbut" href="editprofile.html">Edit profile</a></div>
+			--><p><a class="classic" href="changepassword.html">Change password</a></p>
+			<p>Use official STiBaRC software, such as the <a href="https://stibarc.gq/" class="classic">STiBaRC website</a>, to edit your profile</p>
+			<p><a class="classic" href="mailto:herronjo110@gmail.com?subject=STiBaRC%20User%20Verification%20Request">Request user verification</a></p>
+			<h4>Switch account</h4>
+			<ul style="padding:0 0 0 20px;" id="accounts">
+			</ul>
+			<div style="margin-top:16px;"><a class="othbut" href="login.html">Add account</a></div>
+			<div style="margin-top:16px;"><a class="othbut" href="logout.html">Log out</a></div>
+			<p><a class="classic" href="register.html">Register a new account</a></p>
+		</div>
+	</div>
+	<main id="rm">
+		<h3 id="eugh" style="display:none;">Create theme</h3>
+		<div class="stdc" id="main" style="display:none;">
+			<p>Write colors as you would in CSS</p>
+			<p class="tfl">Background</p>
+			<p class="small">The background that everything is on top of</p>
+			<input type="text" id="input-bg" class="txf" placeholder="Color" style="display:block; margin-bottom:16px;">
+			<p class="tfl">Content</p>
+			<p class="small">Most text, borders of buttons, background of major buttons, loading spinner</p>
+			<input type="text" id="input-content" class="txf" placeholder="Color" style="display:block; margin-bottom:16px;">
+			<p class="tfl">Background of content</p>
+			<p class="small">Background of content boxes, text of major buttons</p>
+			<input type="text" id="input-content-bg" class="txf" placeholder="Color" style="display:block; margin-bottom:16px;">
+			<p class="tfl">Background of navigation bar</p>
+			<p class="small">Background of the navigation bar, likely to be the same as "background of content"</p>
+			<input type="text" id="input-header-bg" class="txf" placeholder="Color" style="display:block; margin-bottom:16px;">
+			<p class="tfl">Border</p>
+			<p class="small">Borders, minor text (like this), text indicating something doesn't exist (ex. "No comments")</p>
+			<input type="text" id="input-border" class="txf" placeholder="Color" style="display:block; margin-bottom:16px;">
+			<p class="tfl">Rollover</p>
+			<p class="small">Many clickable things when the mouse pointer is over them, displayed instead of "background of content," likely to be "background of content" with lightness adjusted</p>
+			<input type="text" id="input-rollover" class="txf" placeholder="Color" style="display:block; margin-bottom:16px;">
+			<p class="tfl">Alternate rollover</p>
+			<p class="small">Major buttons when the mouse pointer is over them, displayed instead of "content," likely to be "content" with lightness adjusted</p>
+			<input type="text" id="input-other-rollover" class="txf" placeholder="Color" style="display:block; margin-bottom:16px;">
+			<p class="tfl">Text box background</p>
+			<p class="small">Background of text input boxes</p>
+			<input type="text" id="input-tb-back" class="txf" placeholder="Color" style="display:block; margin-bottom:16px;">
+			<p class="tfl">Text box active border</p>
+			<p class="small">Border of text boxes when focused or when the mouse pointer is over them</p>
+			<input type="text" id="input-tb-rollover-border" class="txf" placeholder="Color" style="display:block; margin-bottom:16px;">
+			<p class="tfl">Text box hint</p>
+			<p class="small">Text box placeholder text, should be "content" with lightness adjusted</p>
+			<input type="text" id="input-tb-hint" class="txf" placeholder="Color" style="display:block; margin-bottom:16px;">
+			<p class="tfl">Links and accent</p>
+			<p class="small">Text links, refresh button, checkboxes when checked, and potentially more "accent" color</p>
+			<input type="text" id="input-link" class="txf" placeholder="Color" style="display:block; margin-bottom:16px;">
+			<p class="tfl">Opposing "links and accent" color</p>
+			<p class="small">Color for content on a background of "links and accent" color</p><!-- also cb-sign -->
+			<input type="text" id="input-opposing" class="txf" placeholder="Color" style="display:block; margin-bottom:16px;">
+			<p class="tfl">Verified</p>
+			<p class="small">Verification check mark sign, should be a green color</p>
+			<input type="text" id="input-verified" class="txf" placeholder="Color" style="display:block; margin-bottom:16px;">
+			<p class="tfl">Current username</p>
+			<p class="small">Text links of the current user's username</p>
+			<input type="text" id="input-you" class="txf" placeholder="Color" style="display:block; margin-bottom:16px;">
+			<p class="tfl">Unchecked checkbox</p>
+			<p class="small">Background of an unchecked checkbox</p>
+			<input type="text" id="input-cb-off" class="txf" placeholder="Color" style="display:block; margin-bottom:16px;">
+		</div>
+		<div class="loader" id="loader"></div>
+	</main>
+</body>
+</html>

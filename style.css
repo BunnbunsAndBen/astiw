@@ -1,3 +1,13 @@
+#cssshade {
+	position: fixed;
+	height: 100%;
+	width: 100%;
+	background-color: black;
+	z-index: 999;
+	left: 0;
+	top: 0;
+}
+
 body {
 	font-family: Roboto, sans-serif;
 	color: var(--content);
@@ -155,7 +165,7 @@ textarea {
 	height: 100%;
 	width: 100%;
 	display: none;
-	background-color: var(--bg);
+	background-color: black;
 	background-color: rgba(0,0,0,0.5);
 	z-index: 1;
 	left: 0;

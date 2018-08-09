@@ -52,6 +52,7 @@
 </head>
 <body>
 	<nav><a id="title" href="index.html">ASTiW</a><input type="search" id="search" class="txf" placeholder="Search"><a href="newpost.html" class="mi ib">+</a><a href="settings.html" class="mi">&#8943;</a><a href="javascript:openUserMenu();" id="usermenu" class="mi ib rightmost"></a><a href="register.html" class="lb" id="register">REGISTER</a><a href="login.html" class="lb rightmost">LOG IN</a></nav>
+	<div id="cssshade"></div>
 	<div class="dbg" id="usermenubox">
 		<div class="dialog">
 			<a href="javascript:closeUserMenu();" class="closeButton">&times;</a>
@@ -73,6 +74,19 @@
 		<h3 id="eugh" style="display:none;">Settings</h3>
 		<div class="stdc" id="main" style="display:none;">
 			<p>Settings are stored locally and only apply to this browser</p>
+			<h4>Theme</h4>
+			<div>
+				<select id="theme" onchange="applySetting('theme'); colors();">
+					<option value="dark.css">DARK (Default)</option>
+					<option value="light.css">LIGHT</option>
+					<option value="stibarc.css">STIBARC</option>
+					<option value="custom">CUSTOM</option>
+				</select>
+				<p style="margin-bottom:9px;">Set theme</p>
+				<p class="small">Change the colors of ASTiW</p>
+				<p style="margin-bottom:9px;"><a href="theme.html" class="classic">Create custom theme</a></p>
+				<p class="small">Create a custom theme to apply or share with other users</p>
+			</div>
 			<h4>Behavior</h4>
 			<div>
 				<select id="dir" onchange="applySetting('dir');">
@@ -90,18 +104,11 @@
 				<button class="cb" id="docache" onclick="toggleSetting('docache');"></button><p style="margin-bottom:9px;">Cache images</p>
 				<p class="small">Save images to your browser to not have to load them again (turning this off does not delete already cached images)</p>
 			</div>
-			<h4>Experimental</h4>
-			<div>
-				<select id="theme" onchange="applySetting('theme'); colors();">
-					<option value="dark.css">DARK (Default)</option>
-					<option value="light.css">LIGHT</option>
-					<option value="stibarc.css">STIBARC</option>
-				</select>
-				<p style="margin-bottom:9px;">Set theme</p>
-				<p class="small">Change the colors (not fully functional)</p>
-			</div>
-			<h4>Clear data</h4>
-			<p>If something isn't working you can <a href="javascript:clearData();" class="classic">clear data</a>. (This will not log out your sess(es))</p>
+			<h4>Title this section</h4>
+			<p style="margin-bottom:9px;"><a href="javascript:clearData();" class="classic">Clear data</a></p>
+			<p class="small">Use this to reset ASTiW if something isn't working (This will not log out your sess(es))</p>
+			<p style="margin-bottom:9px;"><a href="https://github.com/savaka2/astiw/issues/new" class="classic" target="_blank">Submit issue</a></p>
+			<p class="small">Report a bug (or suggest a feature) as an issue on GitHub</p>
 			<h4>About</h4>
 			<p>Created by savaka<br/>
 			Based on the <a href="https://stibarc.gq/" target="_blank" class="classic">STiBaRC website</a></p>

@@ -3,6 +3,7 @@ var modal;
 
 window.onload = function() {
 	colors();
+	document.getElementById('cssshade').style.display = 'none';
 	var sb = document.getElementById('search');
 	window.addEventListener('keydown', function(e) {
 		if (e.keyCode == 27) {
@@ -53,7 +54,11 @@ function colors() {
 	var theme = localStorage.getItem('astiw_theme');
 	var link = document.getElementById('themer');
 	if (isSet(theme)) {
-		link.href = theme;
+		if (theme == 'custom') {
+			// custom theme
+		} else {
+			link.href = theme;
+		}
 	}
 };
 
