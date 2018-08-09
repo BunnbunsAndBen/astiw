@@ -318,3 +318,9 @@ select {
 	float: left;
 	padding: 0 9px;
 }
+
+#prev {
+	margin-left: 16px;
+	height: 36px;
+	width: 36px;
+}
