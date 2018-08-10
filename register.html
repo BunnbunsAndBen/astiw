@@ -123,11 +123,11 @@
 	<main id="rm">
 		<h3 id="eugh" style="display:none;">Register a STiBaRC account</h3>
 		<div class="stdc" style="display:none;" id="main">
-			<p class="tfl">Username <span style="color:red;">*</span></p>
+			<p class="tfl">Username <span style="color:var(--red);">*</span></p>
 			<input type="text" id="username" class="txf" placeholder="Username (no spaces)" style="display:block; margin-bottom:16px;">
-			<p class="tfl">Password <span style="color:red;">*</span></p>
+			<p class="tfl">Password <span style="color:var(--red);">*</span></p>
 			<input type="password" id="password" class="txf" placeholder="Password" style="display:block; margin-bottom:16px;">
-			<p class="tfl">Confirm password <span style="color:red;">*</span></p>
+			<p class="tfl">Confirm password <span style="color:var(--red);">*</span></p>
 			<input type="password" id="confirmpassword" class="txf" placeholder="Confirm password" style="display:block; margin-bottom:16px;">
 			<p class="tfl">Name</p>
 			<div style="display:block; margin-bottom:10px;"><input type="text" id="name" class="txf" placeholder="Name" style="margin-right:16px; margin-bottom:6px;"><button id="showname" class="othbut" onclick="toggleShow('name');" style="margin-bottom:6px;">Private</button></div>
@@ -138,10 +138,10 @@
 			<p>By registering a STiBaRC account you accept the STiBaRC <a href="https://stibarc.gq/privacy.html" target="_blank" class="classic">Privacy Policy</a></p>
 			<p>After registering you will be directed to the login page to log in to your account</p>
 			<div id="contain"><button id="registerButton" onclick="register();" class="libut" style="display:block; margin-bottom:16px;">REGISTER</button></div>
-			<p class="small" style="color:red; display:none;" id="bad">Registration failed</p>
-			<p class="small" style="color:red; display:none;" id="empty">Please enter a username and password</p>
-			<p class="small" style="color:red; display:none;" id="mismatch">Passwords do not match</p>
-			<p class="small" style="color:red; display:none;" id="spaces">Username may not contain spaces</p>
+			<p class="small" style="color:var(--red); display:none;" id="bad">Registration failed</p>
+			<p class="small" style="color:var(--red); display:none;" id="empty">Please enter a username and password</p>
+			<p class="small" style="color:var(--red); display:none;" id="mismatch">Passwords do not match</p>
+			<p class="small" style="color:var(--red); display:none;" id="spaces">Username may not contain spaces</p>
 			<p>Already have a STiBaRC account? <a href="login.html" class="classic">Log in!</a></p>
 		</div>
 		<div class="loader" id="loader2"></div>

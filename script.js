@@ -1,3 +1,4 @@
+var themeprops = ['bg', 'content', 'content-bg', 'header-bg', 'border', 'rollover', 'other-rollover', 'tb-back', 'tb-rollover-border', 'tb-hint', 'link', 'opposing', 'verified', 'you', 'cb-off', 'red'];
 var modal;
 // var modal2;
 
@@ -55,10 +56,22 @@ function colors() {
 	var link = document.getElementById('themer');
 	if (isSet(theme)) {
 		if (theme == 'custom') {
-			// custom theme
+			var customTheme = localStorage.getItem('astiw_customtheme');
+			if (isSet(customTheme)) {
+				act(customTheme);
+			} else {
+				link.href = 'dark.css';
+			}
 		} else {
 			link.href = theme;
 		}
+	}
+};
+
+function act(string) {
+	var obj = getAllUrlParams('?' + string);
+	for (i = 0; i < themeprops.length; i++) {
+		document.body.style.setProperty('--' + themeprops[i], decodeURIComponent(obj[themeprops[i]]));
 	}
 };
 

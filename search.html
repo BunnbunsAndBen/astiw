@@ -27,7 +27,7 @@
 		};
 		
 		function importantLoad() {
-			term = decodeURIComponent(getAllUrlParams(window.location.href).q);
+			term = decodeURIComponent(getAllUrlParams().q);
 			document.getElementById('search').value = term;
 			document.title = '"' + term + '" - Search Results - ASTiW';
 		};
