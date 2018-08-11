@@ -84,18 +84,19 @@
 	<div class="dbg" id="usermenubox">
 		<div class="dialog">
 			<a href="javascript:closeUserMenu();" class="closeButton">&times;</a>
-			<h3>Account menu</h3>
-			<div style="margin-top:16px;"><a class="othbut" id="userMenuProfButton">View profile</a></div>
-			<!-- <div style="margin-top:16px;"><a class="othbut" href="editprofile.html">Edit profile</a></div>
-			--><p><a class="classic" href="changepassword.html">Change password</a></p>
-			<p>Use official STiBaRC software, such as the <a href="https://stibarc.gq/" class="classic">STiBaRC website</a>, to edit your profile</p>
-			<p><a class="classic" href="mailto:herronjo110@gmail.com?subject=STiBaRC%20User%20Verification%20Request">Request user verification</a></p>
-			<h4>Switch account</h4>
-			<ul style="padding:0 0 0 20px;" id="accounts">
-			</ul>
-			<div style="margin-top:16px;"><a class="othbut" href="login.html">Add account</a></div>
-			<div style="margin-top:16px;"><a class="othbut" href="logout.html">Log out</a></div>
-			<p><a class="classic" href="register.html">Register a new account</a></p>
+			<h3 id="currentUserName"></h3>
+			<div style="margin-top:16px;"><a class="othbut" id="userMenuProfButton" style="margin-right:8px;">View profile</a><a class="othbut" href="editprofile.html">Edit profile</a></div>
+			<p style="margin:8px 0;"><a class="classic" href="changepassword.html">Change password</a></p>
+			<p style="margin:8px 0;"><a class="classic" href="mailto:herronjo110@gmail.com?subject=STiBaRC%20User%20Verification%20Request">Request user verification</a></p>
+			<hr style="margin:20px 0;">
+			<div id="accountSwitcher" style="display:none;">
+				<h4 style="margin-top:20px;">Switch account</h4>
+				<ul style="padding:0 0 0 20px;" id="accounts">
+				</ul>
+				<hr style="margin:20px 0;">
+			</div>
+			<div style="margin-top:16px;"><a class="othbut" href="login.html" style="margin-right:8px;">Add account</a><a class="othbut" href="logout.html">Log out</a></div>
+			<p style="margin:8px 0;"><a class="classic" href="register.html">Register a new account</a></p>
 		</div>
 	</div>
 	<main id="rm">

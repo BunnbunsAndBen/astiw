@@ -294,8 +294,8 @@ h3 {
 .cb {
 	float: left;
 	border-radius: 4px;
-	height: 36px;
-	width: 36px;
+	height: 38px;
+	width: 38px;
 	cursor: pointer;
 	margin-right: 8px;
 	outline: none;
@@ -312,7 +312,7 @@ select {
 	outline: none;
 	color: var(--content);
 	cursor: pointer;
-	height: 36px;
+	height: 38px;
 	font: inherit;
 	margin-right: 8px;
 	float: left;
@@ -331,4 +331,17 @@ select {
 .e {
 	display: inline-block;
 	margin-right: 16px;
+}
+
+hr {
+	border-width: 1px 0px 0px 0px;
+	border-color: var(--border);
+	border-style: solid;
+}
+
+.whateverthisis {
+	display: inline-block;
+	height: 38px;
+	margin: 0;
+	line-height: 38px;
 }

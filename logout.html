@@ -8,7 +8,7 @@
 	<link rel="stylesheet" href="dark.css" id="themer">
 	<script src="script.js"></script>
 	<script>
-		window.onload = function() {colors();};
+		window.onload = function() {colors(); document.getElementById('cssshade').style.display = 'none';};
 		var sesses = JSON.parse(localStorage.getItem('astiw_sesses'));
 		var jsonurl = 'https://api.stibarc.gq/logout.sjs';
 		var r = new XMLHttpRequest();

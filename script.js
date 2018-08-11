@@ -105,11 +105,13 @@ function checkSess(sess) {
 
 function openUserMenu() {
 	var accounts = document.getElementById('accounts');
+	var me = document.getElementById('currentUserName');
 	var usernames = JSON.parse(localStorage.getItem('astiw_usernames'));
 	document.getElementById('userMenuProfButton').href = 'user.html?id=' + encodeURIComponent(usernames[0]);
-	accounts.innerHTML = '<li><b>' + usernames[0] + '</b></li>';
+	me.innerHTML = usernames[0];
 	var oof;
 	for (i = 1; i < usernames.length; i++) {
+		document.getElementById('accountSwitcher').style.display = '';
 		oof = document.createElement('li');
 		oof.innerHTML = '<a class="classic" href="javascript:switchUser(' + i.toString() + ')">' + usernames[i] + '</a>';
 		oof.style.marginTop = '0.5em';
