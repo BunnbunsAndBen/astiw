@@ -28,7 +28,7 @@
 			var list = inp.split(/( |<br\/>)/g);
 			var temp;
 			var tempName;
-			var currentUser = JSON.parse(localStorage.getItem('astiw_usernames'))[0];
+			var currentUser = '';
 			for (j = 0; j < list.length; j++) {
 				if (list[j].substring(0,7) == 'http://' || list[j].substring(0,8) == 'https://') {
 					temp = list[j];
@@ -58,7 +58,7 @@
 				stuf = JSON.parse(r.responseText);
 				document.getElementById('nameThing').innerHTML = stuf.title.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 				document.title = stuf.title + ' - ASTiW';
-				var currentUser = JSON.parse(localStorage.getItem('astiw_usernames'))[0];
+				var currentUser = getCurrentUser();
 				document.getElementById('metaThing').innerHTML = 'Posted by <a class="classic" ' + (stuf.poster == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(stuf.poster) + '">' + stuf.poster + '</a><span id="verified"> &#x2611;&#xFE0E;</span> at ' + stuf.postdate + (stuf.edited ? ' (edited)' : '');
 				document.getElementById('postText').innerHTML = putUserLinks(stuf.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'));
 				var jsonurlv = 'https://api.stibarc.gq/checkverify.sjs?id=' + stuf.poster;
@@ -125,7 +125,7 @@
 		
 		function placeComments() {
 			var commentsDiv = document.getElementById('comments');
-			var currentUser = JSON.parse(localStorage.getItem('astiw_usernames'))[0];
+			var currentUser = getCurrentUser();
 			commentsDiv.innerHTML = '';
 			var placable;
 			for (i = 0; i < comments.length; i++) {
@@ -281,7 +281,7 @@
 					stuf = JSON.parse(r.responseText);
 					document.getElementById('nameThing').innerHTML = stuf.title.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 					document.title = stuf.title + ' - ASTiW';
-					var currentUser = JSON.parse(localStorage.getItem('astiw_usernames'))[0];
+					var currentUser = getCurrentUser();
 					document.getElementById('metaThing').innerHTML = 'Posted by <a class="classic" ' + (stuf.poster == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(stuf.poster) + '">' + stuf.poster + '</a><span id="verified"> &#x2611;&#xFE0E;</span> at ' + stuf.postdate + (stuf.edited ? ' (edited)' : '');
 					if (holdmyverification) {
 						document.getElementById('verified').style.display = 'initial';

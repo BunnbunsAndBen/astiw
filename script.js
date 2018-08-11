@@ -51,6 +51,15 @@ window.onload = function() {
 	}
 };
 
+function getCurrentUser() {
+	var lsu = localStorage.getItem('astiw_usernames');
+	if (isSet(lsu) && JSON.parse(lsu).length > 0) {
+		return JSON.parse(lsu)[0];
+	} else {
+		return '';
+	}
+};
+
 function colors() {
 	var theme = localStorage.getItem('astiw_theme');
 	var link = document.getElementById('themer');

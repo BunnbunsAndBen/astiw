@@ -15,7 +15,8 @@
 			var username = document.getElementById('username').value;
 			var password = document.getElementById('password').value;
 			if (isSet(username) && isSet(password)) {
-				if (JSON.parse(localStorage.getItem('astiw_usernames')).indexOf(username) == -1) {
+				var tthtdwun = localStorage.getItem('astiw_usernames');
+				if (!isSet(tthtdwun) || JSON.parse(tthtdwun).indexOf(username) == -1) {
 					document.getElementById('login').style.display = 'none';
 					document.getElementById('username').disabled = true;
 					document.getElementById('password').disabled = true;
