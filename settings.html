@@ -49,6 +49,10 @@
 			if (!isSet(theme)) {
 				theme = 'dark.css';
 			}
+			var customtheme = localStorage.getItem('astiw_customtheme');
+			if (!isSet(customtheme)) {
+				customtheme = '';
+			}
 			document.getElementById('dir').value = dir;
 			document.getElementById('roi').innerHTML = (!roi ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('roi').style.backgroundColor = (!roi ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
@@ -63,6 +67,7 @@
 			document.getElementById('notifyMentions').innerHTML = (!notifyMentions ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('notifyMentions').style.backgroundColor = (!notifyMentions ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('theme').value = theme;
+			document.getElementById('customtheme').value = customtheme;
 			if (!roi) {
 				setCbAbility('notifs', true);
 				if (!notifs) {
@@ -96,7 +101,7 @@
 		<div class="dialog">
 			<a href="javascript:closeUserMenu();" class="closeButton">&times;</a>
 			<h3 id="currentUserName"></h3>
-			<div style="margin-top:16px;"><a class="othbut" id="userMenuProfButton" style="margin-right:8px;">View profile</a><a class="othbut" href="editprofile.html">Edit profile</a></div>
+			<div style="margin-top:16px;"><a class="othbut" id="userMenuProfButton" style="margin-right:8px;">View profile</a><a class="othbut" href="javascript:editProfile();">Edit profile</a></div>
 			<p style="margin:8px 0;"><a class="classic" href="changepassword.html">Change password</a></p>
 			<p style="margin:8px 0;"><a class="classic" href="mailto:herronjo110@gmail.com?subject=STiBaRC%20User%20Verification%20Request">Request user verification</a></p>
 			<hr style="margin:20px 0;">
@@ -137,12 +142,15 @@
 					<option value="dark.css">Dark</option>
 					<option value="light.css">Light</option>
 					<option value="stibarc.css">STiBaRC</option>
-					<!-- <option value="custom">Custom</option> -->
+					<option value="custom">Custom (from URL)</option>
 				</select>
 				<p style="margin-bottom:9px;">Set theme</p>
 				<p class="small">Change the colors of ASTiW</p>
-				<!-- <p style="margin-bottom:9px;"><a href="createtheme.html" class="classic">Create theme</a></p>
-				<p class="small">Create a custom theme to apply or share with other users</p> -->
+				<p style="margin-bottom:9px;">Custom theme</p>
+				<p class="small">Paste a URL of a custom theme (you must also choose "Custom" from the "Set theme" dropdown)</p>
+				<input type="text" id="customtheme" class="txf" onchange="applySetting('customtheme'); colors();" placeholder="Custom theme URL" style="display:block; margin-bottom:16px;">
+				<p style="margin-bottom:9px;"><a href="https://github.com/savaka2/astiw/wiki/Theme-Documentation" target="_blank" class="classic">Documentation</a></p>
+				<p class="small">Learn how to create a custom theme</p>
 			</div>
 			<h4>Behavior</h4>
 			<div>

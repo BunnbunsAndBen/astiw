@@ -320,15 +320,6 @@ select {
 	padding: 0 9px;
 }
 
-.prev {	
-	height: 36px;
-	width: 36px;
-	border: 1px solid var(--border);
-	vertical-align: top;
-	border-radius: 4px;
-	display: inline-block;
-}
-
 .e {
 	display: inline-block;
 	margin-right: 16px;

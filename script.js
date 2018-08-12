@@ -1,4 +1,3 @@
-var themeprops = ['bg', 'content', 'content-bg', 'header-bg', 'border', 'rollover', 'other-rollover', 'tb-back', 'tb-rollover-border', 'tb-hint', 'link', 'opposing', 'verified', 'you', 'cb-off', 'red'];
 var modal;
 // var modal2;
 
@@ -60,6 +59,27 @@ function getCurrentUser() {
 	}
 };
 
+function putLinksInText(inp, hash) {
+	var list = inp.split(/( |<br\/>)/g);
+	var temp;
+	var tempName;
+	var currentUser = getCurrentUser();
+	for (j = 0; j < list.length; j++) {
+		if (list[j].substring(0,7) == 'http://' || list[j].substring(0,8) == 'https://') {
+			temp = list[j];
+			list[j] = '<a class="classic" target="_blank" href="' + encodeURI(temp) + '">' + temp + '</a>';
+		} else if (list[j][0] == '@' && list[j].length >= 2) {
+			temp = list[j];
+			tempName = list[j].substring(1);
+			list[j] = '<a class="classic" ' + (tempName == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(tempName) + '">' + temp + '</a>';
+		} else if (hash && list[j][0] == '#' && list[j].length >= 2) {
+			temp = list[j];
+			list[j] = '<a class="classic" href="search.html?q=' + encodeURIComponent(temp) + '">' + temp + '</a>';
+		}
+	}
+	return list.join('');
+};
+
 function colors() {
 	var theme = localStorage.getItem('astiw_theme');
 	var link = document.getElementById('themer');
@@ -67,20 +87,13 @@ function colors() {
 		if (theme == 'custom') {
 			var customTheme = localStorage.getItem('astiw_customtheme');
 			if (isSet(customTheme)) {
-				act(customTheme);
+				link.href = customTheme;
 			} else {
 				link.href = 'dark.css';
 			}
 		} else {
 			link.href = theme;
 		}
-	}
-};
-
-function act(string) {
-	var obj = getAllUrlParams('?' + string);
-	for (i = 0; i < themeprops.length; i++) {
-		document.body.style.setProperty('--' + themeprops[i], decodeURIComponent(obj[themeprops[i]]));
 	}
 };
 
@@ -295,5 +308,11 @@ function checknotifs() {
 		} else {
 			setTimeout(checknotifs, 500);
 		}
+	}
+};
+
+function editProfile() {
+	if (confirm('This feature is not yet available on ASTiW. Open the STiBaRC website?')) {
+		window.open('https://stibarc.gq/', '_blank')
 	}
 };
