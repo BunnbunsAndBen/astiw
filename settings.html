@@ -9,10 +9,10 @@
 	<script src="script.js"></script>
 	<script>
 		function load() {
+			checkSettings();
 			document.getElementById('rm').removeChild(document.getElementById('loader'));
 			document.getElementById('eugh').style.display = '';
 			document.getElementById('main').style.display = '';
-			checkSettings();
 		};
 		
 		function clearData() {
