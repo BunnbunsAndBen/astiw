@@ -19,7 +19,7 @@
 			usernames.splice(0, 1);
 			localStorage.setItem('astiw_sesses', JSON.stringify(sesses));
 			localStorage.setItem('astiw_usernames', JSON.stringify(usernames));
-			window.location.href = 'index.html';
+			window.location.replace('index.html');
 		});
 		r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
 		r.open('post', jsonurl, true);

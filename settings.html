@@ -8,7 +8,10 @@
 	<link rel="stylesheet" href="dark.css" id="themer">
 	<script src="script.js"></script>
 	<script>
+		var loggedin;
+		
 		function load() {
+			loggedin = isSet(localStorage.getItem('astiw_sesses')) && JSON.parse(localStorage.getItem('astiw_sesses')).length > 0;
 			checkSettings();
 			document.getElementById('rm').removeChild(document.getElementById('loader'));
 			document.getElementById('eugh').style.display = '';
@@ -37,6 +40,11 @@
 			var dir = localStorage.getItem('astiw_dir') == 'true';
 			var roi = localStorage.getItem('astiw_roi') == 'true';
 			var docache = localStorage.getItem('astiw_docache') == 'true';
+			var notifs = localStorage.getItem('astiw_notifs') == 'true';
+			var notifyPosts = localStorage.getItem('astiw_notifyPosts') == 'true';
+			var notifyComms = localStorage.getItem('astiw_notifyComms') == 'true';
+			var notifyMentions = localStorage.getItem('astiw_notifyMentions') == 'true';
+			var docache = localStorage.getItem('astiw_docache') == 'true';
 			var theme = localStorage.getItem('astiw_theme');
 			if (!isSet(theme)) {
 				theme = 'dark.css';
@@ -46,7 +54,38 @@
 			document.getElementById('roi').style.backgroundColor = (!roi ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('docache').innerHTML = (!docache ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('docache').style.backgroundColor = (!docache ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('notifs').innerHTML = (!notifs ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('notifs').style.backgroundColor = (!notifs ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('notifyPosts').innerHTML = (notifyPosts ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('notifyPosts').style.backgroundColor = (notifyPosts ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('notifyComms').innerHTML = (!notifyComms ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('notifyComms').style.backgroundColor = (!notifyComms ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('notifyMentions').innerHTML = (!notifyMentions ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('notifyMentions').style.backgroundColor = (!notifyMentions ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('theme').value = theme;
+			if (!roi) {
+				setCbAbility('notifs', true);
+				if (!notifs) {
+					setCbAbility('notifyPosts', true);
+					setCbAbility('notifyComms', loggedin);
+					setCbAbility('notifyMentions', loggedin);
+				} else {
+					setCbAbility('notifyPosts', false);
+					setCbAbility('notifyComms', false);
+					setCbAbility('notifyMentions', false);
+				}
+			} else {
+				setCbAbility('notifs', false);
+				setCbAbility('notifyPosts', false);
+				setCbAbility('notifyComms', false);
+				setCbAbility('notifyMentions', false);
+			}
+		};
+		
+		function setCbAbility(id, bool) {
+			var cbiq = document.getElementById(id)
+			cbiq.disabled = !bool;
+			cbiq.parentNode.style.opacity = (bool ? 1 : 0.5)
 		};
 	</script>
 </head>
@@ -75,6 +114,23 @@
 		<h3 id="eugh" style="display:none;">Settings</h3>
 		<div class="stdc" id="main" style="display:none;">
 			<p>Settings are stored locally and only apply to this browser</p>
+			<h4>Notifications</h4>
+			<div>
+				<button class="cb" id="notifs" onclick="toggleSetting('notifs');"></button><p style="margin-bottom:9px;">Push notifications</p>
+				<p class="small">Check for and receive web notifications (requires "Repeating requests" enabled) (changes require a reload to take effect)</p>
+			</div>
+			<div>
+				<button class="cb" id="notifyPosts" onclick="toggleSetting('notifyPosts');"></button><p style="margin-bottom:9px;">New posts</p>
+				<p class="small">Receive notifications for all new posts</p>
+			</div>
+			<div>
+				<button class="cb" id="notifyComms" onclick="toggleSetting('notifyComms');"></button><p style="margin-bottom:9px;">Comments on your posts</p>
+				<p class="small">Receive notifications for comments on your posts (if logged in)</p>
+			</div>
+			<div>
+				<button class="cb" id="notifyMentions" onclick="toggleSetting('notifyMentions');"></button><p style="margin-bottom:9px;">Mentions (@username)</p>
+				<p class="small">Receive notifications for mentions (if logged in)</p>
+			</div>
 			<h4>Theme</h4>
 			<div>
 				<select id="theme" onchange="applySetting('theme'); colors();">
@@ -99,13 +155,13 @@
 			</div>
 			<div>
 				<button class="cb" id="roi" onclick="toggleSetting('roi');"></button><p style="margin-bottom:9px;">Repeating requests</p>
-				<p class="small">Home and post pages check for new content every 0.5 seconds and display a message if there is new content</p>
+				<p class="small">Check for notifications and/or new content every 0.5 seconds (changes require a reload to take effect)</p>
 			</div>
 			<div>
 				<button class="cb" id="docache" onclick="toggleSetting('docache');"></button><p style="margin-bottom:9px;">Cache images</p>
 				<p class="small">Save images to your browser to not have to load them again (turning this off does not delete already cached images)</p>
 			</div>
-			<h4>Title this section</h4>
+			<h4>Troubleshooting</h4>
 			<p style="margin-bottom:9px;"><a href="javascript:clearData();" class="classic">Clear data</a></p>
 			<p class="small">Use this to reset ASTiW if something isn't working (This will not log out your sess(es))</p>
 			<p style="margin-bottom:9px;"><a href="https://github.com/savaka2/astiw/issues/new" class="classic" target="_blank">Submit issue</a></p>

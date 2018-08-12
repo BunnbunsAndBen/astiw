@@ -9,7 +9,7 @@ window.onload = function() {
 	window.addEventListener('keydown', function(e) {
 		if (e.keyCode == 27) {
 			closeUserMenu();
-			closeMenu();
+			// closeMenu();
 		}
 	});
 	sb.addEventListener('keydown', function(e) {
@@ -89,6 +89,7 @@ function notLoggedIn() {
 	for (i = 0; i < lbs.length; i++) {
 		lbs[i].style.display = 'initial';
 	}
+	startnotifs();
 	load();
 };
 
@@ -104,6 +105,7 @@ function checkSess(sess) {
 			localStorage.removeItem('astiw_usernames');
 			window.location.reload();
 		} else {
+			startnotifs();
 			load();
 		}
 	});
@@ -189,4 +191,97 @@ function getAllUrlParams(url) {
 		}
 	}
 	return obj;
+};
+
+function startnotifs() {
+	if (localStorage.getItem('astiw_notifs') != 'true') {
+		if (Notification.permission = 'default') {
+			Notification.requestPermission();
+		}
+		checknotifs();
+	}
+};
+
+var notifs1;
+var notifs2;
+
+function checknotifs() {
+	if (Notification.permission = 'granted') {
+		notifs1 = localStorage.getItem('astiw_notifyPosts') == 'true';
+		loggedin = isSet(localStorage.getItem('astiw_sesses')) && JSON.parse(localStorage.getItem('astiw_sesses')).length > 0;
+		notifs2 = loggedin && (localStorage.getItem('astiw_notifyComms') != 'true' || localStorage.getItem('astiw_notifyMentions') != 'true');
+		if (notifs1) {
+			var jsonurl = 'https://api.stibarc.gq/getnotifs.sjs';
+			var r = new XMLHttpRequest();
+			r.addEventListener('load', function() {
+				if (r.responseText != 'None\n') {
+					var tmp = r.responseText.split('\n');
+					var lastnotifid = localStorage.getItem('astiw_lastnotifid');
+					if (!isSet(lastnotifid)) {
+						lastnotifid = -1;
+					}
+					if (tmp[0] != lastnotifid) {
+						var ntext = '';
+						for (k = 1; k < tmp.length - 2; k++) {
+							ntext += tmp[k] + (k < tmp.length - 3 ? '\n' : '');
+						}
+						if (isSet(ntext)) {
+							localStorage.setItem('astiw_lastnotifid', tmp[0]);
+							var ftnotif = new Notification('New post', {body: ntext});
+							ftnotif.onclick = function(e) {
+								ftnotif.close();
+								var postID = tmp[tmp.length - 2];
+								window.location.href = 'post.html?id=' + postID;
+							}
+						}
+					}
+				}
+				if (notifs2) {
+					r2.send();
+				} else {
+					setTimeout(checknotifs, 500);
+				}
+			});
+			r.addEventListener('error', function() {});
+			r.open('get', jsonurl, true);
+		}
+		if (notifs2) {
+			var jsonurl2 = 'https://api.stibarc.gq/getusernotifs.sjs?id=' + JSON.parse(localStorage.getItem('astiw_usernames'))[0];
+			var r2 = new XMLHttpRequest();
+			r2.addEventListener('load', function() {
+				if (r2.responseText != 'None\n') {
+					var tmp = r2.responseText.split('\n');
+					var lastnotifid = localStorage.getItem('astiw_lastusernotifid');
+					if (!isSet(lastnotifid)) {
+						lastnotifid = -1;
+					}
+					if (tmp[0] != lastnotifid) {
+						var ntext = '';
+						for (k = 2; k < tmp.length - 2; k++) {
+							ntext += tmp[k] + (k < tmp.length - 3 ? '\n' : '');
+						}
+						localStorage.setItem('astiw_lastusernotifid', tmp[0].concat(tmp[tmp.length - 2]));
+						if (isSet(ntext)) {
+							var ftnotif = new Notification(tmp[1], {body: ntext});
+							ftnotif.onclick = function(e) {
+								ftnotif.close();
+								var postID = tmp[tmp.length - 2];
+								window.location.href = 'post.html?id=' + postID;
+							}
+						}
+					}
+				}
+				setTimeout(checknotifs, 500);
+			});
+			r2.addEventListener('error', function() {});
+			r2.open('get', jsonurl2, true);
+		}
+		if (notifs1) {
+			r.send();
+		} else if (notifs2) {
+			r2.send();
+		} else {
+			setTimeout(checknotifs, 500);
+		}
+	}
 };
