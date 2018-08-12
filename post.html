@@ -42,7 +42,7 @@
 				document.title = stuf.title + ' - ASTiW';
 				var currentUser = getCurrentUser();
 				document.getElementById('metaThing').innerHTML = 'Posted by <a class="classic" ' + (stuf.poster == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(stuf.poster) + '">' + stuf.poster + '</a><span id="verified"> &#x2611;&#xFE0E;</span> at ' + stuf.postdate + (stuf.edited ? ' (edited)' : '');
-				document.getElementById('postText').innerHTML = putLinksInText(stuf.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'), true);
+				document.getElementById('postText').innerHTML = putLinksInText(stuf.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'));
 				var jsonurlv = 'https://api.stibarc.gq/checkverify.sjs?id=' + stuf.poster;
 				rv.open('get', jsonurlv, true);
 				rv.send();
@@ -113,7 +113,7 @@
 			for (i = 0; i < comments.length; i++) {
 				placable = document.createElement('div');
 				placable.style.marginTop = '16px';
-				placable.innerHTML = '<p class="small">' + '<a class="classic" ' + (comments[i][1] == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(comments[i][1]) + '">' + comments[i][1] + '</a>' + (comments[i][1] == stuf.poster ? ' (OP)' : '') + '</p><p style="margin:9px 0px;">' + putLinksInText(comments[i][0].replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'), false) + '</p>' + (loggedIn ? ('<p class="small"><a class="classic" href="javascript:reply(\'' + comments[i][1] + '\')"><b>&larr; Reply</b></a></p>') : '');
+				placable.innerHTML = '<p class="small">' + '<a class="classic" ' + (comments[i][1] == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(comments[i][1]) + '">' + comments[i][1] + '</a>' + (comments[i][1] == stuf.poster ? ' (OP)' : '') + '</p><p style="margin:9px 0px;">' + putLinksInText(comments[i][0].replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>')) + '</p>' + (loggedIn ? ('<p class="small"><a class="classic" href="javascript:reply(\'' + comments[i][1] + '\')"><b>&larr; Reply</b></a></p>') : '');
 				commentsDiv.appendChild(placable);
 			}
 		};
@@ -268,7 +268,7 @@
 					if (holdmyverification) {
 						document.getElementById('verified').style.display = 'initial';
 					}
-					document.getElementById('postText').innerHTML = putLinksInText(stuf.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'), true);
+					document.getElementById('postText').innerHTML = putLinksInText(stuf.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'));
 					document.getElementById('editLink').innerHTML = '<a class="classic" href="javascript:editPost();">&#x270E;&#xFE0E; Edit</a>';
 					document.getElementById('oof').removeChild(document.getElementById('loader4'));
 					document.getElementById('nameThing').style.display = '';

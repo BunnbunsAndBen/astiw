@@ -71,7 +71,7 @@
 						for (i = 6; i < tmp.length; i++) {
 							bio = bio + tmp[i] + (i < tmp.length - 1 ? '<br/>' : '');
 						}
-						document.getElementById('bio').innerHTML = putLinksInText(bio, false);
+						document.getElementById('bio').innerHTML = putLinksInText(bio);
 						
 					} else {
 						document.getElementById('detail').removeChild(document.getElementById('bio'));

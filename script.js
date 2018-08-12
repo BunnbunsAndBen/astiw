@@ -59,7 +59,7 @@ function getCurrentUser() {
 	}
 };
 
-function putLinksInText(inp, hash) {
+function putLinksInText(inp) {
 	var list = inp.split(/( |<br\/>)/g);
 	var temp;
 	var tempName;
@@ -72,9 +72,6 @@ function putLinksInText(inp, hash) {
 			temp = list[j];
 			tempName = list[j].substring(1);
 			list[j] = '<a class="classic" ' + (tempName == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(tempName) + '">' + temp + '</a>';
-		} else if (hash && list[j][0] == '#' && list[j].length >= 2) {
-			temp = list[j];
-			list[j] = '<a class="classic" href="search.html?q=' + encodeURIComponent(temp) + '">' + temp + '</a>';
 		}
 	}
 	return list.join('');
