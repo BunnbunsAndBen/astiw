@@ -348,7 +348,7 @@
 					setTimeout(checkNewComms, 500);
 				}
 			});
-			r.addEventListener('error', function() {});
+			r.addEventListener('error', function() {setTimeout(checkNewComms, 500);});
 			r.open('get', jsonurl, true);
 			r.send();
 		};

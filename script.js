@@ -227,11 +227,12 @@ function checknotifs() {
 						}
 						if (isSet(ntext)) {
 							localStorage.setItem('astiw_lastnotifid', tmp[0]);
+							// console.log('New post: ' + ntext);
 							var ftnotif = new Notification('New post', {body: ntext});
 							ftnotif.onclick = function(e) {
-								ftnotif.close();
+								e.preventDefault();
 								var postID = tmp[tmp.length - 2];
-								window.location.href = 'post.html?id=' + postID;
+								window.open('post.html?id=' + postID, '_blank');
 							}
 						}
 					}
@@ -242,7 +243,13 @@ function checknotifs() {
 					setTimeout(checknotifs, 500);
 				}
 			});
-			r.addEventListener('error', function() {});
+			r.addEventListener('error', function() {
+				if (notifs2) {
+					r2.send();
+				} else {
+					setTimeout(checknotifs, 500);
+				}
+			});
 			r.open('get', jsonurl, true);
 		}
 		if (notifs2) {
@@ -255,25 +262,26 @@ function checknotifs() {
 					if (!isSet(lastnotifid)) {
 						lastnotifid = -1;
 					}
-					if (tmp[0] != lastnotifid) {
+					if (tmp[0].concat(tmp[tmp.length - 2]) != lastnotifid) {
 						var ntext = '';
 						for (k = 2; k < tmp.length - 2; k++) {
 							ntext += tmp[k] + (k < tmp.length - 3 ? '\n' : '');
 						}
-						localStorage.setItem('astiw_lastusernotifid', tmp[0].concat(tmp[tmp.length - 2]));
 						if (isSet(ntext)) {
+							localStorage.setItem('astiw_lastusernotifid', tmp[0].concat(tmp[tmp.length - 2]));
+							// console.log(tmp[1] + ': ' + ntext);
 							var ftnotif = new Notification(tmp[1], {body: ntext});
 							ftnotif.onclick = function(e) {
-								ftnotif.close();
+								e.preventDefault();
 								var postID = tmp[tmp.length - 2];
-								window.location.href = 'post.html?id=' + postID;
+								window.open('post.html?id=' + postID, '_blank');
 							}
 						}
 					}
 				}
 				setTimeout(checknotifs, 500);
 			});
-			r2.addEventListener('error', function() {});
+			r2.addEventListener('error', function() {setTimeout(checknotifs, 500);});
 			r2.open('get', jsonurl2, true);
 		}
 		if (notifs1) {
