@@ -217,9 +217,8 @@ var notifs2;
 
 function checknotifs() {
 	if (Notification.permission = 'granted') {
-		notifs1 = localStorage.getItem('astiw_notifyPosts') == 'true';
-		loggedin = isSet(localStorage.getItem('astiw_sesses')) && JSON.parse(localStorage.getItem('astiw_sesses')).length > 0;
-		notifs2 = loggedin && (localStorage.getItem('astiw_notifyComms') != 'true' || localStorage.getItem('astiw_notifyMentions') != 'true');
+		notifs1 = localStorage.getItem('astiw_notifyPosts') == 'true' || (isSet(getCurrentUser()) && localStorage.getItem('astiw_notifyMentions') != 'true');
+		notifs2 = isSet(getCurrentUser()) && (localStorage.getItem('astiw_notifyComms') != 'true' || localStorage.getItem('astiw_notifyMentions') != 'true');
 		if (notifs1) {
 			var jsonurl = 'https://api.stibarc.gq/getnotifs.sjs';
 			var r = new XMLHttpRequest();
@@ -237,14 +236,25 @@ function checknotifs() {
 						}
 						if (isSet(ntext)) {
 							localStorage.setItem('astiw_lastnotifid', tmp[0]);
-							// console.log('New post: ' + ntext);
-							var dts = Math.floor(Date.now());
-							var ftnotif = new Notification('New post', {body: ntext, icon: 'https://savaka2.github.io/favicon.ico', timestamp: dts});
-							ftnotif.onclick = function(e) {
-								e.preventDefault();
-								ftnotif.close();
-								var postID = tmp[tmp.length - 2];
-								window.open('post.html?id=' + postID, '_blank');
+							var theNotifTitle = '';
+							if (isSet(getCurrentUser()) && localStorage.getItem('astiw_notifyMentions') != 'true') {
+								var list = ntext.split(/( |<br\/>)/g);
+								if (list.indexOf('@' + JSON.parse(localStorage.getItem('astiw_sesses'))[0]) > -1) {
+									theNotifTitle = 'Mention';
+								}
+							}
+							if (theNotifTitle == '' && localStorage.getItem('astiw_notifyPosts') == 'true') {
+								theNotifTitle = 'New post';
+							}
+							if (isSet(theNotifTitle)) {
+								var dts = Math.floor(Date.now());
+								var ftnotif = new Notification(theNotifTitle, {body: ntext, icon: 'https://savaka2.github.io/favicon.ico', timestamp: dts});
+								ftnotif.onclick = function(e) {
+									e.preventDefault();
+									ftnotif.close();
+									var postID = tmp[tmp.length - 2];
+									window.open('post.html?id=' + postID, '_blank');
+								}
 							}
 						}
 					}
@@ -279,16 +289,28 @@ function checknotifs() {
 						for (k = 2; k < tmp.length - 2; k++) {
 							ntext += tmp[k] + (k < tmp.length - 3 ? '\n' : '');
 						}
+						localStorage.setItem('astiw_lastusernotifid', tmp[0].concat(tmp[tmp.length - 2]));
 						if (isSet(ntext)) {
-							localStorage.setItem('astiw_lastusernotifid', tmp[0].concat(tmp[tmp.length - 2]));
-							// console.log(tmp[1] + ': ' + ntext);
-							var dts = Math.floor(Date.now());
-							var ftnotif = new Notification(tmp[1], {body: ntext, icon: 'https://savaka2.github.io/favicon.ico', timestamp: dts});
-							ftnotif.onclick = function(e) {
-								e.preventDefault();
-								ftnotif.close();
-								var postID = tmp[tmp.length - 2];
-								window.open('post.html?id=' + postID, '_blank');
+							var theNotifTitle = '';
+							var uiqitn = tmp[1].split(' ')[0];
+							if (localStorage.getItem('astiw_notifyComms') != 'true' && tmp[1].indexOf(' commented on your post!') > -1) {
+								var theNotifTitle = 'Comment by ' + uiqitn;
+							}
+							if (localStorage.getItem('astiw_notifyMentions') != 'true' && tmp[1].indexOf(' mentioned you!') > -1) {
+								var theNotifTitle = 'Mention by ' + uiqitn;
+							}
+							if (uiqitn == getCurrentUser()) {
+								theNotifTitle = '';
+							}
+							if (isSet(theNotifTitle)) {
+								var dts = Math.floor(Date.now());
+								var ftnotif = new Notification(theNotifTitle, {body: ntext, icon: 'https://savaka2.github.io/favicon.ico', timestamp: dts});
+								ftnotif.onclick = function(e) {
+									e.preventDefault();
+									ftnotif.close();
+									var postID = tmp[tmp.length - 2];
+									window.open('post.html?id=' + postID, '_blank');
+								}
 							}
 						}
 					}
