@@ -228,9 +228,11 @@ function checknotifs() {
 						if (isSet(ntext)) {
 							localStorage.setItem('astiw_lastnotifid', tmp[0]);
 							// console.log('New post: ' + ntext);
-							var ftnotif = new Notification('New post', {body: ntext});
+							var dts = Math.floor(Date.now());
+							var ftnotif = new Notification('New post', {body: ntext, icon: 'https://savaka2.github.io/favicon.ico', timestamp: dts});
 							ftnotif.onclick = function(e) {
 								e.preventDefault();
+								ftnotif.close();
 								var postID = tmp[tmp.length - 2];
 								window.open('post.html?id=' + postID, '_blank');
 							}
@@ -270,9 +272,11 @@ function checknotifs() {
 						if (isSet(ntext)) {
 							localStorage.setItem('astiw_lastusernotifid', tmp[0].concat(tmp[tmp.length - 2]));
 							// console.log(tmp[1] + ': ' + ntext);
-							var ftnotif = new Notification(tmp[1], {body: ntext});
+							var dts = Math.floor(Date.now());
+							var ftnotif = new Notification(tmp[1], {body: ntext, icon: 'https://savaka2.github.io/favicon.ico', timestamp: dts});
 							ftnotif.onclick = function(e) {
 								e.preventDefault();
+								ftnotif.close();
 								var postID = tmp[tmp.length - 2];
 								window.open('post.html?id=' + postID, '_blank');
 							}
