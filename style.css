@@ -63,7 +63,7 @@ textarea {
 	border-radius: 4px;
 	height: 34px;
 	border: 1px solid var(--content);
-	line-height: 32px;
+	line-height: 34px;
 	background-color: var(--content);
 	color: var(--content-bg);
 	outline: none;
@@ -77,7 +77,7 @@ textarea {
 	height: 34px;
 	border: 1px solid var(--content);
 	display: inline-block;
-	line-height: 32px;
+	line-height: 34px;
 	outline: none;
 	font-size: 1em;
 	cursor: pointer;
