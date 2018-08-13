@@ -1,3 +1,13 @@
+#cssshade {
+	position: fixed;
+	height: 100%;
+	width: 100%;
+	background-color: black;
+	z-index: 999;
+	left: 0;
+	top: 0;
+}
+
 body {
 	font-family: Roboto, sans-serif;
 	color: var(--content);
@@ -14,6 +24,7 @@ nav {
 	border-bottom: 1px solid var(--border);
 	display: flex;
 	height: 36px;
+	z-index: 1;
 }
 
 #title {
@@ -155,9 +166,9 @@ textarea {
 	height: 100%;
 	width: 100%;
 	display: none;
-	background-color: var(--bg);
+	background-color: black;
 	background-color: rgba(0,0,0,0.5);
-	z-index: 1;
+	z-index: 2;
 	left: 0;
 	top: 0;
 }
@@ -279,4 +290,50 @@ h3 {
 #verified {
 	display: none;
 	color: var(--verified);
+}
+
+.cb {
+	float: left;
+	border-radius: 4px;
+	height: 38px;
+	width: 38px;
+	cursor: pointer;
+	margin-right: 8px;
+	outline: none;
+	background-color: var(--cb-off);
+	border-style: none;
+	color: var(--cb-sign);
+	font-size: 24px;
+}
+
+select {
+	border-radius: 4px;
+	border: 1px solid var(--border);
+	background-color: var(--content-bg);
+	outline: none;
+	color: var(--content);
+	cursor: pointer;
+	height: 38px;
+	font: inherit;
+	margin-right: 8px;
+	float: left;
+	padding: 0 9px;
+}
+
+.e {
+	display: inline-block;
+	margin-right: 16px;
+}
+
+hr {
+	border-width: 1px 0px 0px 0px;
+	border-color: var(--border);
+	border-style: solid;
+}
+
+.whateverthisis {
+	display: inline-block;
+	height: 38px;
+	margin: 0;
+	line-height: 38px;
 }

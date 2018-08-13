@@ -8,7 +8,7 @@
 	<link rel="stylesheet" href="dark.css" id="themer">
 	<script src="script.js"></script>
 	<script>
-		window.onload = function() {colors();};
+		window.onload = function() {colors(); document.getElementById('cssshade').style.display = 'none';};
 		var sesses = JSON.parse(localStorage.getItem('astiw_sesses'));
 		var jsonurl = 'https://api.stibarc.gq/logout.sjs';
 		var r = new XMLHttpRequest();
@@ -19,7 +19,7 @@
 			usernames.splice(0, 1);
 			localStorage.setItem('astiw_sesses', JSON.stringify(sesses));
 			localStorage.setItem('astiw_usernames', JSON.stringify(usernames));
-			window.location.href = 'index.html';
+			window.location.replace('index.html');
 		});
 		r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
 		r.open('post', jsonurl, true);
@@ -27,6 +27,7 @@
 	</script>
 </head>
 <body>
+	<div id="cssshade"></div>
 	<main style="text-align:center;">
 		Logging out...
 	</main>

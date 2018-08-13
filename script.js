@@ -1,13 +1,14 @@
 var modal;
-var modal2;
+// var modal2;
 
 window.onload = function() {
 	colors();
+	document.getElementById('cssshade').style.display = 'none';
 	var sb = document.getElementById('search');
 	window.addEventListener('keydown', function(e) {
 		if (e.keyCode == 27) {
 			closeUserMenu();
-			closeMenu();
+			// closeMenu();
 		}
 	});
 	sb.addEventListener('keydown', function(e) {
@@ -21,7 +22,7 @@ window.onload = function() {
 		importantLoad();
 	}
 	modal = document.getElementById('usermenubox');
-	modal2 = document.getElementById('menubox');
+	// modal2 = document.getElementById('menubox');
 	var sesses = localStorage.getItem('astiw_sesses');
 	var usernames = localStorage.getItem('astiw_usernames');
 	if (isSet(sesses)) {
@@ -49,17 +50,48 @@ window.onload = function() {
 	}
 };
 
+function getCurrentUser() {
+	var lsu = localStorage.getItem('astiw_usernames');
+	if (isSet(lsu) && JSON.parse(lsu).length > 0) {
+		return JSON.parse(lsu)[0];
+	} else {
+		return '';
+	}
+};
+
+function putLinksInText(inp) {
+	var list = inp.split(/( |<br\/>)/g);
+	var temp;
+	var tempName;
+	var currentUser = getCurrentUser();
+	for (j = 0; j < list.length; j++) {
+		if (list[j].substring(0,7) == 'http://' || list[j].substring(0,8) == 'https://') {
+			temp = list[j];
+			list[j] = '<a class="classic" target="_blank" href="' + encodeURI(temp) + '">' + temp + '</a>';
+		} else if (list[j][0] == '@' && list[j].length >= 2) {
+			temp = list[j];
+			tempName = list[j].substring(1);
+			list[j] = '<a class="classic" ' + (tempName == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(tempName) + '">' + temp + '</a>';
+		}
+	}
+	return list.join('');
+};
+
 function colors() {
 	var theme = localStorage.getItem('astiw_theme');
 	var link = document.getElementById('themer');
 	if (isSet(theme)) {
-		link.href = theme;
+		if (theme == 'custom') {
+			var customTheme = localStorage.getItem('astiw_customtheme');
+			if (isSet(customTheme)) {
+				link.href = customTheme;
+			} else {
+				link.href = 'dark.css';
+			}
+		} else {
+			link.href = theme;
+		}
 	}
-};
-
-function chtheme(s) {
-	localStorage.setItem('astiw_theme', s + '.css');
-	colors();
 };
 
 function notLoggedIn() {
@@ -67,6 +99,7 @@ function notLoggedIn() {
 	for (i = 0; i < lbs.length; i++) {
 		lbs[i].style.display = 'initial';
 	}
+	startnotifs();
 	load();
 };
 
@@ -82,6 +115,7 @@ function checkSess(sess) {
 			localStorage.removeItem('astiw_usernames');
 			window.location.reload();
 		} else {
+			startnotifs();
 			load();
 		}
 	});
@@ -92,11 +126,13 @@ function checkSess(sess) {
 
 function openUserMenu() {
 	var accounts = document.getElementById('accounts');
+	var me = document.getElementById('currentUserName');
 	var usernames = JSON.parse(localStorage.getItem('astiw_usernames'));
 	document.getElementById('userMenuProfButton').href = 'user.html?id=' + encodeURIComponent(usernames[0]);
-	accounts.innerHTML = '<li><b>' + usernames[0] + '</b></li>';
+	me.innerHTML = usernames[0];
 	var oof;
 	for (i = 1; i < usernames.length; i++) {
+		document.getElementById('accountSwitcher').style.display = '';
 		oof = document.createElement('li');
 		oof.innerHTML = '<a class="classic" href="javascript:switchUser(' + i.toString() + ')">' + usernames[i] + '</a>';
 		oof.style.marginTop = '0.5em';
@@ -109,35 +145,13 @@ function closeUserMenu() {
 	modal.style.display = 'none';
 };
 
-function openMenu() {
-	checkSettings();
-	modal2.style.display = 'initial';
-};
-
-function checkSettings() {
-	var dir = localStorage.getItem('astiw_dir') == 'true';
-	var roi = localStorage.getItem('astiw_roi') == 'true';
-	document.getElementById('toggleDir').innerHTML = (dir ? 'Default comment order: Oldest first' : 'Default comment order: Newest first');
-	document.getElementById('toggleROI').innerHTML = (roi ? 'Requests on intervals: OFF' : 'Requests on intervals: ON');
-};
-
-function toggleSetting(setting) {
-	var bool = localStorage.getItem('astiw_' + setting) == 'true';
-	localStorage.setItem('astiw_' + setting, (!bool).toString());
-	checkSettings();
-};
-
-function closeMenu() {
-	modal2.style.display = 'none';
-};
-
 window.onclick = function(event) {
 	if (event.target == modal) {
 		modal.style.display = 'none';
 	}
-	if (event.target == modal2) {
+	/* if (event.target == modal2) {
 		modal2.style.display = 'none';
-	}
+	} */
 };
 
 function switchUser(n) {
@@ -152,13 +166,6 @@ function switchUser(n) {
 	localStorage.setItem('astiw_sesses', JSON.stringify(sesses));
 	localStorage.setItem('astiw_usernames', JSON.stringify(usernames));
 	window.location.reload();
-};
-
-function clearData() {
-	if (confirm('Are you sure you want to clear local storage? This includes all signed in accounts, cached images, and settings')) {
-		localStorage.clear();
-		window.location.href = 'index.html';
-	}
 };
 
 function getAllUrlParams(url) {
@@ -196,6 +203,135 @@ function getAllUrlParams(url) {
 	return obj;
 };
 
-function explanation() {
-	alert('Some pages send a request every 0.5 seconds to check for new content and prompt you to reload to see new content if this setting is on (technically they are timeouts not intervals now)');
+function startnotifs() {
+	if (localStorage.getItem('astiw_notifs') != 'true') {
+		if (Notification.permission = 'default') {
+			Notification.requestPermission();
+		}
+		checknotifs();
+	}
+};
+
+var notifs1;
+var notifs2;
+
+function checknotifs() {
+	if (Notification.permission = 'granted') {
+		notifs1 = localStorage.getItem('astiw_notifyPosts') == 'true' || (isSet(getCurrentUser()) && localStorage.getItem('astiw_notifyMentions') != 'true');
+		notifs2 = isSet(getCurrentUser()) && (localStorage.getItem('astiw_notifyComms') != 'true' || localStorage.getItem('astiw_notifyMentions') != 'true');
+		if (notifs1) {
+			var jsonurl = 'https://api.stibarc.gq/getnotifs.sjs';
+			var r = new XMLHttpRequest();
+			r.addEventListener('load', function() {
+				if (r.responseText != 'None\n') {
+					var tmp = r.responseText.split('\n');
+					var lastnotifid = localStorage.getItem('astiw_lastnotifid');
+					if (!isSet(lastnotifid)) {
+						lastnotifid = -1;
+					}
+					if (tmp[0] != lastnotifid) {
+						var ntext = '';
+						for (k = 1; k < tmp.length - 2; k++) {
+							ntext += tmp[k] + (k < tmp.length - 3 ? '\n' : '');
+						}
+						if (isSet(ntext)) {
+							localStorage.setItem('astiw_lastnotifid', tmp[0]);
+							var theNotifTitle = '';
+							if (isSet(getCurrentUser()) && localStorage.getItem('astiw_notifyMentions') != 'true') {
+								var list = ntext.split(/( |<br\/>)/g);
+								if (list.indexOf('@' + JSON.parse(localStorage.getItem('astiw_sesses'))[0]) > -1) {
+									theNotifTitle = 'Mention';
+								}
+							}
+							if (theNotifTitle == '' && localStorage.getItem('astiw_notifyPosts') == 'true') {
+								theNotifTitle = 'New post';
+							}
+							if (isSet(theNotifTitle)) {
+								var dts = Math.floor(Date.now());
+								var ftnotif = new Notification(theNotifTitle, {body: ntext, icon: 'https://savaka2.github.io/favicon.ico', timestamp: dts});
+								ftnotif.onclick = function(e) {
+									e.preventDefault();
+									ftnotif.close();
+									var postID = tmp[tmp.length - 2];
+									window.open('post.html?id=' + postID, '_blank');
+								}
+							}
+						}
+					}
+				}
+				if (notifs2) {
+					r2.send();
+				} else {
+					setTimeout(checknotifs, 500);
+				}
+			});
+			r.addEventListener('error', function() {
+				if (notifs2) {
+					r2.send();
+				} else {
+					setTimeout(checknotifs, 500);
+				}
+			});
+			r.open('get', jsonurl, true);
+		}
+		if (notifs2) {
+			var jsonurl2 = 'https://api.stibarc.gq/getusernotifs.sjs?id=' + JSON.parse(localStorage.getItem('astiw_usernames'))[0];
+			var r2 = new XMLHttpRequest();
+			r2.addEventListener('load', function() {
+				if (r2.responseText != 'None\n') {
+					var tmp = r2.responseText.split('\n');
+					var lastnotifid = localStorage.getItem('astiw_lastusernotifid');
+					if (!isSet(lastnotifid)) {
+						lastnotifid = -1;
+					}
+					if (tmp[0].concat(tmp[tmp.length - 2]) != lastnotifid) {
+						var ntext = '';
+						for (k = 2; k < tmp.length - 2; k++) {
+							ntext += tmp[k] + (k < tmp.length - 3 ? '\n' : '');
+						}
+						localStorage.setItem('astiw_lastusernotifid', tmp[0].concat(tmp[tmp.length - 2]));
+						if (isSet(ntext)) {
+							var theNotifTitle = '';
+							var uiqitn = tmp[1].split(' ')[0];
+							if (localStorage.getItem('astiw_notifyComms') != 'true' && tmp[1].indexOf(' commented on your post!') > -1) {
+								var theNotifTitle = 'Comment by ' + uiqitn;
+							}
+							if (localStorage.getItem('astiw_notifyMentions') != 'true' && tmp[1].indexOf(' mentioned you!') > -1) {
+								var theNotifTitle = 'Mention by ' + uiqitn;
+							}
+							if (uiqitn == getCurrentUser()) {
+								theNotifTitle = '';
+							}
+							if (isSet(theNotifTitle)) {
+								var dts = Math.floor(Date.now());
+								var ftnotif = new Notification(theNotifTitle, {body: ntext, icon: 'https://savaka2.github.io/favicon.ico', timestamp: dts});
+								ftnotif.onclick = function(e) {
+									e.preventDefault();
+									ftnotif.close();
+									var postID = tmp[tmp.length - 2];
+									window.open('post.html?id=' + postID, '_blank');
+								}
+							}
+						}
+					}
+				}
+				setTimeout(checknotifs, 500);
+			});
+			r2.addEventListener('error', function() {setTimeout(checknotifs, 500);});
+			r2.open('get', jsonurl2, true);
+		}
+		if (notifs1) {
+			r.send();
+		} else if (notifs2) {
+			r2.send();
+		} else {
+			setTimeout(checknotifs, 500);
+		}
+	}
+};
+
+function editProfile() {
+	if (confirm('This feature is not yet available on ASTiW. Open the STiBaRC website?')) {
+		window.open('https://stibarc.gq/', '_blank')
+	}
 };
