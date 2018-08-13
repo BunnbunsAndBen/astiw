@@ -86,10 +86,10 @@ function colors() {
 			if (isSet(customTheme)) {
 				link.href = customTheme;
 			} else {
-				link.href = 'dark.css';
+				link.href = 'themes/dark.css';
 			}
 		} else {
-			link.href = theme;
+			link.href = 'themes/' + theme;
 		}
 	}
 };
