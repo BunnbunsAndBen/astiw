@@ -111,8 +111,18 @@
 	</div>
 	<main id="rm">
 		<div id="main"></div>
-		<button id="loadmore" class="tkob" onclick="loadMore();">LOAD MORE</button>
+		<button id="loadmore" class="othbut widebut specialSpecifics" onclick="loadMore();">LOAD MORE</button>
 		<div class="loader" id="loader"></div>
 	</main>
 </body>
 </html>
+<style>
+	.specialSpecifics {
+		display: none;
+		background-color: var(--content-bg);
+	}
+	
+	.specialSpecifics:hover, .specialSpecifics:active {
+		background-color: var(--rollover);
+	}
+</style>
