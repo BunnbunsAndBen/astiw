@@ -221,10 +221,10 @@ function checknotifs() {
 		notifs2 = isSet(getCurrentUser()) && (localStorage.getItem('astiw_notifyComms') != 'true' || localStorage.getItem('astiw_notifyMentions') != 'true');
 		if (notifs1) {
 			var jsonurl = 'https://api.stibarc.gq/getnotifs.sjs';
-			var r = new XMLHttpRequest();
-			r.addEventListener('load', function() {
-				if (r.responseText != 'None\n') {
-					var tmp = r.responseText.split('\n');
+			var nr = new XMLHttpRequest();
+			nr.addEventListener('load', function() {
+				if (nr.responseText != 'None\n') {
+					var tmp = nr.responseText.split('\n');
 					var lastnotifid = localStorage.getItem('astiw_lastnotifid');
 					if (!isSet(lastnotifid)) {
 						lastnotifid = -1;
@@ -260,26 +260,26 @@ function checknotifs() {
 					}
 				}
 				if (notifs2) {
-					r2.send();
+					nr2.send();
 				} else {
 					setTimeout(checknotifs, 500);
 				}
 			});
-			r.addEventListener('error', function() {
+			nr.addEventListener('error', function() {
 				if (notifs2) {
-					r2.send();
+					nr2.send();
 				} else {
 					setTimeout(checknotifs, 500);
 				}
 			});
-			r.open('get', jsonurl, true);
+			nr.open('get', jsonurl, true);
 		}
 		if (notifs2) {
 			var jsonurl2 = 'https://api.stibarc.gq/getusernotifs.sjs?id=' + JSON.parse(localStorage.getItem('astiw_usernames'))[0];
-			var r2 = new XMLHttpRequest();
-			r2.addEventListener('load', function() {
-				if (r2.responseText != 'None\n') {
-					var tmp = r2.responseText.split('\n');
+			var nr2 = new XMLHttpRequest();
+			nr2.addEventListener('load', function() {
+				if (nr2.responseText != 'None\n') {
+					var tmp = nr2.responseText.split('\n');
 					var lastnotifid = localStorage.getItem('astiw_lastusernotifid');
 					if (!isSet(lastnotifid)) {
 						lastnotifid = -1;
@@ -317,13 +317,13 @@ function checknotifs() {
 				}
 				setTimeout(checknotifs, 500);
 			});
-			r2.addEventListener('error', function() {setTimeout(checknotifs, 500);});
-			r2.open('get', jsonurl2, true);
+			nr2.addEventListener('error', function() {setTimeout(checknotifs, 500);});
+			nr2.open('get', jsonurl2, true);
 		}
 		if (notifs1) {
-			r.send();
+			nr.send();
 		} else if (notifs2) {
-			r2.send();
+			nr2.send();
 		} else {
 			setTimeout(checknotifs, 500);
 		}
