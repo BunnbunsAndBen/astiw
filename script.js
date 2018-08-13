@@ -220,7 +220,7 @@ function checknotifs() {
 		notifs1 = localStorage.getItem('astiw_notifyPosts') == 'true' || (isSet(getCurrentUser()) && localStorage.getItem('astiw_notifyMentions') != 'true');
 		notifs2 = isSet(getCurrentUser()) && (localStorage.getItem('astiw_notifyComms') != 'true' || localStorage.getItem('astiw_notifyMentions') != 'true');
 		if (notifs1) {
-			var jsonurl = 'https://api.stibarc.gq/getnotifs.sjs';
+			var njsonurl = 'https://api.stibarc.gq/getnotifs.sjs';
 			var nr = new XMLHttpRequest();
 			nr.addEventListener('load', function() {
 				if (nr.responseText != 'None\n') {
@@ -238,8 +238,8 @@ function checknotifs() {
 							localStorage.setItem('astiw_lastnotifid', tmp[0]);
 							var theNotifTitle = '';
 							if (isSet(getCurrentUser()) && localStorage.getItem('astiw_notifyMentions') != 'true') {
-								var list = ntext.split(/( |<br\/>)/g);
-								if (list.indexOf('@' + JSON.parse(localStorage.getItem('astiw_sesses'))[0]) > -1) {
+								var lyst = ntext.split(/( |<br\/>)/g);
+								if (lyst.indexOf('@' + JSON.parse(localStorage.getItem('astiw_sesses'))[0]) > -1) {
 									theNotifTitle = 'Mention';
 								}
 							}
@@ -272,10 +272,10 @@ function checknotifs() {
 					setTimeout(checknotifs, 500);
 				}
 			});
-			nr.open('get', jsonurl, true);
+			nr.open('get', njsonurl, true);
 		}
 		if (notifs2) {
-			var jsonurl2 = 'https://api.stibarc.gq/getusernotifs.sjs?id=' + JSON.parse(localStorage.getItem('astiw_usernames'))[0];
+			var njsonurl2 = 'https://api.stibarc.gq/getusernotifs.sjs?id=' + JSON.parse(localStorage.getItem('astiw_usernames'))[0];
 			var nr2 = new XMLHttpRequest();
 			nr2.addEventListener('load', function() {
 				if (nr2.responseText != 'None\n') {
@@ -318,7 +318,7 @@ function checknotifs() {
 				setTimeout(checknotifs, 500);
 			});
 			nr2.addEventListener('error', function() {setTimeout(checknotifs, 500);});
-			nr2.open('get', jsonurl2, true);
+			nr2.open('get', njsonurl2, true);
 		}
 		if (notifs1) {
 			nr.send();
