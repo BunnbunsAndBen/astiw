@@ -127,17 +127,17 @@
 		<h3 id="eugh" style="display:none;">Register a STiBaRC account</h3>
 		<div class="stdc" style="display:none;" id="main">
 			<p class="tfl">Username <span style="color:var(--red);">*</span></p>
-			<input type="text" autocomplete="off" autocorrect="off" autocapitalize="off" id="username" class="txf" placeholder="Username (no spaces)" style="display:block; margin-bottom:16px;">
+			<input type="text" autocomplete="off" spellcheck="false" id="username" class="txf" placeholder="Username (no spaces)" style="display:block; margin-bottom:16px;">
 			<p class="tfl">Password <span style="color:var(--red);">*</span></p>
-			<input type="password" autocomplete="off" autocorrect="off" autocapitalize="off" id="password" class="txf" placeholder="Password" style="display:block; margin-bottom:16px;">
+			<input type="password" id="password" class="txf" placeholder="Password" style="display:block; margin-bottom:16px;">
 			<p class="tfl">Confirm password <span style="color:var(--red);">*</span></p>
-			<input type="password" autocomplete="off" autocorrect="off" autocapitalize="off" id="confirmpassword" class="txf" placeholder="Confirm password" style="display:block; margin-bottom:16px;">
+			<input type="password" id="confirmpassword" class="txf" placeholder="Confirm password" style="display:block; margin-bottom:16px;">
 			<p class="tfl">Name</p>
-			<div style="display:block; margin-bottom:10px;"><input type="text" autocomplete="off" autocorrect="off" id="name" class="txf e" placeholder="Name" style="margin-bottom:6px;"><div style="display:inline-block; vertical-align:top;"><button id="showname" class="cb" onclick="toggleShow('name');" style="margin-bottom:6px;"></button><p class="whateverthisis">Make name public</p></div></div>
+			<div style="display:block; margin-bottom:10px;"><input type="text" autocomplete="off" spellcheck="false" id="name" class="txf e" placeholder="Name" style="margin-bottom:6px;"><div style="display:inline-block; vertical-align:top;"><button id="showname" class="cb" onclick="toggleShow('name');" style="margin-bottom:6px;"></button><p class="whateverthisis">Make name public</p></div></div>
 			<p class="tfl">Email</p>
-			<div style="display:block; margin-bottom:10px;"><input type="text" autocomplete="off" autocorrect="off" autocapitalize="off" id="email" class="txf e" placeholder="Email" style="margin-bottom:6px;"><div style="display:inline-block; vertical-align:top;"><button id="showemail" class="cb" onclick="toggleShow('email');" style="margin-bottom:6px;"></button><p class="whateverthisis">Make email public</p></div></div>
+			<div style="display:block; margin-bottom:10px;"><input type="text" autocomplete="off" spellcheck="false" id="email" class="txf e" placeholder="Email" style="margin-bottom:6px;"><div style="display:inline-block; vertical-align:top;"><button id="showemail" class="cb" onclick="toggleShow('email');" style="margin-bottom:6px;"></button><p class="whateverthisis">Make email public</p></div></div>
 			<p class="tfl">Birthday</p>
-			<div style="display:block; margin-bottom:10px;"><input type="text" autocomplete="off" autocorrect="off" id="birthday" class="txf e" placeholder="Birthday" style="margin-bottom:6px;"><div style="display:inline-block; vertical-align:top;"><button id="showbirthday" class="cb" onclick="toggleShow('birthday');" style="margin-bottom:6px;"></button><p class="whateverthisis">Make birthday public</p></div></div>
+			<div style="display:block; margin-bottom:10px;"><input type="text" autocomplete="off" spellcheck="false" id="birthday" class="txf e" placeholder="Birthday" style="margin-bottom:6px;"><div style="display:inline-block; vertical-align:top;"><button id="showbirthday" class="cb" onclick="toggleShow('birthday');" style="margin-bottom:6px;"></button><p class="whateverthisis">Make birthday public</p></div></div>
 			<p>By registering a STiBaRC account you accept the STiBaRC <a href="https://stibarc.gq/privacy.html" target="_blank" class="classic">Privacy Policy</a></p>
 			<p>After registering you will be directed to the login page to log in to your account</p>
 			<div id="contain"><button id="registerButton" onclick="register();" class="libut" style="display:block; margin-bottom:16px;">REGISTER</button></div>
