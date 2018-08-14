@@ -1,0 +1,21 @@
+:root {
+	--bg: blanchedalmond;
+	--content: midnightblue;
+	--content-bg: white;
+	--header-bg: white;
+	--border: #CB0066;
+	--rollover: lightgray;
+	--other-rollover: #45459C;
+	--probably-same-as-content-bg: white;
+	--tb-back: #FFF3E1;
+	--tb-rollover-border: hotpink;
+	--tb-hint: gray;
+	--link: hotpink;
+	--opposing: white;
+	--verified: limegreen;
+	--you: mediumaquamarine;
+	--probably-same-as-link: hotpink;
+	--cb-off: blanchedalmond;
+	--cb-sign: white;
+	--red: red;
+}
