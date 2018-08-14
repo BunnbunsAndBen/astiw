@@ -290,7 +290,6 @@ h3 {
 }
 
 select {
-	border-radius: 4px;
 	border: 1px solid var(--border);
 	background-color: var(--content-bg);
 	outline: none;
