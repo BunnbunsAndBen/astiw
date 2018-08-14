@@ -33,6 +33,12 @@ window.onload = function() {
 				var ibs = document.getElementsByClassName('ib');
 				var usermenu = document.getElementById('usermenu');
 				usermenu.innerHTML = usernameList[0];
+				if (usernameList[0] == 'Anon') {
+					var stsbsiyaa = document.getElementsByClassName('noanon');
+					for (ite = 0; ite < stsbsiyaa.length; ite++) {
+						stsbsiyaa[ite].style.display = 'none';
+					}
+				}
 				for (i = 0; i < ibs.length; i++) {
 					ibs[i].style.display = 'initial';
 				}
@@ -199,10 +205,4 @@ function getAllUrlParams(url) {
 		}
 	}
 	return obj;
-};
-
-function editProfile() {
-	if (confirm('This feature is not yet available on ASTiW. Open the STiBaRC website?')) {
-		window.open('https://stibarc.gq/', '_blank')
-	}
 };
