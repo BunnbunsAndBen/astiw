@@ -93,11 +93,26 @@
 			<h4>Theme</h4>
 			<div>
 				<select id="theme" onchange="applySetting('theme'); colors();">
-					<option value="dark.css">Dark</option>
-					<option value="amoled.css">Darker (AMOLED)</option>
-					<option value="light.css">Light</option>
-					<option value="stibarc.css">STiBaRC</option>
-					<option value="custom">Custom (from URL)</option>
+					<optgroup label="Standard">
+						<option value="dark.css">Dark</option>
+						<option value="amoled.css">Darker (AMOLED)</option>
+						<option value="light.css">Light</option>
+					</optgroup>
+					<optgroup label="Misc.">
+						<option value="stibarc.css">STiBaRC</option>
+						<option value="pacer.css">Pacer</option>
+					</optgroup>
+					<optgroup label="Colors">
+						<option value="red.css">Red</option>
+						<option value="orange.css">Orange</option>
+						<option value="yellow.css">Yellow</option>
+						<option value="green.css">Green</option>
+						<option value="blue.css">Blue</option>
+						<option value="purple.css">Purple</option>
+					</optgroup>
+					<optgroup label="From URL">
+						<option value="custom">Custom</option>
+					</optgroup>
 				</select>
 				<p style="margin-bottom:9px;">Set theme</p>
 				<p class="small">Change the colors of ASTiW</p>

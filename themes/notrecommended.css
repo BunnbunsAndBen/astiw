@@ -1,0 +1,21 @@
+:root {
+	--bg: white;
+	--content: gray;
+	--content-bg: yellow;
+	--header-bg: magenta;
+	--border: red;
+	--rollover: lightblue;
+	--other-rollover: gray;
+	--probably-same-as-content-bg: yellow;
+	--tb-back: white;
+	--tb-rollover-border: blue;
+	--tb-hint: #747474;
+	--link: blue;
+	--opposing: cornflowerblue;
+	--verified: green;
+	--you: blue;
+	--probably-same-as-link: lightgray;
+	--cb-off: lightgray;
+	--cb-sign: dimgray;
+	--red: red;
+}
