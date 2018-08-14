@@ -69,7 +69,7 @@
 		
 		function load() {
 			var sesses = localStorage.getItem('astiw_sesses');
-			if (isSet(sesses) && JSON.parse(sesses).length > 0) {
+			if (isSet(sesses) && JSON.parse(sesses).length > 0 && getCurrentUser() != 'Anon') {
 				var sess = JSON.parse(localStorage.getItem('astiw_sesses'))[0];
 				var jsonurl = 'https://api.stibarc.gq/userinfo.sjs?sess=' + sess;
 				var r = new XMLHttpRequest();
