@@ -14,7 +14,7 @@ if (cpURL == 'https://stibarc.gq/' || cpURL == 'https://stibarc.gq/index.html') 
 	rptn = 'https://savaka2.github.io/astiw/user.html' + cpURL.substring(28);
 } else if (cpURL == 'https://stibarc.gq/login.html') {
 	rptn = 'https://savaka2.github.io/astiw/login.html';
-} else if (cpURL == 'https://stibarc.gq/login.html') {
+} else if (cpURL == 'https://stibarc.gq/register.html') {
 	rptn = 'https://savaka2.github.io/astiw/register.html';
 } else if (cpURL.indexOf('https://stibarc.gq/passwd.sjs') == 0) {
 	rptn = 'https://savaka2.github.io/astiw/changepassword.html';
