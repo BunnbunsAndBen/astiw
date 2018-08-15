@@ -68,11 +68,18 @@ function getCurrentUser() {
 function putLinksInText(inp) {
 	var list = inp.split(/( |<br\/>)/g);
 	var temp;
+	var temptwo;
 	var tempName;
 	var currentUser = getCurrentUser();
 	for (j = 0; j < list.length; j++) {
 		if (list[j].substring(0,7) == 'http://' || list[j].substring(0,8) == 'https://') {
 			temp = list[j];
+			if (localStorage.getItem('astiw_replacesl') == 'true') {
+				temptwo = switchta(temp);
+				if (temptwo != 'bad') {
+					temp = temptwo;
+				}
+			}
 			list[j] = '<a class="classic" target="_blank" href="' + encodeURI(temp) + '">' + temp + '</a>';
 		} else if (list[j][0] == '@' && list[j].length >= 2) {
 			temp = list[j];
@@ -81,6 +88,24 @@ function putLinksInText(inp) {
 		}
 	}
 	return list.join('');
+};
+
+function switchta(cpURL) {
+	var rptn = 'bad';
+	if (cpURL.indexOf('https://stibarc.gq/post.html') == 0) {
+		rptn = 'post.html' + cpURL.substring(28);
+	} else if (cpURL == 'https://stibarc.gq/newpost.html') {
+		rptn = 'newpost.html';
+	} else if (cpURL == 'https://stibarc.gq/search.html') {
+		rptn = 'search.html';
+	} else if (cpURL.indexOf('https://stibarc.gq/user.html') == 0) {
+		rptn = 'user.html' + cpURL.substring(28);
+	} else if (cpURL == 'https://stibarc.gq/login.html') {
+		rptn = 'login.html';
+	} else if (cpURL == 'https://stibarc.gq/register.html') {
+		rptn = 'register.html';
+	}
+	return rptn;
 };
 
 function colors() {

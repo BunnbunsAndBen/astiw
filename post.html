@@ -65,7 +65,7 @@
 				rc.send();
 			});
 			rc.addEventListener('load', function() {
-				if (rc.responseText != 'undefined\n') {
+				if (isSet(rc.responseText) && rc.responseText != 'undefined\n') {
 					var objComments = JSON.parse(rc.responseText);
 					for (key in objComments) {
 						comments.push([objComments[key].content, objComments[key].poster]);
@@ -317,12 +317,14 @@
 		
 		function checkNewComms() {
 			var jsonurl = 'https://api.stibarc.gq/getcomments.sjs?id=' + id;
+			var jsonurl4e = 'https://api.stibarc.gq/getpost.sjs?id=' + id;
 			var r = new XMLHttpRequest();
+			var r4e = new XMLHttpRequest();
 			r.addEventListener('load', function() {
 				var thingy;
-				if (r.responseText != 'undefined\n') {
+				if (isSet(r.responseText) && r.responseText != 'undefined\n') {
 					var objComments = JSON.parse(r.responseText);
-					var thingy = 0;
+					thingy = 0;
 					for (key in objComments) {
 						thingy++;
 					}
@@ -333,18 +335,35 @@
 					document.getElementById('refreshMarker').style.display = 'block';
 					document.title = '(\u21bb) ' + stuf.title + ' - ASTiW';
 				} else {
+					r4e.send();
+				}
+			});
+			r4e.addEventListener('load', function() {
+				var winners = false;
+				if (isSet(r4e.responseText)) {
+					var regottenStuf = JSON.parse(r4e.responseText);
+					if (regottenStuf.edited != stuf.edited || regottenStuf.content != stuf.content || regottenStuf.title != stuf.title) {
+						winners = true;
+					}
+				}
+				if (winners) {
+					document.getElementById('refreshMarker').style.display = 'block';
+					document.title = '(\u21bb) ' + stuf.title + ' - ASTiW';
+				} else {
 					setTimeout(checkNewComms, 500);
 				}
 			});
 			r.addEventListener('error', function() {setTimeout(checkNewComms, 500);});
+			r4e.addEventListener('error', function() {setTimeout(checkNewComms, 500);});
 			r.open('get', jsonurl, true);
+			r4e.open('get', jsonurl4e, true);
 			r.send();
 		};
 	</script>
 </head>
 <body>
 	<nav><a id="title" href="index.html">ASTiW</a><input type="search" id="search" class="txf" placeholder="Search"><a href="newpost.html" class="mi ib">+</a><a href="settings.html" class="mi">&#8943;</a><a href="javascript:openUserMenu();" id="usermenu" class="mi ib rightmost"></a><a href="register.html" class="lb" id="register">REGISTER</a><a href="login.html" class="lb rightmost">LOG IN</a></nav>
-	<div id="refreshMarker" onclick="window.location.reload();">&#8635; Reload to see new comment(s)</div>
+	<div id="refreshMarker" onclick="window.location.reload();">&#8635; Reload to see new comment(s) or edit</div>
 	<div id="cssshade"></div>
 	<div class="dbg" id="usermenubox">
 		<div class="dialog">
