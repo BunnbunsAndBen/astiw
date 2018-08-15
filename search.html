@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>Search Results - ASTiW</title>
+	<title>Loading... - ASTiW</title>
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 	<link rel="stylesheet" href="style.css">
 	<link rel="stylesheet" href="themes/dark.css" id="themer">
@@ -27,50 +27,70 @@
 		};
 		
 		function importantLoad() {
-			term = decodeURIComponent(getAllUrlParams().q);
+			var temp = getAllUrlParams().q;
+			if (isSet(temp)) {
+				term = decodeURIComponent(temp);
+			} else {
+				term = '';
+			}
 			document.getElementById('search').value = term;
-			document.title = '"' + term + '" - Search Results - ASTiW';
+			if (isSet(term)) {
+				document.title = '"' + term + '" - Search Results - ASTiW';
+			} else {
+				document.title = 'Search - ASTiW';
+			}
 		};
 		
 		function load() {
-			document.getElementById('nameThing').innerHTML = 'Search results for "' + term.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '"';
-			var jsonurl = 'https://api.stibarc.gq/postsearch.sjs?q=' + encodeURIComponent(term);
-			var r = new XMLHttpRequest();
-			var ru = new XMLHttpRequest();
-			r.addEventListener('load', function() {
-				var stuf = r.responseText.split('\n');
-				if (isSet(r.responseText) && stuf[0] != 'No results') {
-					stuf.splice(stuf.length - 1, 1);
-					stuf.reverse();
-					for (i = 0; i < stuf.length; i++) {
-						addRecent(stuf[i], i == 0);
+			if (isSet(term)) {
+				document.getElementById('nameThing').innerHTML = 'Search results for "' + term.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '"';
+				var jsonurl = 'https://api.stibarc.gq/postsearch.sjs?q=' + encodeURIComponent(term);
+				var r = new XMLHttpRequest();
+				var ru = new XMLHttpRequest();
+				r.addEventListener('load', function() {
+					var stuf = r.responseText.split('\n');
+					if (isSet(r.responseText) && stuf[0] != 'No results') {
+						stuf.splice(stuf.length - 1, 1);
+						stuf.reverse();
+						for (i = 0; i < stuf.length; i++) {
+							addRecent(stuf[i], i == 0);
+						}
+					} else {
+						nores = true;
 					}
-				} else {
-					nores = true;
-				}
-				var jsonurlu = 'https://api.stibarc.gq/getuser.sjs?id=' + encodeURIComponent(term);
-				ru.open('get', jsonurlu, true);
-				ru.send();
-			});
-			ru.addEventListener('load', function() {
-				var messenge = document.getElementById('messenge');
-				if (isSet(ru.responseText)) {
-					messenge.innerHTML = 'There is a user named <a class="classic" href="user.html?id=' + encodeURIComponent(term) + '">' + term.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</a>'
-					document.getElementById('info').style.display = '';
-				} else if (nores) {
-					messenge.innerHTML = 'There are no results';
-					messenge.style.color = 'var(--border)';
-					messenge.style.textAlign = 'center';
-					document.getElementById('info').style.display = '';
-				}
+					var jsonurlu = 'https://api.stibarc.gq/getuser.sjs?id=' + encodeURIComponent(term);
+					ru.open('get', jsonurlu, true);
+					ru.send();
+				});
+				ru.addEventListener('load', function() {
+					var messenge = document.getElementById('messenge');
+					if (isSet(ru.responseText)) {
+						messenge.innerHTML = 'There is a user named <a class="classic" href="user.html?id=' + encodeURIComponent(term) + '">' + term.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</a>'
+						document.getElementById('info').style.display = '';
+					} else if (nores) {
+						messenge.innerHTML = 'There are no results';
+						messenge.style.color = 'var(--border)';
+						messenge.style.textAlign = 'center';
+						document.getElementById('info').style.display = '';
+					}
+					document.getElementById('rm').removeChild(document.getElementById('loader'));
+					document.getElementById('nameThing').style.display = '';
+					document.getElementById('main').style.display = '';
+				});
+				r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+				ru.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+				r.open('get', jsonurl, true);
+				r.send();
+			} else {
+				document.getElementById('nameThing').innerHTML = 'Search';
 				document.getElementById('rm').removeChild(document.getElementById('loader'));
+				var messenge = document.getElementById('messenge');
+				messenge.innerHTML = 'Enter text into the search bar to search';
+				messenge.style.color = 'var(--border)';
+				messenge.style.textAlign = 'center';
 				document.getElementById('nameThing').style.display = '';
-				document.getElementById('main').style.display = '';
-			});
-			r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
-			ru.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
-			r.open('get', jsonurl, true);
-			r.send();
+				document.getElementById('info').style.display = '';
+			}
 		};
 	</script>
 </head>
