@@ -10,7 +10,6 @@
 	<script>
 		var attachedfile = 'none';
 		var oktoleave = false;
-		var modalS;
 		
 		window.onbeforeunload = function() {
 			if (!oktoleave && (isSet(document.getElementById('postTitle').value) || isSet(document.getElementById('postText').value))) {
@@ -19,12 +18,10 @@
 		};
 		
 		function load() {
-			modalS = document.getElementById('draftsbox');
 			var sesses = localStorage.getItem('astiw_sesses');
 			if (isSet(sesses) && JSON.parse(sesses).length > 0) {
 				document.getElementById('rm').removeChild(document.getElementById('loader2'));
 				document.getElementById('nameThing').style.display = '';
-				document.getElementById('draftsThing').style.display = 'inline-block';
 				document.getElementById('main').style.display = 'block';
 			} else {
 				window.location.replace('login.html');
@@ -213,17 +210,9 @@
 			<p style="margin:8px 0;"><a class="classic" href="register.html">Register a new account</a></p>
 		</div>
 	</div>
-	<div class="dbg" id="draftsbox">
-		<div class="dialog">
-			<a href="javascript:closeSpecificModal();" class="closeButton">&times;</a>
-			<h3>Drafts</h3>
-			<p class="small">Images are not stored in drafts</p>
-		</div>
-	</div>
 	<main id="rm">
-		<h3 style="display:none; float:left;" id="nameThing">Create post</h3>
-		<button id="draftsThing" onclick="openSpecificModal();" class="othbut draftsbut">DRAFTS</button>
-		<div id="main" class="stdc" style="display:none; clear:both;">
+		<h3 style="display:none;" id="nameThing">Create post</h3>
+		<div id="main" class="stdc" style="display:none;">
 			<input type="text" autocomplete="off" id="postTitle" class="txf" placeholder="Title" style="width:calc(100% - 32px); display:block; margin-top:16px; margin-bottom:16px;">
 			<textarea class="txf" id="postText" style="height:108px; width:calc(100% - 32px);" placeholder="Text"></textarea>
 			<h4>Upload image (beta?)</h4>
