@@ -85,6 +85,14 @@ textarea {
 	color: var(--content);
 }
 
+button.othbut {
+	height: 36px;
+}
+
+button.libut {
+	height: 36px;
+}
+
 .othbut:hover, .othbut:active {
 	background-color: var(--rollover);
 	text-decoration: none;
@@ -218,8 +226,8 @@ main {
     border: 6px solid;
     border-color: var(--content) transparent var(--content) transparent;
     border-radius: 50%;
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
 	margin: auto;
 	margin-top: 24px;
     animation: spin 1s linear infinite;
@@ -323,4 +331,11 @@ hr {
 .widebut {
 	width: 100%;
 	margin-top: 24px;
+}
+
+.draftsbut {
+	margin-top: calc((3.17em - 36px) / 2);
+	float: right;
+	display: none;
+	background-color: var(--content-bg);
 }
