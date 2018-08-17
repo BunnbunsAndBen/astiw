@@ -17,7 +17,8 @@
 		
 		function load() {
 			document.getElementById('username').innerHTML = term.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '<span id="verified"> &#x2611;&#xFE0E;</span>';
-			if (term == getCurrentUser()) {
+			var myname = getCurrentUser();
+			if (term == myname && myname != 'Anon') {
 				var editproflink = document.createElement('p');
 				editproflink.className = 'small';
 				editproflink.innerHTML = '<b><a class="classic" href="editprofile.html">&#x270E;&#xFE0E; Edit</a></b>';

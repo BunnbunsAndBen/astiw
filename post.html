@@ -94,7 +94,7 @@
 				}
 				if (isSet(localStorage.getItem('astiw_usernames'))) {
 					var myName = JSON.parse(localStorage.getItem('astiw_usernames'))[0];
-					if (stuf.poster == myName) {
+					if (stuf.poster == myName && myName != 'Anon') {
 						document.getElementById('postMenu').innerHTML += ' &#xb7; <span id="editLink"><a class="classic" href="javascript:editPost();">&#x270E;&#xFE0E; Edit</a></span>';
 					}
 				}
@@ -245,7 +245,7 @@
 			var ldr = document.createElement('div');
 			ldr.className = 'loader';
 			ldr.id = 'loader4';
-			ldr.style.margin = 'auto';
+			ldr.style.margin = '0 auto 1em auto';
 			document.getElementById('oof').appendChild(ldr);
 			var jsonurl = 'https://api.stibarc.gq/getpost.sjs?id=' + id;
 			var r = new XMLHttpRequest();
@@ -275,7 +275,7 @@
 				var ldr = document.createElement('div');
 				ldr.className = 'loader';
 				ldr.id = 'loader4';
-				ldr.style.margin = 'auto';
+				ldr.style.margin = '0 auto 1em auto';
 				document.getElementById('oof').appendChild(ldr);
 				var jsonurl = 'https://api.stibarc.gq/getpost.sjs?id=' + id;
 				var r = new XMLHttpRequest();
