@@ -93,9 +93,14 @@ button.libut {
 	height: 36px;
 }
 
-.othbut:hover, .othbut:active {
+.othbut:not(.disabledbut):hover, .othbut:not(.disabledbut):active {
 	background-color: var(--rollover);
 	text-decoration: none;
+}
+
+.disabledbut {
+	opacity: 0.5;
+	cursor: not-allowed;
 }
 
 .libut:hover, .libut:active {

@@ -253,11 +253,7 @@ function addRecent(item, b) {
 	el.id = 'postItem' + splits[0];
 	el.href = 'post.html?id=' + splits[0];
 	el.className = 'recentLinks';
-	if (b) {
-		el.innerHTML = '<div class="recent bb"><span style="float:right;"><a class="classic" href="javascript:expand(' + splits[0] + ');">&#x25bc;</a></span><b class="theB">' + splits[1].replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b></div>';
-	} else {
-		el.innerHTML = '<div class="recent"><span style="float:right;"><a class="classic" href="javascript:expand(' + splits[0] + ');">&#x25bc;</a></span><b class="theB">' + splits[1].replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b></div>';
-	}
+	el.innerHTML = '<div class="recent' + (b ? ' bb' : '') + '"><span style="float:right;"><a class="classic" href="javascript:expand(' + splits[0] + ');">&#x25bc;</a></span><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + splits[0]) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + splits[1].replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b></div>';
 	main.appendChild(el);
 	if (typeof youreOnTheHomepage !== 'undefined' && youreOnTheHomepage == true) {
 		lastid = splits[0];
@@ -320,6 +316,9 @@ function expand(numb) {
 		} else {
 			menulist.splice(0, 0, '0 comments');
 		}
+		if (localStorage.getItem('astiw_markread') != 'true') {
+			menulist.splice(1, 0, (localStorage.getItem('astiw_viewed' + numb) == 'true' ? '<a class="classic" id="prms' + numb + '" href="javascript:markPost(' + numb + ', false);">Mark unread</a>' : '<a class="classic" id="prms' + numb + '" href="javascript:markPost(' + numb + ', true);">Mark read</a>'))
+		}
 		appendMe.innerHTML = metastuff + poststuff + '<b><p class="small">' + menulist.join(' &#xb7; ') + '</p></b>';
 		eliqB.innerHTML = newtitleiguess;
 		eliq.appendChild(appendMe);
@@ -333,6 +332,17 @@ function expand(numb) {
 	expdrc.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
 	expdr.open('get', jason, true);
 	expdr.send();
+};
+
+function markPost(pn, whichOne) {
+	localStorage.setItem('astiw_viewed' + pn, whichOne.toString());
+	if (localStorage.getItem('astiw_viewed' + pn) == 'true') {
+		document.getElementById('postItem' + pn).getElementsByTagName('b')[0].style.opacity = '0.5';
+		document.getElementById('prms' + pn).innerHTML = '<a class="classic" id="prms' + pn + '" href="javascript:markPost(' + pn + ', false);">Mark unread</a>';
+	} else {
+		document.getElementById('postItem' + pn).getElementsByTagName('b')[0].style.opacity = '1';
+		document.getElementById('prms' + pn).innerHTML = '<a class="classic" id="prms' + pn + '" href="javascript:markPost(' + pn + ', true);">Mark read</a>';
+	}
 };
 
 function collapse(numb) {

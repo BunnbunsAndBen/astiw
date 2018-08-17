@@ -97,9 +97,13 @@
 						document.getElementById('postMenu').innerHTML += ' &#xb7; <span id="editLink"><a class="classic" href="javascript:editPost();">&#x270E;&#xFE0E; Edit</a></span>';
 					}
 				}
+				if (localStorage.getItem('astiw_markread') != 'true') {
+					document.getElementById('postMenu').innerHTML += ' &#xb7; <span id="readLink"><a class="classic" href="javascript:markPostLoc(false);">Mark unread</a></span>';
+					localStorage.setItem('astiw_viewed' + id, 'true');
+				}
 				document.getElementById('rm').removeChild(document.getElementById('loader2'));
 				document.getElementById('main').style.display = 'block';
-				if (!(localStorage.getItem('astiw_roi') == 'true')) {
+				if (localStorage.getItem('astiw_roi') != 'true') {
 					setTimeout(checkNewComms, 500);
 				}
 			});
@@ -108,6 +112,15 @@
 			rc.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
 			r.open('get', jsonurl, true);
 			r.send();
+		};
+		
+		function markPostLoc(whichOne) {
+			localStorage.setItem('astiw_viewed' + id, whichOne.toString());
+			if (localStorage.getItem('astiw_viewed' + id) == 'true') {
+				document.getElementById('readLink').innerHTML = '<a class="classic" href="javascript:markPostLoc(false);">Mark unread</a>';
+			} else {
+				document.getElementById('readLink').innerHTML = '<a class="classic" href="javascript:markPostLoc(true);">Mark read</a>';
+			}
 		};
 		
 		function placeComments() {
