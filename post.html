@@ -176,7 +176,7 @@
 					} else {
 						var left = again - new Date().getTime();
 						left = Math.round(left / 1000);
-						document.getElementById('wait').innerHTML = 'You can post again in ' + left.toString() + ' seconds';
+						document.getElementById('wait').innerHTML = 'You can comment again in ' + left.toString() + (left.toString() == '1' ? ' second' : ' seconds');
 						document.getElementById('wait').style.display = 'initial';
 					}
 				} else {

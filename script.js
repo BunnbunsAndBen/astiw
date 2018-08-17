@@ -8,7 +8,7 @@ window.onload = function() {
 	window.addEventListener('keydown', function(e) {
 		if (e.keyCode == 27) {
 			closeUserMenu();
-			if (isSet(modalS)) {
+			if (typeof modalS !== 'undefined') {
 				modalS.style.display = 'none';
 			}
 		}
@@ -183,7 +183,7 @@ window.onclick = function(event) {
 	/* if (event.target == modal2) {
 		modal2.style.display = 'none';
 	} */
-	if (isSet(modalS) && event.target == modalS) {
+	if (typeof modalS !== 'undefined' && event.target == modalS) {
 		modalS.style.display = 'none';
 	}
 };
@@ -243,4 +243,102 @@ function getAllUrlParams(url) {
 		}
 	}
 	return obj;
+};
+
+function addRecent(item, b) {
+	var i = item.indexOf(':');
+	var splits = [item.slice(0, i), item.slice(i + 1)];
+	var main = document.getElementById('main');
+	var el = document.createElement('a');
+	el.id = 'postItem' + splits[0];
+	el.href = 'post.html?id=' + splits[0];
+	el.className = 'recentLinks';
+	if (b) {
+		el.innerHTML = '<div class="recent bb"><span style="float:right;"><a class="classic" href="javascript:expand(' + splits[0] + ');">&#x25bc;</a></span><b class="theB">' + splits[1].replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b></div>';
+	} else {
+		el.innerHTML = '<div class="recent"><span style="float:right;"><a class="classic" href="javascript:expand(' + splits[0] + ');">&#x25bc;</a></span><b class="theB">' + splits[1].replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b></div>';
+	}
+	main.appendChild(el);
+	if (typeof youreOnTheHomepage !== 'undefined' && youreOnTheHomepage == true) {
+		lastid = splits[0];
+	}
+};
+
+function expand(numb) {
+	var eliq = document.getElementById('postItem' + numb).getElementsByTagName('div')[0];
+	var eliqSpan = eliq.getElementsByTagName('span')[0];
+	var eliqB = eliq.getElementsByClassName('theB')[0];
+	eliqSpan.innerHTML = '<a href="javascript:void(0)" style="text-decoration:none;">&#x25bc;</a>';
+	var jason = 'https://api.stibarc.gq/getpost.sjs?id=' + numb;
+	var expdr = new XMLHttpRequest();
+	var expdrv = new XMLHttpRequest();
+	var expdrc = new XMLHttpRequest();
+	var metastuff;
+	var poststuff;
+	var exans;
+	var menulist = [];
+	var appendMe = document.createElement('div');
+	appendMe.id = 'expanded' + numb;
+	var newtitleiguess;
+	expdr.addEventListener('load', function() {
+		if (isSet(expdr.responseText)) {
+			var tkos = JSON.parse(expdr.responseText);
+			var currentUser = getCurrentUser();
+			metastuff = '<p class="small">Posted by <a class="classic" ' + (tkos.poster == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(tkos.poster) + '">' + tkos.poster + '</a><span class="ddverif" id="verified' + numb + '"> &#x2611;&#xFE0E;</span> at ' + tkos.postdate + (tkos.edited ? ' (edited)' : '') + '</p>';
+			poststuff = '<p style="white-space:pre-wrap;">' + putLinksInText(tkos.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>')) + '</p>';
+			if (isSet(tkos.attachment) && tkos.attachment != 'none') {
+				menulist.push('Image attached');
+			}
+			newtitleiguess = tkos.title.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+			var jasonv = 'https://api.stibarc.gq/checkverify.sjs?id=' + tkos.poster;
+			expdrv.open('get', jasonv, true);
+			expdrv.send();
+		} else {
+			appendMe.innerHTML = '<p style="text-align:center; color:var(--border);">This post does not exist</p>';
+			eliq.appendChild(appendMe);
+			eliqSpan.innerHTML = '<a class="classic" href="javascript:collapse(' + numb + ');">&#x25b2;</a>';
+		}
+	});
+	expdrv.addEventListener('load', function() {
+		exans = expdrv.responseText.split('\n')[0];
+		var jasonc = 'https://api.stibarc.gq/getcomments.sjs?id=' + numb;
+		expdrc.open('get', jasonc, true);
+		expdrc.send();
+	});
+	expdrc.addEventListener('load', function() {
+		if (isSet(expdrc.responseText) && expdrc.responseText != 'undefined\n') {
+			var objComments = JSON.parse(expdrc.responseText);
+			var counter = 0;
+			for (key in objComments) {
+				counter++;
+			}
+			if (counter == 1) {
+				menulist.splice(0, 0, '1 comment');
+			} else {
+				menulist.splice(0, 0, counter.toString() + ' comments');
+			}
+		} else {
+			menulist.splice(0, 0, '0 comments');
+		}
+		appendMe.innerHTML = metastuff + poststuff + '<b><p class="small">' + menulist.join(' &#xb7; ') + '</p></b>';
+		eliqB.innerHTML = newtitleiguess;
+		eliq.appendChild(appendMe);
+		if (exans == 'true') {
+			document.getElementById('verified' + numb).style.display = 'initial';
+		}
+		eliqSpan.innerHTML = '<a class="classic" href="javascript:collapse(' + numb + ');">&#x25b2;</a>';
+	});
+	expdr.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+	expdrv.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+	expdrc.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+	expdr.open('get', jason, true);
+	expdr.send();
+};
+
+function collapse(numb) {
+	var eliq = document.getElementById('postItem' + numb).getElementsByTagName('div')[0];
+	var eliqSpan = eliq.getElementsByTagName('span')[0];
+	var appended = document.getElementById('expanded' + numb);
+	eliq.removeChild(appended);
+	eliqSpan.innerHTML = '<a class="classic" href="javascript:expand(' + numb + ');">&#x25bc;</a>';
 };
