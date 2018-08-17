@@ -19,9 +19,32 @@
 		};
 		
 		function clearData() {
-			if (confirm('Are you sure you want to clear local storage? This includes all signed in accounts, cached images, and settings')) {
+			if (confirm('Are you sure you want to clear local storage? This includes all signed in accounts, settings, read markings, and cached images')) {
 				localStorage.clear();
 				window.location.href = 'index.html';
+			}
+		};
+		
+		function markAllRead() {
+			if (confirm('Are you sure you want to mark all posts read? You cannot undo this, except by clearing all data')) {
+				document.getElementById('markallread').style.display = 'none';
+				var r = new XMLHttpRequest();
+				var ldr = document.createElement('div');
+				ldr.className = 'loader';
+				ldr.id = 'loader2';
+				ldr.style.margin = '0';
+				document.getElementById('marContain').appendChild(ldr);
+				r.addEventListener('load', function() {
+					var theimportantpart = r.responseText.split("\n")[0].split(':')[0];
+					for (elbow = 1; elbow <= theimportantpart; elbow++) {
+						localStorage.setItem('astiw_viewed' + elbow, 'true');
+					}
+					document.getElementById('marContain').removeChild(document.getElementById('loader2'));
+					document.getElementById('markallread').style.display = 'initial';
+				});
+				r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+				r.open('get', 'https://api.stibarc.gq/getposts.sjs', true);
+				r.send();
 			}
 		};
 		
@@ -40,7 +63,8 @@
 			var dir = localStorage.getItem('astiw_dir') == 'true';
 			var roi = localStorage.getItem('astiw_roi') == 'true';
 			var docache = localStorage.getItem('astiw_docache') == 'true';
-			var docache = localStorage.getItem('astiw_docache') == 'true';
+			var replacesl = localStorage.getItem('astiw_replacesl') == 'true';
+			var markread = localStorage.getItem('astiw_markread') == 'true';
 			var theme = localStorage.getItem('astiw_theme');
 			if (!isSet(theme)) {
 				theme = 'dark.css';
@@ -54,8 +78,20 @@
 			document.getElementById('roi').style.backgroundColor = (!roi ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('docache').innerHTML = (!docache ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('docache').style.backgroundColor = (!docache ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('markread').innerHTML = (!markread ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('markread').style.backgroundColor = (!markread ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('replacesl').innerHTML = (replacesl ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('replacesl').style.backgroundColor = (replacesl ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('theme').value = theme;
 			document.getElementById('customtheme').value = customtheme;
+			var mar = document.getElementById('markallread')
+			if (markread) {
+				mar.disabled = true;
+				mar.className = 'othbut disabledbut';
+			} else {
+				mar.disabled = false;
+				mar.className = 'othbut';
+			}
 		};
 		
 		function setCbAbility(id, bool) {
@@ -130,6 +166,17 @@
 				</select>
 				<p style="margin-bottom:9px;">Default comment order</p>
 				<p class="small">Post pages load with comments in this order</p>
+			</div>
+			<div>
+				<button class="cb" id="replacesl" onclick="toggleSetting('replacesl');"></button><p style="margin-bottom:9px;">Replace STiBaRC links with ASTiW links</p>
+				<p class="small">Replace user-created links to STiBaRC content on the STiBaRC website with links to the same content on ASTiW</p>
+			</div>
+			<div>
+				<button class="cb" id="markread" onclick="toggleSetting('markread');"></button><p style="margin-bottom:9px;">Mark posts read</p>
+				<p class="small">Display titles of posts that have been viewed with lower opacity in lists</p>
+			</div>
+			<div id="marContain" style="margin-top:16px;">
+				<button class="othbut" id="markallread" onclick="markAllRead();">Mark all posts read</button>
 			</div>
 			<div>
 				<button class="cb" id="roi" onclick="toggleSetting('roi');"></button><p style="margin-bottom:9px;">Repeating requests</p>

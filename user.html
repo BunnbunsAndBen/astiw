@@ -10,21 +10,6 @@
 	<script>
 		var term;
 		
-		function addRecent(item, b) {
-			var i = item.indexOf(':');
-			var splits = [item.slice(0, i), item.slice(i + 1)];
-			var main = document.getElementById('main');
-			var el = document.createElement('a');
-			el.href = 'post.html?id=' + splits[0];
-			el.className = 'recentLinks';
-			if (b) {
-				el.innerHTML = '<div class="recent bb"><b>' + splits[1].replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b></div>'
-			} else {
-				el.innerHTML = '<div class="recent"><b>' + splits[1].replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b></div>'
-			}
-			main.appendChild(el);
-		};
-		
 		function importantLoad() {
 			term = decodeURIComponent(getAllUrlParams().id);
 			document.title = term + ' - ASTiW';

@@ -85,9 +85,22 @@ textarea {
 	color: var(--content);
 }
 
-.othbut:hover, .othbut:active {
+button.othbut {
+	height: 36px;
+}
+
+button.libut {
+	height: 36px;
+}
+
+.othbut:not(.disabledbut):hover, .othbut:not(.disabledbut):active {
 	background-color: var(--rollover);
 	text-decoration: none;
+}
+
+.disabledbut {
+	opacity: 0.5;
+	cursor: not-allowed;
 }
 
 .libut:hover, .libut:active {
@@ -199,6 +212,7 @@ main {
 	border: 1px solid var(--border);
 	border-top: none;
 	padding: 8px;
+	overflow: hidden;
 }
 
 .recent:hover, .recent:active {
@@ -218,8 +232,8 @@ main {
     border: 6px solid;
     border-color: var(--content) transparent var(--content) transparent;
     border-radius: 50%;
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
 	margin: auto;
 	margin-top: 24px;
     animation: spin 1s linear infinite;
@@ -270,7 +284,7 @@ h3 {
 	margin-bottom: 6px;
 }
 
-#verified {
+#verified, .ddverif {
 	display: none;
 	color: var(--verified);
 }

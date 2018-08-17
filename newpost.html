@@ -15,7 +15,7 @@
 			if (!oktoleave && (isSet(document.getElementById('postTitle').value) || isSet(document.getElementById('postText').value))) {
 				return true;
 			}
-		}
+		};
 		
 		function load() {
 			var sesses = localStorage.getItem('astiw_sesses');
@@ -63,7 +63,7 @@
 				} else {
 					var left = again - new Date().getTime();
 					left = Math.round(left / 1000);
-					document.getElementById('wait').innerHTML = 'You can post again in ' + left.toString() + ' seconds';
+					document.getElementById('wait').innerHTML = 'You can post again in ' + left.toString() + (left.toString() == '1' ? ' second' : ' seconds');
 					document.getElementById('wait').style.display = 'initial';
 				}
 			} else {

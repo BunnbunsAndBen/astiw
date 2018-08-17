@@ -65,7 +65,7 @@
 				rc.send();
 			});
 			rc.addEventListener('load', function() {
-				if (rc.responseText != 'undefined\n') {
+				if (isSet(rc.responseText) && rc.responseText != 'undefined\n') {
 					var objComments = JSON.parse(rc.responseText);
 					for (key in objComments) {
 						comments.push([objComments[key].content, objComments[key].poster]);
@@ -97,9 +97,13 @@
 						document.getElementById('postMenu').innerHTML += ' &#xb7; <span id="editLink"><a class="classic" href="javascript:editPost();">&#x270E;&#xFE0E; Edit</a></span>';
 					}
 				}
+				if (localStorage.getItem('astiw_markread') != 'true') {
+					document.getElementById('postMenu').innerHTML += ' &#xb7; <span id="readLink"><a class="classic" href="javascript:markPostLoc(false);">Mark unread</a></span>';
+					localStorage.setItem('astiw_viewed' + id, 'true');
+				}
 				document.getElementById('rm').removeChild(document.getElementById('loader2'));
 				document.getElementById('main').style.display = 'block';
-				if (!(localStorage.getItem('astiw_roi') == 'true')) {
+				if (localStorage.getItem('astiw_roi') != 'true') {
 					setTimeout(checkNewComms, 500);
 				}
 			});
@@ -108,6 +112,15 @@
 			rc.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
 			r.open('get', jsonurl, true);
 			r.send();
+		};
+		
+		function markPostLoc(whichOne) {
+			localStorage.setItem('astiw_viewed' + id, whichOne.toString());
+			if (localStorage.getItem('astiw_viewed' + id) == 'true') {
+				document.getElementById('readLink').innerHTML = '<a class="classic" href="javascript:markPostLoc(false);">Mark unread</a>';
+			} else {
+				document.getElementById('readLink').innerHTML = '<a class="classic" href="javascript:markPostLoc(true);">Mark read</a>';
+			}
 		};
 		
 		function placeComments() {
@@ -176,7 +189,7 @@
 					} else {
 						var left = again - new Date().getTime();
 						left = Math.round(left / 1000);
-						document.getElementById('wait').innerHTML = 'You can post again in ' + left.toString() + ' seconds';
+						document.getElementById('wait').innerHTML = 'You can comment again in ' + left.toString() + (left.toString() == '1' ? ' second' : ' seconds');
 						document.getElementById('wait').style.display = 'initial';
 					}
 				} else {
@@ -317,12 +330,14 @@
 		
 		function checkNewComms() {
 			var jsonurl = 'https://api.stibarc.gq/getcomments.sjs?id=' + id;
+			var jsonurl4e = 'https://api.stibarc.gq/getpost.sjs?id=' + id;
 			var r = new XMLHttpRequest();
+			var r4e = new XMLHttpRequest();
 			r.addEventListener('load', function() {
 				var thingy;
-				if (r.responseText != 'undefined\n') {
+				if (isSet(r.responseText) && r.responseText != 'undefined\n') {
 					var objComments = JSON.parse(r.responseText);
-					var thingy = 0;
+					thingy = 0;
 					for (key in objComments) {
 						thingy++;
 					}
@@ -333,18 +348,35 @@
 					document.getElementById('refreshMarker').style.display = 'block';
 					document.title = '(\u21bb) ' + stuf.title + ' - ASTiW';
 				} else {
+					r4e.send();
+				}
+			});
+			r4e.addEventListener('load', function() {
+				var winners = false;
+				if (isSet(r4e.responseText)) {
+					var regottenStuf = JSON.parse(r4e.responseText);
+					if (regottenStuf.edited != stuf.edited || regottenStuf.content != stuf.content || regottenStuf.title != stuf.title) {
+						winners = true;
+					}
+				}
+				if (winners) {
+					document.getElementById('refreshMarker').style.display = 'block';
+					document.title = '(\u21bb) ' + stuf.title + ' - ASTiW';
+				} else {
 					setTimeout(checkNewComms, 500);
 				}
 			});
 			r.addEventListener('error', function() {setTimeout(checkNewComms, 500);});
+			r4e.addEventListener('error', function() {setTimeout(checkNewComms, 500);});
 			r.open('get', jsonurl, true);
+			r4e.open('get', jsonurl4e, true);
 			r.send();
 		};
 	</script>
 </head>
 <body>
 	<nav><a id="title" href="index.html">ASTiW</a><input type="search" id="search" class="txf" placeholder="Search"><a href="newpost.html" class="mi ib">+</a><a href="settings.html" class="mi">&#8943;</a><a href="javascript:openUserMenu();" id="usermenu" class="mi ib rightmost"></a><a href="register.html" class="lb" id="register">REGISTER</a><a href="login.html" class="lb rightmost">LOG IN</a></nav>
-	<div id="refreshMarker" onclick="window.location.reload();">&#8635; Reload to see new comment(s)</div>
+	<div id="refreshMarker" onclick="window.location.reload();">&#8635; Reload to see new comment(s) or edit</div>
 	<div id="cssshade"></div>
 	<div class="dbg" id="usermenubox">
 		<div class="dialog">
