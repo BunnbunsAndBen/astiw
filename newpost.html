@@ -54,8 +54,12 @@
 					var jsonurl = 'https://api.stibarc.gq/postpost.sjs';
 					var r = new XMLHttpRequest();
 					r.addEventListener('load', function() {
+						var newpostid = r.responseText;
+						if (localStorage.getItem('astiw_markread') != 'true') {
+							localStorage.setItem('astiw_viewed' + newpostid, 'true');
+						}
 						oktoleave = true;
-						window.location.href = 'post.html?id=' + r.responseText;
+						window.location.href = 'post.html?id=' + newpostid;
 					});
 					r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
 					r.open('post', jsonurl, true);
