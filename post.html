@@ -17,6 +17,7 @@
 		var inter;
 		var commCount;
 		var holdmyverification = false;
+		var ddnc = false;
 		
 		window.onbeforeunload = function() {
 			if (!oktoleave && (isSet(document.getElementById('commentBox').value) || document.getElementById('editText').style.display != 'none')) {
@@ -185,6 +186,7 @@
 						});
 						r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
 						r.open('post', jsonurl, true);
+						ddnc = true;
 						r.send('sess=' + sess + '&postid=' + id + '&content=' + encodeURIComponent(text).replace(/%0A/g, '%0D%0A'));
 					} else {
 						var left = again - new Date().getTime();
@@ -321,6 +323,7 @@
 					});
 					r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
 					r.open('post', jsonurl, true);
+					ddnc = true;
 					r.send('sess=' + sess + '&id=' + id + '&title=' + encodeURIComponent(title) + '&content=' + encodeURIComponent(text).replace(/%0A/g, '%0D%0A'));
 				} else {
 					document.getElementById('editEmpty').style.display = 'initial';
@@ -344,7 +347,7 @@
 				} else {
 					thingy = 0;
 				}
-				if (thingy > commCount) {
+				if (!ddnc && thingy > commCount) {
 					document.getElementById('refreshMarker').style.display = 'block';
 					document.title = '(\u21bb) ' + stuf.title + ' - ASTiW';
 				} else {
@@ -359,7 +362,7 @@
 						winners = true;
 					}
 				}
-				if (winners) {
+				if (!ddnc && winners) {
 					document.getElementById('refreshMarker').style.display = 'block';
 					document.title = '(\u21bb) ' + stuf.title + ' - ASTiW';
 				} else {
