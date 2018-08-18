@@ -59,7 +59,7 @@
 							localStorage.setItem('astiw_viewed' + newpostid, 'true');
 						}
 						oktoleave = true;
-						window.location.href = 'post.html?id=' + newpostid;
+						window.location.replace('post.html?id=' + newpostid);
 					});
 					r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
 					r.open('post', jsonurl, true);
