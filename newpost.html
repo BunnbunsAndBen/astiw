@@ -30,48 +30,52 @@
 		};
 		
 		function post() {
-			document.getElementById('wait').style.display = 'none';
-			document.getElementById('empty').style.display = 'none';
-			var title = document.getElementById('postTitle').value;
-			var text = document.getElementById('postText').value;
-			var sess = JSON.parse(localStorage.getItem('astiw_sesses'))[0];
-			var again = localStorage.getItem('astiw_canpostagain');
-			if (!isSet(again)) {
-				again = 0;
-			}
-			if (isSet(title) && isSet(text) && title.trim() != '' && text.trim() != '') {
-				if (new Date().getTime() >= again) {
-					document.getElementById('post').style.display = 'none';
-					document.getElementById('postTitle').disabled = true;
-					document.getElementById('postText').disabled = true;
-					var ldr = document.createElement('div');
-					ldr.className = 'loader';
-					ldr.id = 'loader';
-					ldr.style.margin = '0 0 16px 0';
-					document.getElementById('contain').appendChild(ldr);
-					var n = new Date().getTime() + 15000;
-					localStorage.setItem("astiw_canpostagain", n);
-					var jsonurl = 'https://api.stibarc.gq/postpost.sjs';
-					var r = new XMLHttpRequest();
-					r.addEventListener('load', function() {
-						var newpostid = r.responseText;
-						if (localStorage.getItem('astiw_markread') != 'true') {
-							localStorage.setItem('astiw_viewed' + newpostid, 'true');
-						}
-						oktoleave = true;
-						window.location.replace('post.html?id=' + newpostid);
-					});
-					r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
-					r.open('post', jsonurl, true);
-					r.send('sess=' + sess + '&title=' + encodeURIComponent(title) + '&image=' + attachedfile + '&content=' + encodeURIComponent(text).replace(/%0A/g, '%0D%0A'));
+			if (!sessHasChanged()) {
+				document.getElementById('wait').style.display = 'none';
+				document.getElementById('empty').style.display = 'none';
+				var title = document.getElementById('postTitle').value;
+				var text = document.getElementById('postText').value;
+				var sess = JSON.parse(localStorage.getItem('astiw_sesses'))[0];
+				var again = localStorage.getItem('astiw_canpostagain');
+				if (!isSet(again)) {
+					again = 0;
+				}
+				if (isSet(title) && isSet(text) && title.trim() != '' && text.trim() != '') {
+					if (new Date().getTime() >= again) {
+						document.getElementById('post').style.display = 'none';
+						document.getElementById('postTitle').disabled = true;
+						document.getElementById('postText').disabled = true;
+						var ldr = document.createElement('div');
+						ldr.className = 'loader';
+						ldr.id = 'loader';
+						ldr.style.margin = '0 0 16px 0';
+						document.getElementById('contain').appendChild(ldr);
+						var n = new Date().getTime() + 15000;
+						localStorage.setItem("astiw_canpostagain", n);
+						var jsonurl = 'https://api.stibarc.gq/postpost.sjs';
+						var r = new XMLHttpRequest();
+						r.addEventListener('load', function() {
+							var newpostid = r.responseText;
+							if (localStorage.getItem('astiw_markread') != 'true') {
+								localStorage.setItem('astiw_viewed' + newpostid, 'true');
+							}
+							oktoleave = true;
+							window.location.replace('post.html?id=' + newpostid);
+						});
+						r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+						r.open('post', jsonurl, true);
+						r.send('sess=' + sess + '&title=' + encodeURIComponent(title) + '&image=' + attachedfile + '&content=' + encodeURIComponent(text).replace(/%0A/g, '%0D%0A'));
+					} else {
+						var left = again - new Date().getTime();
+						left = Math.round(left / 1000);
+						document.getElementById('wait').innerHTML = 'You can post again in ' + left.toString() + (left.toString() == '1' ? ' second' : ' seconds');
+						document.getElementById('wait').style.display = 'initial';
+					}
 				} else {
-					var left = again - new Date().getTime();
-					left = Math.round(left / 1000);
-					document.getElementById('wait').innerHTML = 'You can post again in ' + left.toString() + (left.toString() == '1' ? ' second' : ' seconds');
-					document.getElementById('wait').style.display = 'initial';
+					document.getElementById('empty').style.display = 'initial';
 				}
 			} else {
-				document.getElementById('empty').style.display = 'initial';
+				sayToReload();
 			}
 		};
 		

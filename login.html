@@ -9,63 +9,67 @@
 	<script src="script.js"></script>
 	<script>
 		function login(isanon) {
-			document.getElementById('bad').style.display = 'none';
-			document.getElementById('empty').style.display = 'none';
-			document.getElementById('already').style.display = 'none';
-			if (isanon) {
-				var username = 'Anon';
-				var password = 'anon';
-			} else {
-				var username = document.getElementById('username').value;
-				var password = document.getElementById('password').value;
-			}
-			if (isSet(username) && isSet(password)) {
-				var tthtdwun = localStorage.getItem('astiw_usernames');
-				if (!isSet(tthtdwun) || JSON.parse(tthtdwun).indexOf(username) == -1) {
-					document.getElementById('login').style.display = 'none';
-					document.getElementById('username').disabled = true;
-					document.getElementById('password').disabled = true;
-					document.getElementById('anon').style.cursor = 'not-allowed';
-					var ldr = document.createElement('div');
-					ldr.className = 'loader';
-					ldr.id = 'loader';
-					ldr.style.margin = '0 0 16px 0';
-					document.getElementById('contain').appendChild(ldr);
-					var jsonurl = 'https://api.stibarc.gq/createsess.sjs';
-					var r = new XMLHttpRequest();
-					r.addEventListener('load', function() {
-						sess = r.responseText;
-						if (sess != 'Invalid username or password\n') {
-							var sesses = JSON.parse(localStorage.getItem('astiw_sesses'));
-							var usernames = JSON.parse(localStorage.getItem('astiw_usernames'));
-							if (!isSet(sesses)) {
-								sesses = [];
-							}
-							if (!isSet(usernames)) {
-								usernames = [];
-							}
-							sesses.splice(0, 0, sess.split('\n')[0]);
-							usernames.splice(0, 0, username);
-							localStorage.setItem('astiw_sesses', JSON.stringify(sesses));
-							localStorage.setItem('astiw_usernames', JSON.stringify(usernames));
-							window.location.href = 'index.html';
-						} else {
-							document.getElementById('username').disabled = false;
-							document.getElementById('password').disabled = false;
-							document.getElementById('anon').style.cursor = '';
-							document.getElementById('bad').style.display = 'initial';
-							document.getElementById('contain').removeChild(document.getElementById('loader'));
-							document.getElementById('login').style.display = 'initial';
-						}
-					});
-					r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
-					r.open('post', jsonurl, true);
-					r.send('username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password));
+			if (!sessHasChanged()) {
+				document.getElementById('bad').style.display = 'none';
+				document.getElementById('empty').style.display = 'none';
+				document.getElementById('already').style.display = 'none';
+				if (isanon) {
+					var username = 'Anon';
+					var password = 'anon';
 				} else {
-					document.getElementById('already').style.display = 'initial';
+					var username = document.getElementById('username').value;
+					var password = document.getElementById('password').value;
+				}
+				if (isSet(username) && isSet(password)) {
+					var tthtdwun = localStorage.getItem('astiw_usernames');
+					if (!isSet(tthtdwun) || JSON.parse(tthtdwun).indexOf(username) == -1) {
+						document.getElementById('login').style.display = 'none';
+						document.getElementById('username').disabled = true;
+						document.getElementById('password').disabled = true;
+						document.getElementById('anon').style.cursor = 'not-allowed';
+						var ldr = document.createElement('div');
+						ldr.className = 'loader';
+						ldr.id = 'loader';
+						ldr.style.margin = '0 0 16px 0';
+						document.getElementById('contain').appendChild(ldr);
+						var jsonurl = 'https://api.stibarc.gq/createsess.sjs';
+						var r = new XMLHttpRequest();
+						r.addEventListener('load', function() {
+							sess = r.responseText;
+							if (sess != 'Invalid username or password\n') {
+								var sesses = JSON.parse(localStorage.getItem('astiw_sesses'));
+								var usernames = JSON.parse(localStorage.getItem('astiw_usernames'));
+								if (!isSet(sesses)) {
+									sesses = [];
+								}
+								if (!isSet(usernames)) {
+									usernames = [];
+								}
+								sesses.splice(0, 0, sess.split('\n')[0]);
+								usernames.splice(0, 0, username);
+								localStorage.setItem('astiw_sesses', JSON.stringify(sesses));
+								localStorage.setItem('astiw_usernames', JSON.stringify(usernames));
+								window.location.href = 'index.html';
+							} else {
+								document.getElementById('username').disabled = false;
+								document.getElementById('password').disabled = false;
+								document.getElementById('anon').style.cursor = '';
+								document.getElementById('bad').style.display = 'initial';
+								document.getElementById('contain').removeChild(document.getElementById('loader'));
+								document.getElementById('login').style.display = 'initial';
+							}
+						});
+						r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+						r.open('post', jsonurl, true);
+						r.send('username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password));
+					} else {
+						document.getElementById('already').style.display = 'initial';
+					}
+				} else {
+					document.getElementById('empty').style.display = 'initial';
 				}
 			} else {
-				document.getElementById('empty').style.display = 'initial';
+				sayToReload();
 			}
 		};
 		

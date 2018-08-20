@@ -1,5 +1,6 @@
 var modal;
 // var modal2;
+var sessesAtLoad;
 
 window.onload = function() {
 	colors();
@@ -32,6 +33,7 @@ window.onload = function() {
 		var usernameList = JSON.parse(usernames);
 		if (sessList.length == usernameList.length) {
 			if (sessList.length > 0) {
+				sessesAtLoad = sessList;
 				var ibs = document.getElementsByClassName('ib');
 				var usermenu = document.getElementById('usermenu');
 				usermenu.innerHTML = usernameList[0];
@@ -56,6 +58,11 @@ window.onload = function() {
 	} else {
 		notLoggedIn();
 	}
+};
+
+function sessHasChanged() {
+	var sessesStorage = localStorage.getItem('astiw_sesses');
+	return (isSet(sessesAtLoad) && isSet(sessesAtLoad[0]) ? sessesAtLoad[0] : '') != (isSet(sessesStorage) && isSet(JSON.parse(sessesStorage)[0]) ? JSON.parse(sessesStorage)[0] : '');
 };
 
 function getCurrentUser() {
@@ -156,20 +163,25 @@ function checkSess(sess) {
 };
 
 function openUserMenu() {
-	var accounts = document.getElementById('accounts');
-	var me = document.getElementById('currentUserName');
-	var usernames = JSON.parse(localStorage.getItem('astiw_usernames'));
-	document.getElementById('userMenuProfButton').href = 'user.html?id=' + encodeURIComponent(usernames[0]);
-	me.innerHTML = usernames[0];
-	var oof;
-	for (i = 1; i < usernames.length; i++) {
-		document.getElementById('accountSwitcher').style.display = '';
-		oof = document.createElement('li');
-		oof.innerHTML = '<a class="classic" href="javascript:switchUser(' + i.toString() + ')">' + usernames[i] + '</a>';
-		oof.style.marginTop = '0.5em';
-		accounts.appendChild(oof);
+	if (!sessHasChanged()) {
+		var accounts = document.getElementById('accounts');
+		accounts.innerHTML = '';
+		var me = document.getElementById('currentUserName');
+		var usernames = JSON.parse(localStorage.getItem('astiw_usernames'));
+		document.getElementById('userMenuProfButton').href = 'user.html?id=' + encodeURIComponent(usernames[0]);
+		me.innerHTML = usernames[0];
+		var oof;
+		for (i = 1; i < usernames.length; i++) {
+			document.getElementById('accountSwitcher').style.display = '';
+			oof = document.createElement('li');
+			oof.innerHTML = '<a class="classic" href="javascript:switchUser(' + i.toString() + ')">' + usernames[i] + '</a>';
+			oof.style.marginTop = '0.5em';
+			accounts.appendChild(oof);
+		}
+		modal.style.display = 'initial';
+	} else {
+		sayToReload();
 	}
-	modal.style.display = 'initial';
 };
 
 function closeUserMenu() {
@@ -196,18 +208,41 @@ function openSpecificModal() {
 	modalS.style.display = 'initial';
 };
 
+function logoutCurrentUser() {
+	if (!sessHasChanged()) {
+		window.location.href = 'logout.html';
+	} else {
+		sayToReload();
+	}
+};
+
 function switchUser(n) {
-	var sesses = JSON.parse(localStorage.getItem('astiw_sesses'));
-	var usernames = JSON.parse(localStorage.getItem('astiw_usernames'));
-	var wantedSess = sesses[n];
-	var wantedUsername = usernames[n];
-	sesses.splice(n, 1);
-	usernames.splice(n, 1);
-	sesses.splice(0, 0, wantedSess);
-	usernames.splice(0, 0, wantedUsername);
-	localStorage.setItem('astiw_sesses', JSON.stringify(sesses));
-	localStorage.setItem('astiw_usernames', JSON.stringify(usernames));
-	window.location.reload();
+	var sessesStorage = JSON.parse(localStorage.getItem('astiw_sesses'));
+	var sessesHaveChanged = false;
+	if (!(sessesStorage.length == sessesAtLoad.length)) {
+		sessesHaveChanged = true;
+	} else {
+		for (i = 0; i < sessesAtLoad.length; i++) {
+			if (sessesAtLoad[i] != sessesStorage[i]) {
+				sessesHaveChanged = true;
+			}
+		}
+	}
+	if (!sessesHaveChanged) {
+		var sesses = JSON.parse(localStorage.getItem('astiw_sesses'));
+		var usernames = JSON.parse(localStorage.getItem('astiw_usernames'));
+		var wantedSess = sesses[n];
+		var wantedUsername = usernames[n];
+		sesses.splice(n, 1);
+		usernames.splice(n, 1);
+		sesses.splice(0, 0, wantedSess);
+		usernames.splice(0, 0, wantedUsername);
+		localStorage.setItem('astiw_sesses', JSON.stringify(sesses));
+		localStorage.setItem('astiw_usernames', JSON.stringify(usernames));
+		window.location.reload();
+	} else {
+		alert('The logged in accounts have changed, please reload the page');
+	}
 };
 
 function getAllUrlParams(url) {
@@ -261,77 +296,81 @@ function addRecent(item, b) {
 };
 
 function expand(numb) {
-	var eliq = document.getElementById('postItem' + numb).getElementsByTagName('div')[0];
-	var eliqSpan = eliq.getElementsByTagName('span')[0];
-	var eliqB = eliq.getElementsByClassName('theB')[0];
-	eliqSpan.innerHTML = '<a href="javascript:void(0)" style="text-decoration:none;">&#x25bc;</a>';
-	var jason = 'https://api.stibarc.gq/getpost.sjs?id=' + numb;
-	var expdr = new XMLHttpRequest();
-	var expdrv = new XMLHttpRequest();
-	var expdrc = new XMLHttpRequest();
-	var metastuff;
-	var poststuff;
-	var exans;
-	var menulist = [];
-	var appendMe = document.createElement('div');
-	appendMe.id = 'expanded' + numb;
-	var newtitleiguess;
-	expdr.addEventListener('load', function() {
-		if (isSet(expdr.responseText)) {
-			var tkos = JSON.parse(expdr.responseText);
-			var currentUser = getCurrentUser();
-			metastuff = '<p class="small">Posted by <a class="classic" ' + (tkos.poster == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(tkos.poster) + '">' + tkos.poster + '</a><span class="ddverif" id="verified' + numb + '"> &#x2611;&#xFE0E;</span> at ' + tkos.postdate + (tkos.edited ? ' (edited)' : '') + '</p>';
-			poststuff = '<p style="white-space:pre-wrap;">' + putLinksInText(tkos.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>')) + '</p>';
-			if (isSet(tkos.attachment) && tkos.attachment != 'none') {
-				menulist.push('Image attached');
-			}
-			newtitleiguess = tkos.title.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-			var jasonv = 'https://api.stibarc.gq/checkverify.sjs?id=' + tkos.poster;
-			expdrv.open('get', jasonv, true);
-			expdrv.send();
-		} else {
-			appendMe.innerHTML = '<p style="text-align:center; color:var(--border);">This post does not exist</p>';
-			eliq.appendChild(appendMe);
-			eliqSpan.innerHTML = '<a class="classic" href="javascript:collapse(' + numb + ');">&#x25b2;</a>';
-		}
-	});
-	expdrv.addEventListener('load', function() {
-		exans = expdrv.responseText.split('\n')[0];
-		var jasonc = 'https://api.stibarc.gq/getcomments.sjs?id=' + numb;
-		expdrc.open('get', jasonc, true);
-		expdrc.send();
-	});
-	expdrc.addEventListener('load', function() {
-		if (isSet(expdrc.responseText) && expdrc.responseText != 'undefined\n') {
-			var objComments = JSON.parse(expdrc.responseText);
-			var counter = 0;
-			for (key in objComments) {
-				counter++;
-			}
-			if (counter == 1) {
-				menulist.splice(0, 0, '1 comment');
+	if (!sessHasChanged()) {
+		var eliq = document.getElementById('postItem' + numb).getElementsByTagName('div')[0];
+		var eliqSpan = eliq.getElementsByTagName('span')[0];
+		var eliqB = eliq.getElementsByClassName('theB')[0];
+		eliqSpan.innerHTML = '<a href="javascript:void(0)" style="text-decoration:none;">&#x25bc;</a>';
+		var jason = 'https://api.stibarc.gq/getpost.sjs?id=' + numb;
+		var expdr = new XMLHttpRequest();
+		var expdrv = new XMLHttpRequest();
+		var expdrc = new XMLHttpRequest();
+		var metastuff;
+		var poststuff;
+		var exans;
+		var menulist = [];
+		var appendMe = document.createElement('div');
+		appendMe.id = 'expanded' + numb;
+		var newtitleiguess;
+		expdr.addEventListener('load', function() {
+			if (isSet(expdr.responseText)) {
+				var tkos = JSON.parse(expdr.responseText);
+				var currentUser = getCurrentUser();
+				metastuff = '<p class="small">Posted by <a class="classic" ' + (tkos.poster == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(tkos.poster) + '">' + tkos.poster + '</a><span class="ddverif" id="verified' + numb + '"> &#x2611;&#xFE0E;</span> at ' + tkos.postdate + (tkos.edited ? ' (edited)' : '') + '</p>';
+				poststuff = '<p style="white-space:pre-wrap;">' + putLinksInText(tkos.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>')) + '</p>';
+				if (isSet(tkos.attachment) && tkos.attachment != 'none') {
+					menulist.push('Image attached');
+				}
+				newtitleiguess = tkos.title.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+				var jasonv = 'https://api.stibarc.gq/checkverify.sjs?id=' + tkos.poster;
+				expdrv.open('get', jasonv, true);
+				expdrv.send();
 			} else {
-				menulist.splice(0, 0, counter.toString() + ' comments');
+				appendMe.innerHTML = '<p style="text-align:center; color:var(--border);">This post does not exist</p>';
+				eliq.appendChild(appendMe);
+				eliqSpan.innerHTML = '<a class="classic" href="javascript:collapse(' + numb + ');">&#x25b2;</a>';
 			}
-		} else {
-			menulist.splice(0, 0, '0 comments');
-		}
-		if (localStorage.getItem('astiw_markread') != 'true') {
-			menulist.splice(1, 0, (localStorage.getItem('astiw_viewed' + numb) == 'true' ? '<a class="classic" id="prms' + numb + '" href="javascript:markPost(' + numb + ', false);">Mark unread</a>' : '<a class="classic" id="prms' + numb + '" href="javascript:markPost(' + numb + ', true);">Mark read</a>'))
-		}
-		appendMe.innerHTML = metastuff + poststuff + '<b><p class="small">' + menulist.join(' &#xb7; ') + '</p></b>';
-		eliqB.innerHTML = newtitleiguess;
-		eliq.appendChild(appendMe);
-		if (exans == 'true') {
-			document.getElementById('verified' + numb).style.display = 'initial';
-		}
-		eliqSpan.innerHTML = '<a class="classic" href="javascript:collapse(' + numb + ');">&#x25b2;</a>';
-	});
-	expdr.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
-	expdrv.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
-	expdrc.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
-	expdr.open('get', jason, true);
-	expdr.send();
+		});
+		expdrv.addEventListener('load', function() {
+			exans = expdrv.responseText.split('\n')[0];
+			var jasonc = 'https://api.stibarc.gq/getcomments.sjs?id=' + numb;
+			expdrc.open('get', jasonc, true);
+			expdrc.send();
+		});
+		expdrc.addEventListener('load', function() {
+			if (isSet(expdrc.responseText) && expdrc.responseText != 'undefined\n') {
+				var objComments = JSON.parse(expdrc.responseText);
+				var counter = 0;
+				for (key in objComments) {
+					counter++;
+				}
+				if (counter == 1) {
+					menulist.splice(0, 0, '1 comment');
+				} else {
+					menulist.splice(0, 0, counter.toString() + ' comments');
+				}
+			} else {
+				menulist.splice(0, 0, '0 comments');
+			}
+			if (localStorage.getItem('astiw_markread') != 'true') {
+				menulist.splice(1, 0, (localStorage.getItem('astiw_viewed' + numb) == 'true' ? '<a class="classic" id="prms' + numb + '" href="javascript:markPost(' + numb + ', false);">Mark unread</a>' : '<a class="classic" id="prms' + numb + '" href="javascript:markPost(' + numb + ', true);">Mark read</a>'))
+			}
+			appendMe.innerHTML = metastuff + poststuff + '<b><p class="small">' + menulist.join(' &#xb7; ') + '</p></b>';
+			eliqB.innerHTML = newtitleiguess;
+			eliq.appendChild(appendMe);
+			if (exans == 'true') {
+				document.getElementById('verified' + numb).style.display = 'initial';
+			}
+			eliqSpan.innerHTML = '<a class="classic" href="javascript:collapse(' + numb + ');">&#x25b2;</a>';
+		});
+		expdr.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+		expdrv.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+		expdrc.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+		expdr.open('get', jason, true);
+		expdr.send();
+	} else {
+		sayToReload();
+	}
 };
 
 function markPost(pn, whichOne) {
@@ -351,4 +390,8 @@ function collapse(numb) {
 	var appended = document.getElementById('expanded' + numb);
 	eliq.removeChild(appended);
 	eliqSpan.innerHTML = '<a class="classic" href="javascript:expand(' + numb + ');">&#x25bc;</a>';
+};
+
+function sayToReload() {
+	alert('The selected account has changed, please reload the page');
 };
