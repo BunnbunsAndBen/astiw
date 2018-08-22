@@ -10,9 +10,13 @@
 	<script>
 		var attachedfile = 'none';
 		var oktoleave = false;
+		var acquiredContents = '';
+		var npSess;
+		var npTitle;
+		var npText;
 		
 		window.onbeforeunload = function() {
-			if (!oktoleave && (isSet(document.getElementById('postTitle').value) || isSet(document.getElementById('postText').value))) {
+			if (!oktoleave && (isSet(document.getElementById('postTitle').value) || isSet(document.getElementById('postText').value) || isSet(document.getElementById('file').files[0]))) {
 				return true;
 			}
 		};
@@ -26,13 +30,14 @@
 			} else {
 				window.location.replace('login.html');
 			}
-			document.getElementById("file").addEventListener('change',readFile,false); //for the image thing
+			document.getElementById('file').addEventListener('change', acquireFile, false);
 		};
 		
 		function post() {
 			if (!sessHasChanged()) {
 				document.getElementById('wait').style.display = 'none';
 				document.getElementById('empty').style.display = 'none';
+				document.getElementById('fileError').style.display = 'none';
 				var title = document.getElementById('postTitle').value;
 				var text = document.getElementById('postText').value;
 				var sess = JSON.parse(localStorage.getItem('astiw_sesses'))[0];
@@ -45,48 +50,66 @@
 						document.getElementById('post').style.display = 'none';
 						document.getElementById('postTitle').disabled = true;
 						document.getElementById('postText').disabled = true;
+						document.getElementById('file').disabled = true;
+						document.getElementById('removeimage').disabled = true;
+						document.getElementById('removeimage').className = 'othbut disabledbut';
 						var ldr = document.createElement('div');
 						ldr.className = 'loader';
 						ldr.id = 'loader';
 						ldr.style.margin = '0 0 16px 0';
 						document.getElementById('contain').appendChild(ldr);
-						var n = new Date().getTime() + 15000;
-						localStorage.setItem("astiw_canpostagain", n);
-						var jsonurl = 'https://api.stibarc.gq/postpost.sjs';
-						var r = new XMLHttpRequest();
-						r.addEventListener('load', function() {
-							var newpostid = r.responseText;
-							if (localStorage.getItem('astiw_markread') != 'true') {
-								localStorage.setItem('astiw_viewed' + newpostid, 'true');
-							}
-							oktoleave = true;
-							window.location.replace('post.html?id=' + newpostid);
-						});
-						r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
-						r.open('post', jsonurl, true);
-						r.send('sess=' + sess + '&title=' + encodeURIComponent(title) + '&image=' + attachedfile + '&content=' + encodeURIComponent(text).replace(/%0A/g, '%0D%0A'));
+						npSess = sess;
+						npTitle = title;
+						npText = text;
+						if (isSet(acquiredContents)) {
+							newReadFile();
+						} else {
+							sendPost();
+						}
 					} else {
 						var left = again - new Date().getTime();
 						left = Math.round(left / 1000);
 						document.getElementById('wait').innerHTML = 'You can post again in ' + left.toString() + (left.toString() == '1' ? ' second' : ' seconds');
-						document.getElementById('wait').style.display = 'initial';
+						document.getElementById('wait').style.display = '';
 					}
 				} else {
-					document.getElementById('empty').style.display = 'initial';
+					document.getElementById('empty').style.display = '';
 				}
 			} else {
 				sayToReload();
 			}
 		};
 		
+		function sendPost(sess, title, text) {
+			var n = new Date().getTime() + 15000;
+			localStorage.setItem("astiw_canpostagain", n);
+			var jsonurl = 'https://api.stibarc.gq/postpost.sjs';
+			var r = new XMLHttpRequest();
+			r.addEventListener('load', function() {
+				var newpostid = r.responseText;
+				if (localStorage.getItem('astiw_markread') != 'true') {
+					localStorage.setItem('astiw_viewed' + newpostid, 'true');
+				}
+				oktoleave = true;
+				window.location.replace('post.html?id=' + newpostid);
+			});
+			r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+			r.open('post', jsonurl, true);
+			r.send('sess=' + npSess + '&title=' + encodeURIComponent(npTitle) + '&image=' + attachedfile + '&content=' + encodeURIComponent(npText).replace(/%0A/g, '%0D%0A'));
+		}
+		
 		// begin image thing
 		
 		function removeImageFunction() {
-			attachedfile = 'none';
-			document.getElementById('imageadded').style.display = 'none';
-			document.getElementById('imageadd').style.display = '';
+			acquiredContents = '';
+			var img = document.getElementById('imgToUpload')
+			img.src = '';
+			img.style.display = 'none';
+			document.getElementById('removeimage').style.display = 'none';
+			replaceFilePicker();
 		};
 		
+		/*
 		function uploadPart(file,part,callback) {
 			var xmlHttp = new XMLHttpRequest();
 			xmlHttp.open("POST", "https://api.stibarc.gq/uploadparts.sjs", false);
@@ -111,8 +134,98 @@
 			} catch(err) {
 				callback("Error");
 			}
-		}
-
+		};
+		*/
+		
+		function newReadFile(e) {
+			var contents = acquiredContents;
+			var stuff = contents.match(/.{1,98000}/g);
+			var totalParts = stuff.length;
+			var uploadi = 0;
+			var fileid;
+			var imageloader = document.createElement('div');
+			imageloader.style = 'flex-grow:1; height:36px; margin-left:16px; background-color:var(--cb-off);';
+			imageloader.innerHTML = '<div style="position:absolute; line-height:36px; padding: 0 8px; color:var(--opposing);">Uploading image...</div><div id="progresser" style="width:0; height:100%; background-color:var(--link);"></div>'
+			imageloader.id = 'imageloader';
+			document.getElementById('contain').appendChild(imageloader);
+			var r = new XMLHttpRequest();
+			r.addEventListener('load', function() {
+				if (isSet(r.responseText)) {
+					var ans = r.responseText.split('\n')[0];
+					if (uploadi == 0) {
+						fileid = ans;
+					}
+					if (uploadi == 0 ? isSet(ans) && ans != 'ERR' : ans == 'GOOD') {
+						uploadi++;
+						setProgress(uploadi, totalParts);
+						if (uploadi == totalParts) {
+							attachedfile = fileid;
+							document.getElementById('contain').removeChild(document.getElementById('imageloader'));
+							sendPost();
+						} else {
+							r.open('post', 'https://api.stibarc.gq/uploadparts.sjs', true);
+							r.send('cont=true&file=' + fileid + '&content=' + encodeURIComponent(stuff[uploadi]));
+						}
+					} else {
+						imageError();
+					}
+				} else {
+					imageError();
+				}
+			});
+			r.addEventListener('error', function() {imageError();});
+			r.open('post', 'https://api.stibarc.gq/uploadparts.sjs', true);
+			r.send('content=' + encodeURIComponent(stuff[0]));
+		};
+		
+		function setProgress(val, max) {
+			document.getElementById('progresser').style.width = ((val / max) * 100).toString() + '%';
+		};
+		
+		function imageError() {
+			document.getElementById('fileError').style.display = '';
+			document.getElementById('contain').removeChild(document.getElementById('imageloader'));
+			document.getElementById('contain').removeChild(document.getElementById('loader'));
+			document.getElementById('postTitle').disabled = false;
+			document.getElementById('postText').disabled = false;
+			document.getElementById('file').disabled = false;
+			document.getElementById('removeimage').disabled = false;
+			document.getElementById('removeimage').className = 'othbut';
+			document.getElementById('post').style.display = '';
+		};
+		
+		function replaceFilePicker() {
+			var cont = document.getElementById('pickerContainer');
+			cont.removeChild(document.getElementById('file'));
+			var newPicker = document.createElement('input');
+			newPicker.type = 'file';
+			newPicker.id = 'file';
+			newPicker.accept = 'image/*';
+			cont.appendChild(newPicker);
+			document.getElementById('file').addEventListener('change', acquireFile, false);
+		};
+		
+		function acquireFile(e) {
+			var f = e.target.files[0];
+			var img = document.getElementById('imgToUpload');
+			if (f) {
+				var reader = new FileReader();
+				reader.onload = function(e2) {
+					acquiredContents = e2.target.result;
+					img.src = acquiredContents;
+					img.style.display = 'block';
+					document.getElementById('removeimage').style.display = '';
+				}
+				reader.readAsDataURL(f);
+			} else {
+				acquiredContents = '';
+				img.src = '';
+				img.style.display = 'none';
+				document.getElementById('removeimage').style.display = 'none';
+			}
+		};
+		
+		/*
 		function readFile(evt) {
 			document.getElementById("post").disabled = true;
 			document.getElementById("imageadd").style.display = 'none';
@@ -192,7 +305,8 @@
 				r.readAsDataURL(f);
 			}
 			document.getElementById("post").disabled = false;
-		}
+		};
+		*/
 		
 		// end image thing
 	</script>
@@ -223,17 +337,18 @@
 		<div id="main" class="stdc" style="display:none;">
 			<input type="text" autocomplete="off" id="postTitle" class="txf" placeholder="Title" style="width:calc(100% - 32px); display:block; margin-top:16px; margin-bottom:16px;">
 			<textarea class="txf" id="postText" style="height:108px; width:calc(100% - 32px);" placeholder="Text"></textarea>
-			<h4>Upload image (beta?)</h4>
+			<h4>Add image</h4>
 			<!-- begin image thing -->
-			<div id="error" style="display:none">Error uploading image!</div>
-			<div id="imageadd">Attach image: <input type="file" id="file" name="file" accept="image/*" /></div>
-			<div id="pleasewait" style="display:none">Please wait for image to upload...</div>
-			<progress id="imageprogress" style="display:none"></progress>
-			<div id="imageadded" style="display:none">Image added <button id="removeimage" onclick="removeImageFunction();">remove</button></div><br/>
+			<div>
+				<div id="pickerContainer" style="margin-bottom:16px;"><input type="file" id="file" accept="image/*"></div>
+				<button id="removeimage" class="othbut" onclick="removeImageFunction();" style="margin-bottom:16px; display:none;">Remove image</button>
+				<img id="imgToUpload" style="display:none; max-width:100%; margin-bottom:16px;">
+			</div>
 			<!-- end image thing -->
-			<div id="contain"><button id="post" onclick="post();" class="libut" style="display:block; margin-bottom:16px;">POST</button></div>
-			<p class="small" style="color:var(--red); display:none;" id="wait">You can post again in [seconds] seconds</p>
-			<p class="small" style="color:var(--red); display:none;" id="empty">A title and text are required</p>
+			<div id="contain"  style="display:flex;"><button id="post" onclick="post();" class="libut" style="display:block; margin-bottom:16px;">POST</button></div>
+			<p class="small" style="color:var(--red); display:none; margin:0 0 9px 0;" id="wait">You can post again in [seconds] seconds</p>
+			<p class="small" style="color:var(--red); display:none; margin:0 0 9px 0;" id="empty">A title and text are required</p>
+			<p id="fileError" class="small" style="color:var(--red); display:none; margin:0 0 9px 0;">Image upload failed</p>
 		</div>
 		<div class="loader" id="loader2"></div>
 	</main>

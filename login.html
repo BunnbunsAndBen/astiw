@@ -54,19 +54,19 @@
 								document.getElementById('username').disabled = false;
 								document.getElementById('password').disabled = false;
 								document.getElementById('anon').style.cursor = '';
-								document.getElementById('bad').style.display = 'initial';
+								document.getElementById('bad').style.display = '';
 								document.getElementById('contain').removeChild(document.getElementById('loader'));
-								document.getElementById('login').style.display = 'initial';
+								document.getElementById('login').style.display = '';
 							}
 						});
 						r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
 						r.open('post', jsonurl, true);
 						r.send('username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password));
 					} else {
-						document.getElementById('already').style.display = 'initial';
+						document.getElementById('already').style.display = '';
 					}
 				} else {
-					document.getElementById('empty').style.display = 'initial';
+					document.getElementById('empty').style.display = '';
 				}
 			} else {
 				sayToReload();

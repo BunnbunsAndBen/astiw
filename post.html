@@ -197,10 +197,10 @@
 							var left = again - new Date().getTime();
 							left = Math.round(left / 1000);
 							document.getElementById('wait').innerHTML = 'You can comment again in ' + left.toString() + (left.toString() == '1' ? ' second' : ' seconds');
-							document.getElementById('wait').style.display = 'initial';
+							document.getElementById('wait').style.display = '';
 						}
 					} else {
-						document.getElementById('empty').style.display = 'initial';
+						document.getElementById('empty').style.display = '';
 					}
 				}
 			} else {
@@ -343,7 +343,7 @@
 						ddnc = true;
 						r.send('sess=' + sess + '&id=' + id + '&title=' + encodeURIComponent(title) + '&content=' + encodeURIComponent(text).replace(/%0A/g, '%0D%0A'));
 					} else {
-						document.getElementById('editEmpty').style.display = 'initial';
+						document.getElementById('editEmpty').style.display = '';
 					}
 				}
 			} else {
@@ -429,7 +429,7 @@
 			<input type="text" autocomplete="off" id="editTitle" class="txf" placeholder="Title" style="width:calc(100% - 32px); display:none; margin-top:16px; margin-bottom:16px;">
 			<textarea class="txf" id="editText" style="height:108px; width:calc(100% - 32px); margin-bottom:16px; display:none;" placeholder="Text"></textarea>
 			<div id="contain2" style="display:none;"><button id="save" onclick="saveEdit();" class="libut" style="margin-bottom:16px; margin-right:16px;">SAVE</button><button id="cancel" onclick="cancelEdit();" class="othbut" style="margin-bottom:16px;">CANCEL</button></div>
-			<p class="small" style="color:var(--red); display:none;" id="editEmpty">A title and text are required</p>
+			<p class="small" style="color:var(--red); display:none; margin-top:0;" id="editEmpty">A title and text are required</p>
 			<div id="imgThing" style="display:none; text-align:center;"><button id="viewImg" onclick="loadImg();" class="othbut widebut" style="margin:0; display:initial;">SHOW IMAGE</button></div>
 			<b><p class="small" id="postMenu"></p></b>
 			<p id="youArentLoggedIn" style="margin-top:0;"><a href="register.html" class="classic">Register</a> or <a href="login.html" class="classic">log in</a> to leave a comment!</p>

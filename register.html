@@ -65,7 +65,7 @@
 								document.getElementById('showname').disabled = false;
 								document.getElementById('showemail').disabled = false;
 								document.getElementById('showbirthday').disabled = false;
-								document.getElementById('bad').style.display = 'initial';
+								document.getElementById('bad').style.display = '';
 								document.getElementById('contain').removeChild(document.getElementById('loader'));
 								document.getElementById('registerButton').style.display = 'initial';
 							}
@@ -74,13 +74,13 @@
 						r.open('post', jsonurl, true);
 						r.send('username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password) + '&password2=' + encodeURIComponent(confirmpassword) + '&name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(email) + '&birthday=' + encodeURIComponent(birthday) + (showname ? '&showname=true' : '') + (showemail ? '&showemail=true' : '') + (showbirthday ? '&showbday=true' : ''));
 					} else {
-						document.getElementById('mismatch').style.display = 'initial';
+						document.getElementById('mismatch').style.display = '';
 					}
 				} else {
-					document.getElementById('spaces').style.display = 'initial';
+					document.getElementById('spaces').style.display = '';
 				}
 			} else {
-				document.getElementById('empty').style.display = 'initial';
+				document.getElementById('empty').style.display = '';
 			}
 		};
 		
