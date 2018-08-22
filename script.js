@@ -173,6 +173,7 @@ function openUserMenu() {
 		var oof;
 		for (i = 1; i < usernames.length; i++) {
 			document.getElementById('accountSwitcher').style.display = '';
+			document.getElementById('lobut').innerHTML = 'Log out this account';
 			oof = document.createElement('li');
 			oof.innerHTML = '<a class="classic" href="javascript:switchUser(' + i.toString() + ')">' + usernames[i] + '</a>';
 			oof.style.marginTop = '0.5em';
