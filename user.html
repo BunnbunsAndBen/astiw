@@ -21,7 +21,7 @@
 			if (term == myname && myname != 'Anon') {
 				var editproflink = document.createElement('p');
 				editproflink.className = 'small';
-				editproflink.innerHTML = '<b><a class="classic" href="editprofile.html">&#x270E;&#xFE0E; Edit</a></b>';
+				editproflink.innerHTML = '<b><a class="classic" href="javascript:openEditProfile();">&#x270E;&#xFE0E; Edit</a></b>';
 				document.getElementById('detail').appendChild(editproflink);
 			}
 			var jsonurl = 'https://api.stibarc.gq/getuser.sjs?id=' + encodeURIComponent(term);
@@ -97,6 +97,14 @@
 			rp.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
 			r.open('get', jsonurl, true);
 			r.send();
+		};
+		
+		function openEditProfile() {
+			if (!sessHasChanged()) {
+				window.location.href = 'editprofile.html';
+			} else {
+				sayToReload();
+			}
 		};
 	</script>
 </head>
