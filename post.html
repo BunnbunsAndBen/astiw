@@ -227,11 +227,19 @@
 					img.style.maxWidth = '100%';
 					var tmp = r.responseText.split('');
 					tmp = tmp[0] + tmp[1] + tmp[2] + tmp[3] + tmp[4];
+					var cachefail = false;
 					if (tmp == 'data:' && localStorage.getItem('astiw_docache') != 'true') {
-						localStorage.setItem('astiw_cache' + imgId, r.responseText);
+						try {
+							localStorage.setItem('astiw_cache' + imgId, r.responseText);
+						} catch (err) {
+							cachefail = true;
+						}
 					}
 					document.getElementById('imgThing').removeChild(document.getElementById('loader3'));
 					document.getElementById('imgThing').appendChild(img);
+					if (cachefail) {
+						alert('Image could not be cached because local storage is full');
+					}
 				});
 				r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
 				r.open('get', jsonurl, true);
