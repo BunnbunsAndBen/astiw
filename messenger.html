@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Messenger - ASTiW</title>
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="themes/dark.css" id="themer">
+	<script src="script.js"></script>
+	<script>
+		var sesses;
+		var mySess;
+		
+		function load() {
+			sesses = localStorage.getItem('astiw_sesses');
+			if (isSet(sesses) && JSON.parse(sesses).length > 0) {} else {
+				window.location.replace('login.html');
+			}
+			var mySess = JSON.parse(sesses)[0];
+			var myName = getCurrentUser();
+			var jsonurl = 'https://messenger.stibarc.gq/api/getuserchats.sjs';
+			var r = new XMLHttpRequest();
+			r.addEventListener('load', function() {
+				var tmp = JSON.parse(r.responseText);
+				var keys = [];
+				var keysi = 0;
+				var el;
+				var beforeSplit;
+				var finishedMessage;
+				var jsonurl2 = 'https://messenger.stibarc.gq/api/getuserchat.sjs';
+				var main = document.getElementById('main');
+				for (key in tmp) {
+					keys.push(key);
+				}
+				var r2 = new XMLHttpRequest();
+				r2.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+				r2.addEventListener('load', function() {
+					var tmp3 = r2.responseText.split('\n');
+					el = document.createElement('a');
+					el.href = 'javascript:openChat(' + keys[keysi] + ')';
+					el.className = 'recentLinks';
+					beforeSplit = tmp3[tmp3.length - 2];
+					finishedMessage = (beforeSplit.split(':')[0] == myName ? '&#x2197;&#xFE0E;' : '&#x2199;&#xFE0E;') + ' ' + beforeSplit.substring(beforeSplit.indexOf(':') + 1);
+					el.innerHTML = '<div id="chatItem' + keys[keysi] + '" class="recent" style="border-left:none; border-right:none;"><b>' + tmp[keys[keysi]].user.replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b><p class="small" style="margin-bottom:0;">' + finishedMessage.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</p></div>';
+					main.appendChild(el);
+					keysi++;
+					if (keysi >= keys.length) {
+						document.getElementById('rm').removeChild(document.getElementById('loader'));
+						document.getElementById('hidden').style.display = '';
+						setTimeout(repeater, 500);
+					} else {
+						r2.open('post', jsonurl2, true);
+						r2.send('sess=' + mySess + '&id=' + keys[keysi]);
+					}
+				});
+				r2.open('post', jsonurl2, true);
+				r2.send('sess=' + mySess + '&id=' + keys[keysi]);
+			});
+			r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+			r.open('post', jsonurl, true);
+			r.send('sess=' + mySess);
+		};
+		
+		function repeater() {
+			var jsonurl = 'https://messenger.stibarc.gq/api/getuserchats.sjs';
+			var jsonurli = 'https://messenger.stibarc.gq/api/getuserchat.sjs';
+			var r = new XMLHttpRequest();
+			var ri = new XMLHttpRequest();
+			r.addEventListener('load', function() {
+				var main = document.getElementById('main');
+				if (false) {
+					ri.send();
+				} else {
+					setTimeout(repeater, 500);
+				}
+			});
+			ri.addEventListener('load', function() {
+				setTimeout(repeater, 500);
+			});
+			r.addEventListener('error', function() {setTimeout(repeater, 500);});
+			ri.addEventListener('error', function() {setTimeout(repeater, 500);});
+			r.open('post', jsonurl, true);
+			ri.open('post', jsonurli, true);
+			r.send('sess=' + mySess);
+		};
+	</script>
+</head>
+<body style="overflow:hidden;">
+	<nav><a id="title" href="index.html">ASTiW</a><input type="search" id="search" class="txf" placeholder="Search"><a href="newpost.html" class="mi ib">+</a><a href="settings.html" class="mi">&#8943;</a><a href="javascript:openUserMenu();" id="usermenu" class="mi ib rightmost"></a><a href="register.html" class="lb" id="register">REGISTER</a><a href="login.html" class="lb rightmost">LOG IN</a></nav>
+	<div id="cssshade"></div>
+	<div class="dbg" id="usermenubox">
+		<div class="dialog">
+			<a href="javascript:closeUserMenu();" class="closeButton">&times;</a>
+			<h3 id="currentUserName"></h3>
+			<div style="margin-top:16px;"><a class="othbut" id="userMenuProfButton" style="margin-right:8px;">View profile</a><a class="othbut noanon" href="editprofile.html">Edit profile</a></div>
+			<p style="margin:8px 0;"><a class="classic noanon" href="changepassword.html">Change password</a></p>
+			<p style="margin:8px 0;"><a class="classic noanon" href="mailto:herronjo110@gmail.com?subject=STiBaRC%20User%20Verification%20Request">Request user verification</a></p>
+			<hr style="margin:20px 0;">
+			<div id="accountSwitcher" style="display:none;">
+				<h4 style="margin-top:20px;">Switch account</h4>
+				<ul style="padding:0 0 0 20px;" id="accounts">
+				</ul>
+				<hr style="margin:20px 0;">
+			</div>
+			<div style="margin-top:16px;"><a class="othbut" href="login.html" style="margin-right:8px;">Add account</a><a class="othbut" href="javascript:logoutCurrentUser();" id="lobut">Log out</a></div>
+			<p style="margin:8px 0;"><a class="classic" href="register.html">Register a new account</a></p>
+		</div>
+	</div>
+	<main id="rm" style="margin:0;">
+		<div id="hidden" style="display:none;">
+			<div style="position:absolute; width:30%; left:0; top:49px; bottom:0; border-right:1px solid var(--border); background-color:var(--content-bg);">
+				<div style="background-color:var(--content-bg); border-bottom: 1px solid var(--border); padding:8px;"><h3 style="margin:0; display:inline-block;">Messenger</h3><h3 style="margin:0; float:right; display:inline-block;"><a class="classic" href="javascript:newChat();">New</a></h3></div>
+				<div id="main" style="overflow:auto; height:calc(100vh - 88.5px);"></div>
+			</div>
+			<div id="rightSide" style="position:absolute; width:calc(70% - 1px); right:0; top:49px; bottom:0; display:flex; flex-direction:column;">
+				<div id="noChat" style="color:var(--border); margin:auto;">No chat selected</div>
+				<div id="theChat" style="display:none;">
+					<div style="background-color:var(--content-bg); border-bottom: 1px solid var(--border); padding:8px;"><h3 style="margin:0; text-align:center;"><a class="classic" target="_blank" id="chatPersonUsername"></a></h3></div>
+					<div style="overflow:auto; height:calc(100vh - 137.5px);" id="messages"></div>
+					<textarea type="text" autocomplete="off" id="messageBox" class="chattxf" placeholder="Type a message"></textarea>
+				</div>
+			</div>
+		</div>
+		<div class="loader" id="loader"></div>
+	</main>
+</body>
+</html>

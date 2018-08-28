@@ -52,6 +52,20 @@ nav {
 	outline: none;
 }
 
+.chattxf {
+	border-top: 1px solid var(--border);
+	border-style: solid none none none;
+	height: 1.2em;
+	background-color: var(--tb-back);
+	color: var(--content);
+	outline: none;
+	width: calc(100% - 32px);
+	display: block;
+	resize: none;
+	position: absolute;
+	bottom: 0;
+}
+
 textarea {
 	font-family: Roboto, sans-serif;
 	padding: 16px !important;
@@ -337,4 +351,12 @@ hr {
 .widebut {
 	width: 100%;
 	margin-top: 24px;
+}
+
+.selectedChatItem {
+	background-color: var(--link);
+}
+
+.selectedChatItem > * {
+	color: var(--opposing);
 }
