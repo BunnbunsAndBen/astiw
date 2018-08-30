@@ -21,7 +21,7 @@
 			localStorage.setItem('astiw_usernames', JSON.stringify(usernames));
 			window.location.replace('index.html');
 		});
-		r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+		r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 		r.open('post', jsonurl, true);
 		r.send('sess=' + sesses[0]);
 	</script>

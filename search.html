@@ -62,8 +62,8 @@
 					document.getElementById('nameThing').style.display = '';
 					document.getElementById('main').style.display = '';
 				});
-				r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
-				ru.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+				r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
+				ru.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 				r.open('get', jsonurl, true);
 				r.send();
 			} else {
@@ -80,7 +80,7 @@
 	</script>
 </head>
 <body>
-	<nav><a id="title" href="index.html">ASTiW</a><input type="search" id="search" class="txf" placeholder="Search"><a href="newpost.html" class="mi ib">+</a><a href="settings.html" class="mi">&#8943;</a><a href="javascript:openUserMenu();" id="usermenu" class="mi ib rightmost"></a><a href="register.html" class="lb" id="register">REGISTER</a><a href="login.html" class="lb rightmost">LOG IN</a></nav>
+	<nav><a id="title" href="index.html">ASTiW</a><input type="search" id="search" class="txf" placeholder="Search"><a href="messenger.html" class="mi ib">&#x1f4ac;&#xfe0e;</a><a href="newpost.html" class="mi ib">+</a><a href="settings.html" class="mi">&#8943;</a><a href="javascript:openUserMenu();" id="usermenu" class="mi ib rightmost"></a><a href="register.html" class="lb" id="register">REGISTER</a><a href="login.html" class="lb rightmost">LOG IN</a></nav>
 	<div id="cssshade"></div>
 	<div class="dbg" id="usermenubox">
 		<div class="dialog">

@@ -63,7 +63,7 @@
 						document.getElementById('save').style.display = 'initial';
 					}
 				});
-				r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+				r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 				r.open('post', jsonurl, true);
 				r.send('sess=' + sess + '&name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(email) + '&birthday=' + encodeURIComponent(birthday) + '&bio=' + encodeURIComponent(bio).replace(/%0A/g, '%0D%0A') + (showname ? '&showname=true' : '') + (showemail ? '&showemail=true' : '') + (showbirthday ? '&showbday=true' : '') + (showbio ? '&showbio=true' : ''));
 			} else {
@@ -91,7 +91,7 @@
 					document.getElementById('eugh').style.display = '';
 					document.getElementById('main').style.display = 'block';
 				});
-				r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+				r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 				r.open('get', jsonurl, true);
 				r.send();
 			} else {
@@ -113,7 +113,7 @@
 	</script>
 </head>
 <body>
-	<nav><a id="title" href="index.html">ASTiW</a><input type="search" id="search" class="txf" placeholder="Search"><a href="newpost.html" class="mi ib">+</a><a href="settings.html" class="mi">&#8943;</a><a href="javascript:openUserMenu();" id="usermenu" class="mi ib rightmost"></a><a href="register.html" class="lb" id="register">REGISTER</a><a href="login.html" class="lb rightmost">LOG IN</a></nav>
+	<nav><a id="title" href="index.html">ASTiW</a><input type="search" id="search" class="txf" placeholder="Search"><a href="messenger.html" class="mi ib">&#x1f4ac;&#xfe0e;</a><a href="newpost.html" class="mi ib">+</a><a href="settings.html" class="mi">&#8943;</a><a href="javascript:openUserMenu();" id="usermenu" class="mi ib rightmost"></a><a href="register.html" class="lb" id="register">REGISTER</a><a href="login.html" class="lb rightmost">LOG IN</a></nav>
 	<div id="cssshade"></div>
 	<div class="dbg" id="usermenubox">
 		<div class="dialog">
@@ -143,7 +143,7 @@
 			<p class="tfl">Birthday</p>
 			<div style="display:block; margin-bottom:10px;"><input autocomplete="off" spellcheck="false" type="text" id="birthday" class="txf e" placeholder="Birthday" style="margin-bottom:6px;"><div style="display:inline-block; vertical-align:top;"><button id="showbirthday" class="cb" onclick="toggleShow('birthday');" style="margin-bottom:6px;"></button><p class="whateverthisis">Make birthday public</p></div></div>
 			<p class="tfl">Bio</p>
-			<div style="display:block; margin-bottom:10px;"><textarea id="bio" class="txf e" placeholder="Bio" style="margin-bottom:6px; height:108px; width:calc(100% - 32px);"></textarea><div style="display:inline-block; vertical-align:top;"><button id="showbio" class="cb" onclick="toggleShow('bio');" style="margin-bottom:6px;"></button><p class="whateverthisis">Make bio public</p></div></div>
+			<div style="display:block; margin-bottom:10px;"><textarea id="bio" class="txf e" placeholder="Bio" style="margin-bottom:6px; height:108px; width:calc(100% - 34px);"></textarea><div style="display:inline-block; vertical-align:top;"><button id="showbio" class="cb" onclick="toggleShow('bio');" style="margin-bottom:6px;"></button><p class="whateverthisis">Make bio public</p></div></div>
 			<div id="contain"><button id="save" onclick="save();" class="libut" style="display:block; margin-bottom:16px;">SAVE</button></div>
 			<p class="small" style="color:var(--red); display:none;" id="bad">Edit failed</p>
 		</div>

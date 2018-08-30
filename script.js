@@ -9,7 +9,7 @@ window.onload = function() {
 	window.addEventListener('keydown', function(e) {
 		if (e.keyCode == 27) {
 			closeUserMenu();
-			if (typeof modalS !== 'undefined') {
+			if (typeof modalS !== 'undefined' && okToClose) {
 				modalS.style.display = 'none';
 			}
 		}
@@ -157,7 +157,7 @@ function checkSess(sess) {
 			load();
 		}
 	});
-	xmlHttp.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+	xmlHttp.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 	xmlHttp.open('get', 'https://api.stibarc.gq/checksess.sjs?sess=' + sess, true);
 	xmlHttp.send();
 };
@@ -167,15 +167,17 @@ function openUserMenu() {
 		var accounts = document.getElementById('accounts');
 		accounts.innerHTML = '';
 		var me = document.getElementById('currentUserName');
+		var showsess = localStorage.getItem('astiw_showsess') == 'true';
+		var sesses = JSON.parse(localStorage.getItem('astiw_sesses'));
 		var usernames = JSON.parse(localStorage.getItem('astiw_usernames'));
 		document.getElementById('userMenuProfButton').href = 'user.html?id=' + encodeURIComponent(usernames[0]);
-		me.innerHTML = usernames[0];
+		me.innerHTML = usernames[0] + (showsess ? ' (' + sesses[0] + ')' : '');
 		var oof;
 		for (i = 1; i < usernames.length; i++) {
 			document.getElementById('accountSwitcher').style.display = '';
 			document.getElementById('lobut').innerHTML = 'Log out this account';
 			oof = document.createElement('li');
-			oof.innerHTML = '<a class="classic" href="javascript:switchUser(' + i.toString() + ')">' + usernames[i] + '</a>';
+			oof.innerHTML = '<a class="classic" href="javascript:switchUser(' + i.toString() + ')">' + usernames[i] + '</a>' + (showsess ? ' (' + sesses[i] + ')' : '');
 			oof.style.marginTop = '0.5em';
 			accounts.appendChild(oof);
 		}
@@ -196,13 +198,15 @@ window.onclick = function(event) {
 	/* if (event.target == modal2) {
 		modal2.style.display = 'none';
 	} */
-	if (typeof modalS !== 'undefined' && event.target == modalS) {
+	if (typeof modalS !== 'undefined' && event.target == modalS && okToClose) {
 		modalS.style.display = 'none';
 	}
 };
 
 function closeSpecificModal() {
-	modalS.style.display = 'none';
+	if (okToClose) {
+		modalS.style.display = 'none';
+	}
 };
 
 function openSpecificModal() {
@@ -364,9 +368,9 @@ function expand(numb) {
 			}
 			eliqSpan.innerHTML = '<a class="classic" href="javascript:collapse(' + numb + ');">&#x25b2;</a>';
 		});
-		expdr.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
-		expdrv.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
-		expdrc.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+		expdr.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
+		expdrv.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
+		expdrc.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 		expdr.open('get', jason, true);
 		expdr.send();
 	} else {
