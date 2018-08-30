@@ -61,6 +61,7 @@
 			var roi = localStorage.getItem('astiw_roi') == 'true';
 			var docache = localStorage.getItem('astiw_docache') == 'true';
 			var replacesl = localStorage.getItem('astiw_replacesl') == 'true';
+			var showsess = localStorage.getItem('showsess') == 'true';
 			var markread = localStorage.getItem('astiw_markread') == 'true';
 			var theme = localStorage.getItem('astiw_theme');
 			if (!isSet(theme)) {
@@ -79,6 +80,8 @@
 			document.getElementById('markread').style.backgroundColor = (!markread ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('replacesl').innerHTML = (replacesl ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('replacesl').style.backgroundColor = (replacesl ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('showsess').innerHTML = (showsess ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('showsess').style.backgroundColor = (showsess ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('theme').value = theme;
 			document.getElementById('customtheme').value = customtheme;
 			var mar = document.getElementById('markallread')
@@ -195,6 +198,11 @@
 			<p>Created by savaka<br/>
 			Based on the <a href="https://stibarc.gq/" target="_blank" class="classic">STiBaRC website</a></p>
 			<p>ASTiW connects to the STiBaRC service; by using it you accept the STiBaRC <a href="https://stibarc.gq/privacy.html" target="_blank" class="classic">Privacy Policy</a></p>
+			<h4>Developer</h4>
+			<div>
+				<button class="cb" id="showsess" onclick="toggleSetting('showsess');"></button><p style="margin-bottom:9px;">Show sesses in user menu</p>
+				<p class="small">Show session keys of logins in the user menu</p>
+			</div>
 		</div>
 		<div class="loader" id="loader"></div>
 	</main>
