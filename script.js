@@ -157,7 +157,7 @@ function checkSess(sess) {
 			load();
 		}
 	});
-	xmlHttp.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+	xmlHttp.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 	xmlHttp.open('get', 'https://api.stibarc.gq/checksess.sjs?sess=' + sess, true);
 	xmlHttp.send();
 };
@@ -364,9 +364,9 @@ function expand(numb) {
 			}
 			eliqSpan.innerHTML = '<a class="classic" href="javascript:collapse(' + numb + ');">&#x25b2;</a>';
 		});
-		expdr.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
-		expdrv.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
-		expdrc.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+		expdr.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
+		expdrv.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
+		expdrc.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 		expdr.open('get', jason, true);
 		expdr.send();
 	} else {

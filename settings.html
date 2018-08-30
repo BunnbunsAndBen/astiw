@@ -39,7 +39,7 @@
 					document.getElementById('marContain').removeChild(document.getElementById('loader2'));
 					document.getElementById('markallread').style.display = 'initial';
 				});
-				r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+				r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 				r.open('get', 'https://api.stibarc.gq/getposts.sjs', true);
 				r.send();
 			}

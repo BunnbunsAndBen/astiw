@@ -108,9 +108,9 @@
 					setTimeout(checkNewComms, 500);
 				}
 			});
-			r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
-			rv.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
-			rc.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+			r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
+			rv.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
+			rc.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 			r.open('get', jsonurl, true);
 			r.send();
 		};
@@ -189,7 +189,7 @@
 								oktoleave = true;
 								window.location.reload();
 							});
-							r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+							r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 							r.open('post', jsonurl, true);
 							ddnc = true;
 							r.send('sess=' + sess + '&postid=' + id + '&content=' + encodeURIComponent(text).replace(/%0A/g, '%0D%0A'));
@@ -241,7 +241,7 @@
 						alert('Image could not be cached because local storage is full');
 					}
 				});
-				r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+				r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 				r.open('get', jsonurl, true);
 				r.send();
 			} else {
@@ -276,7 +276,7 @@
 					document.getElementById('editText').style.display = 'initial';
 					document.getElementById('contain2').style.display = 'initial';
 				});
-				r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+				r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 				r.open('get', jsonurl, true);
 				r.send();
 			} else {
@@ -346,7 +346,7 @@
 							oktoleave = true;
 							window.location.reload();
 						});
-						r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+						r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 						r.open('post', jsonurl, true);
 						ddnc = true;
 						r.send('sess=' + sess + '&id=' + id + '&title=' + encodeURIComponent(title) + '&content=' + encodeURIComponent(text).replace(/%0A/g, '%0D%0A'));

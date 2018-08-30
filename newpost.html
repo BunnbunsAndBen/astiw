@@ -93,7 +93,7 @@
 				oktoleave = true;
 				window.location.replace('post.html?id=' + newpostid);
 			});
-			r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+			r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 			r.open('post', jsonurl, true);
 			r.send('sess=' + npSess + '&title=' + encodeURIComponent(npTitle) + '&image=' + attachedfile + '&content=' + encodeURIComponent(npText).replace(/%0A/g, '%0D%0A'));
 		}

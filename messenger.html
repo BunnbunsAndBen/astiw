@@ -17,6 +17,9 @@
 		var currentLength;
 		var highlightChat;
 		var repeaterLoadingChat;
+		var shifted = false;
+		var queue = [];
+		var otherPerson;
 		
 		function load() {
 			sesses = localStorage.getItem('astiw_sesses');
@@ -27,20 +30,43 @@
 			myName = getCurrentUser();
 			document.getElementById('messages').onscroll = function(e) {
 				var msgBox = document.getElementById('messages');
-				if (msgBox.scrollTop == 0) {
-					var msgs = generateMsgs(oldresp, hfb)
+				if (msgBox.scrollTop == 0 && hfb > 0) {
+					var msgs = generateMsgs(oldresp, hfb);
+					var oldSH = msgBox.scrollHeight;
 					msgBox.innerHTML = msgs + msgBox.innerHTML;
+					msgBox.scrollTop = msgBox.scrollHeight - oldSH;
 				}
 			};
+			document.getElementById('messageBox').addEventListener('keydown', function(e) {
+				if (e.keyCode == 13 && !shifted) {
+					e.preventDefault();
+					submitMessage();
+				}
+			});
+			window.addEventListener('keydown', function(e) {
+				if (e.keyCode == 16) {
+					shifted = true;
+				}
+			});
+			window.addEventListener('keyup', function(e) {
+				if (e.keyCode == 16) {
+					shifted = false;
+				}
+			});
 			var jsonurl = 'https://messenger.stibarc.gq/api/v2/getuserchats.sjs';
 			var r = new XMLHttpRequest();
 			r.addEventListener('load', function() {
 				putChats(JSON.parse(r.responseText));
 				document.getElementById('rm').removeChild(document.getElementById('loader'));
 				document.getElementById('hidden').style.display = '';
-				setTimeout(repeater, 500);
+				if (sessHasChanged()) {
+					document.getElementById('cssshade').style.display = '';
+					sayToReload();
+				} else {
+					setTimeout(repeater, 500);
+				}
 			});
-			r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+			r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 			r.open('post', jsonurl, true);
 			r.send('sess=' + mySess);
 		};
@@ -121,10 +147,11 @@
 				var jsonurli = 'https://messenger.stibarc.gq/api/v2/getuserchat.sjs';
 				var ri = new XMLHttpRequest();
 				ri.addEventListener('load', function() {
-					if (ri.responseText != oldresp) {
+					if (isSet(ri.responseText)) {
 						oldresp = ri.responseText;
 						var msgs = generateMsgs(ri.responseText, 'start');
 						document.getElementById('chatPersonUsername').innerHTML = thePerson.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+						otherPerson = thePerson;
 						document.getElementById('chatPersonUsername').href = 'user.html?id=' + encodeURIComponent(thePerson);
 						var msgBox = document.getElementById('messages');
 						msgBox.innerHTML = msgs;
@@ -132,9 +159,12 @@
 						document.getElementById('theChat').style.display = '';
 						msgBox.scrollTop = msgBox.scrollHeight;
 						currentChat = chatid;
+					} else {
+						ri.open('post', jsonurli, true);
+						ri.send('sess=' + mySess + '&id=' + chatid);
 					}
 				});
-				ri.addEventListener('error', function() {alert('darn')});
+				ri.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 				ri.open('post', jsonurli, true);
 				ri.send('sess=' + mySess + '&id=' + chatid);
 			}
@@ -179,16 +209,30 @@
 			var r = new XMLHttpRequest();
 			var ri = new XMLHttpRequest();
 			r.addEventListener('load', function() {
-				putChats(JSON.parse(r.responseText));
-				if (isSet(currentChat) && currentChat != 'processing') {
-					repeaterLoadingChat = currentChat;
-					ri.send('sess=' + mySess + '&id=' + repeaterLoadingChat);
+				if (isSet(JSON.parse(r.responseText))) {
+					putChats(JSON.parse(r.responseText));
+					if (isSet(currentChat) && currentChat != 'processing') {
+						repeaterLoadingChat = currentChat;
+						ri.send('sess=' + mySess + '&id=' + repeaterLoadingChat);
+					} else {
+						if (sessHasChanged()) {
+							document.getElementById('cssshade').style.display = '';
+							sayToReload();
+						} else {
+							setTimeout(repeater, 500);
+						}
+					}
 				} else {
-					setTimeout(repeater, 500);
+					if (sessHasChanged()) {
+						document.getElementById('cssshade').style.display = '';
+						sayToReload();
+					} else {
+						setTimeout(repeater, 500);
+					}
 				}
 			});
 			ri.addEventListener('load', function() {
-				if (repeaterLoadingChat == currentChat) {
+				if (repeaterLoadingChat == currentChat && isSet(r.responseText)) {
 					var tmp = JSON.parse(ri.responseText);
 					if (Object.keys(tmp).length > currentLength) {
 						var msgs = '';
@@ -209,16 +253,55 @@
 							ind++;
 						}
 						var msgBox = document.getElementById('messages');
+						var stb = false;
+						if (msgBox.scrollTop >= msgBox.scrollHeight - msgBox.offsetHeight) {
+							stb = true;
+						}
 						msgBox.innerHTML += msgs;
+						if (stb) {
+							msgBox.scrollTop = msgBox.scrollHeight;
+						}
 					}
 				}
-				setTimeout(repeater, 500);
+				if (sessHasChanged()) {
+					document.getElementById('cssshade').style.display = '';
+					sayToReload();
+				} else {
+					setTimeout(repeater, 500);
+				}
 			});
-			r.addEventListener('error', function() {setTimeout(repeater, 500);});
-			ri.addEventListener('error', function() {setTimeout(repeater, 500);});
+			r.addEventListener('error', function() {
+				if (sessHasChanged()) {
+					document.getElementById('cssshade').style.display = '';
+					sayToReload();
+				} else {
+					setTimeout(repeater, 500);
+				}
+			});
+			ri.addEventListener('error', function() {
+				if (sessHasChanged()) {
+					document.getElementById('cssshade').style.display = '';
+					sayToReload();
+				} else {
+					setTimeout(repeater, 500);
+				}
+			});
 			r.open('post', jsonurl, true);
 			ri.open('post', jsonurli, true);
 			r.send('sess=' + mySess);
+		};
+		
+		function submitMessage() {
+			var message = document.getElementById('messageBox').value;
+			document.getElementById('messageBox').value = '';
+			if (isSet(message)) {
+				var jsonurl = 'https://messenger.stibarc.gq/api/postchat.sjs';
+				var r = new XMLHttpRequest();
+				r.addEventListener('load', function() {});
+				r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
+				r.open('post', jsonurl, true);
+				r.send('sess=' + mySess + '&other=' + otherPerson + '&id=' + currentChat + '&message=' + encodeURIComponent(message));
+			}
 		};
 	</script>
 </head>
@@ -286,6 +369,6 @@
 	}
 	
 	.specialty .classic {
-		color: var(--content-bg);
+		color: var(--content);
 	}
 </style>

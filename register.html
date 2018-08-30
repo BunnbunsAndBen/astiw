@@ -70,7 +70,7 @@
 								document.getElementById('registerButton').style.display = 'initial';
 							}
 						});
-						r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+						r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 						r.open('post', jsonurl, true);
 						r.send('username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password) + '&password2=' + encodeURIComponent(confirmpassword) + '&name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(email) + '&birthday=' + encodeURIComponent(birthday) + (showname ? '&showname=true' : '') + (showemail ? '&showemail=true' : '') + (showbirthday ? '&showbday=true' : ''));
 					} else {

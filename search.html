@@ -62,8 +62,8 @@
 					document.getElementById('nameThing').style.display = '';
 					document.getElementById('main').style.display = '';
 				});
-				r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
-				ru.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+				r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
+				ru.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 				r.open('get', jsonurl, true);
 				r.send();
 			} else {

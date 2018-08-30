@@ -63,7 +63,7 @@
 						document.getElementById('save').style.display = 'initial';
 					}
 				});
-				r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+				r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 				r.open('post', jsonurl, true);
 				r.send('sess=' + sess + '&name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(email) + '&birthday=' + encodeURIComponent(birthday) + '&bio=' + encodeURIComponent(bio).replace(/%0A/g, '%0D%0A') + (showname ? '&showname=true' : '') + (showemail ? '&showemail=true' : '') + (showbirthday ? '&showbday=true' : '') + (showbio ? '&showbio=true' : ''));
 			} else {
@@ -91,7 +91,7 @@
 					document.getElementById('eugh').style.display = '';
 					document.getElementById('main').style.display = 'block';
 				});
-				r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+				r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 				r.open('get', jsonurl, true);
 				r.send();
 			} else {

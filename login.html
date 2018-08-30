@@ -59,7 +59,7 @@
 								document.getElementById('login').style.display = '';
 							}
 						});
-						r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
+						r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 						r.open('post', jsonurl, true);
 						r.send('username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password));
 					} else {
