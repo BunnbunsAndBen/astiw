@@ -299,7 +299,7 @@
 				if (repeaterLoadingChat == currentChat) {
 					var ok = true;
 					try {
-						var parsed = JSON.parse(ri.responseText);
+						var tmp = JSON.parse(ri.responseText);
 					} catch (err) {
 						ok = false;
 					}
