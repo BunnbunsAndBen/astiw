@@ -265,6 +265,7 @@
 					putChats(parsed);
 					if (isSet(newId)) {
 						document.getElementById('bad').style.display = '';
+						document.getElementById('same').style.display = '';
 						document.getElementById('newUsername').disabled = false;
 						document.getElementById('newClose').style.cursor = 'pointer';
 						okToClose = true;
@@ -395,6 +396,7 @@
 		function newChat() {
 			document.getElementById('newUsername').value = '';
 			document.getElementById('bad').style.display = 'none';
+			document.getElementById('same').style.display = 'none';
 			openSpecificModal();
 			document.getElementById('newUsername').focus();
 		};
@@ -402,36 +404,41 @@
 		function start() {
 			var theirs = document.getElementById('newUsername').value;
 			if (isSet(theirs)) {
-				okToClose = false;
 				document.getElementById('bad').style.display = 'none';
-				document.getElementById('startChat').style.display = 'none';
-				document.getElementById('newUsername').disabled = true;
-				document.getElementById('newClose').style.cursor = 'not-allowed';
-				var ldr = document.createElement('div');
-				ldr.className = 'loader';
-				ldr.id = 'loader3';
-				ldr.style.margin = '0';
-				document.getElementById('contain').appendChild(ldr);
-				var jsonurl = 'https://messenger.stibarc.gq/api/newchat.sjs';
-				var r = new XMLHttpRequest();
-				r.addEventListener('load', function() {
-					var tmp = r.responseText.split('\n');
-					if (tmp[0] != 'bad') {
-						newName = theirs;
-						newId = Number(tmp[0]);
-					} else {
-						document.getElementById('bad').style.display = '';
-						document.getElementById('newUsername').disabled = false;
-						document.getElementById('newClose').style.cursor = 'pointer';
-						okToClose = true;
-						document.getElementById('contain').removeChild(document.getElementById('loader3'));
-						document.getElementById('startChat').style.display = '';
-						document.getElementById('newUsername').focus();
-					}
-				});
-				r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
-				r.open('post', jsonurl, true);
-				r.send('sess=' + mySess + '&user=' + theirs);
+				document.getElementById('same').style.display = 'none';
+				if (theirs != myName) {
+					okToClose = false;
+					document.getElementById('startChat').style.display = 'none';
+					document.getElementById('newUsername').disabled = true;
+					document.getElementById('newClose').style.cursor = 'not-allowed';
+					var ldr = document.createElement('div');
+					ldr.className = 'loader';
+					ldr.id = 'loader3';
+					ldr.style.margin = '0';
+					document.getElementById('contain').appendChild(ldr);
+					var jsonurl = 'https://messenger.stibarc.gq/api/newchat.sjs';
+					var r = new XMLHttpRequest();
+					r.addEventListener('load', function() {
+						var tmp = r.responseText.split('\n');
+						if (tmp[0] != 'bad') {
+							newName = theirs;
+							newId = Number(tmp[0]);
+						} else {
+							document.getElementById('bad').style.display = '';
+							document.getElementById('newUsername').disabled = false;
+							document.getElementById('newClose').style.cursor = 'pointer';
+							okToClose = true;
+							document.getElementById('contain').removeChild(document.getElementById('loader3'));
+							document.getElementById('startChat').style.display = '';
+							document.getElementById('newUsername').focus();
+						}
+					});
+					r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
+					r.open('post', jsonurl, true);
+					r.send('sess=' + mySess + '&user=' + theirs);
+				} else {
+					document.getElementById('same').style.display = '';
+				}
 			}
 		};
 		
@@ -468,6 +475,7 @@
 			<input type="text" spellcheck="false" id="newUsername" class="txf" placeholder="Enter username" style="display:block; width:calc(100% - 34px); margin-bottom:16px;">
 			<div id="contain"><button id="startChat" onclick="start();" class="libut" style="display:block;">START</button></div>
 			<p class="small" style="color:var(--red); display:none; margin:16px 0 0 0;" id="bad">User does not exist</p>
+			<p class="small" style="color:var(--red); display:none; margin:16px 0 0 0;" id="same">Type another user's username</p>
 		</div>
 	</div>
 	<main id="rm" style="margin:0;">
