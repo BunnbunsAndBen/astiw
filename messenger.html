@@ -20,6 +20,9 @@
 		var shifted = false;
 		var queue = [];
 		var otherPerson;
+		var okToClose = true;
+		var newId;
+		var newName;
 		
 		function load() {
 			sesses = localStorage.getItem('astiw_sesses');
@@ -43,6 +46,11 @@
 					submitMessage();
 				}
 			});
+			document.getElementById('newUsername').addEventListener('keydown', function(e) {
+				if (e.keyCode == 13 && document.getElementById('startChat').style.display != 'none') {
+					start();
+				}
+			});
 			window.addEventListener('keydown', function(e) {
 				if (e.keyCode == 16) {
 					shifted = true;
@@ -56,14 +64,25 @@
 			var jsonurl = 'https://messenger.stibarc.gq/api/v2/getuserchats.sjs';
 			var r = new XMLHttpRequest();
 			r.addEventListener('load', function() {
-				putChats(JSON.parse(r.responseText));
-				document.getElementById('rm').removeChild(document.getElementById('loader'));
-				document.getElementById('hidden').style.display = '';
-				if (sessHasChanged()) {
-					document.getElementById('cssshade').style.display = '';
-					sayToReload();
+				var ok = true;
+				try {
+					var parsed = JSON.parse(r.responseText);
+				} catch (err) {
+					ok = false;
+				}
+				if (ok) {
+					putChats(parsed);
+					document.getElementById('rm').removeChild(document.getElementById('loader'));
+					document.getElementById('hidden').style.display = '';
+					if (sessHasChanged()) {
+						document.getElementById('cssshade').style.display = '';
+						setTimeout(sayToReload, 500);
+					} else {
+						setTimeout(repeater, 500);
+					}
 				} else {
-					setTimeout(repeater, 500);
+					r.open('post', jsonurl, true);
+					r.send('sess=' + mySess);
 				}
 			});
 			r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
@@ -147,7 +166,13 @@
 				var jsonurli = 'https://messenger.stibarc.gq/api/v2/getuserchat.sjs';
 				var ri = new XMLHttpRequest();
 				ri.addEventListener('load', function() {
-					if (isSet(ri.responseText)) {
+					var ok = true;
+					try {
+						var parsed = JSON.parse(ri.responseText);
+					} catch (err) {
+						ok = false;
+					}
+					if (ok) {
 						oldresp = ri.responseText;
 						var msgs = generateMsgs(ri.responseText, 'start');
 						document.getElementById('chatPersonUsername').innerHTML = thePerson.replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -159,6 +184,14 @@
 						document.getElementById('theChat').style.display = '';
 						msgBox.scrollTop = msgBox.scrollHeight;
 						currentChat = chatid;
+						var te = document.getElementById('messageBox');
+						var saved = localStorage.getItem('astiw_savedmsg' + chatid);
+						if (isSet(saved)) {
+							te.value = saved;
+						} else {
+							te.value = '';
+						}
+						te.focus();
 					} else {
 						ri.open('post', jsonurli, true);
 						ri.send('sess=' + mySess + '&id=' + chatid);
@@ -171,36 +204,49 @@
 		};
 		
 		function generateMsgs(resp, inputind) {
-			var tmp = JSON.parse(resp);
-			var msgs = '';
-			var itsMe;
-			var readyForTime = false;
-			var oldTime = new Date(0);
-			var newTime;
-			if (inputind == 'start') {
-				var ind = Object.keys(tmp).length;
-				currentLength = ind;
-			} else {
-				var ind = inputind;
-				readyForTime = true;
-				oldTime = (tmp[ind + 1].time == 'unknown' ? 'unknown' : new Date(tmp[ind + 1].time));
+			var ok = true;
+			try {
+				var tmp = JSON.parse(resp);
+			} catch (err) {
+				ok = false;
 			}
-			hfb = ind - 20;
-			while (ind > hfb && isSet(tmp[ind - 1])) {
-				ind--;
-				itsMe = tmp[ind].sender == myName;
-				newTime = (tmp[ind].time == 'unknown' ? 'unknown' : new Date(tmp[ind].time));
-				if (readyForTime && (newTime == 'unknown' ? oldTime != 'unknown' : newTime.getDate() != oldTime.getDate() || newTime.getMonth() != oldTime.getMonth() || newTime.getFullYear() != oldTime.getFullYear())) {
+			if (ok) {
+				if (Object.keys(tmp).length == 0) {
+					currentLength = 0;
+					return '';
+				}
+				var msgs = '';
+				var itsMe;
+				var readyForTime = false;
+				var oldTime = new Date(0);
+				var newTime;
+				if (inputind == 'start') {
+					var ind = Object.keys(tmp).length;
+					currentLength = ind;
+				} else {
+					var ind = inputind;
+					readyForTime = true;
+					oldTime = (tmp[ind + 1].time == 'unknown' ? 'unknown' : new Date(tmp[ind + 1].time));
+				}
+				hfb = ind - 20;
+				while (ind > hfb && isSet(tmp[ind - 1])) {
+					ind--;
+					itsMe = tmp[ind].sender == myName;
+					newTime = (tmp[ind].time == 'unknown' ? 'unknown' : new Date(tmp[ind].time));
+					if (readyForTime && (newTime == 'unknown' ? oldTime != 'unknown' : newTime.getDate() != oldTime.getDate() || newTime.getMonth() != oldTime.getMonth() || newTime.getFullYear() != oldTime.getFullYear())) {
+						msgs = '<p class="small" style="margin:16px 0; text-align:center;">' + generateTS(oldTime, 2) + '</p>' + msgs;
+					}
+					readyForTime = true;
+					oldTime = newTime;
+					msgs = '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? '<div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + generateTS(tmp[ind].time, 1) + '</div>' : '') + '<div ' + (itsMe ? 'class="specialty" ' : '') + 'style="padding:8px 17.5px; border-radius:17.5px; border:1px solid var(--border); display:inline-block; word-wrap:break-word; ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);') + '">' + putLinksInText(tmp[ind].message.replace(/</g, '&lt;').replace(/>/g, '&gt;')) + '</div></div>' + msgs;
+				}
+				if (oldTime != 'unknown' && !isSet(tmp[ind - 1])) {
 					msgs = '<p class="small" style="margin:16px 0; text-align:center;">' + generateTS(oldTime, 2) + '</p>' + msgs;
 				}
-				readyForTime = true;
-				oldTime = newTime;
-				msgs = '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? '<div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + generateTS(tmp[ind].time, 1) + '</div>' : '') + '<div ' + (itsMe ? 'class="specialty" ' : '') + 'style="padding:8px 17.5px; border-radius:17.5px; display:inline-block; word-wrap:break-word; ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);') + '">' + putLinksInText(tmp[ind].message.replace(/</g, '&lt;').replace(/>/g, '&gt;')) + '</div></div>' + msgs;
+				return msgs;
+			} else {
+				return 'if you see this please report it';
 			}
-			if (oldTime != 'unknown' && !isSet(tmp[ind - 1])) {
-				msgs = '<p class="small" style="margin:16px 0; text-align:center;">' + generateTS(oldTime, 2) + '</p>' + msgs;
-			}
-			return msgs;
 		};
 		
 		function repeater() {
@@ -209,8 +255,26 @@
 			var r = new XMLHttpRequest();
 			var ri = new XMLHttpRequest();
 			r.addEventListener('load', function() {
-				if (isSet(JSON.parse(r.responseText))) {
-					putChats(JSON.parse(r.responseText));
+				var ok = true;
+				try {
+					var parsed = JSON.parse(r.responseText);
+				} catch (err) {
+					ok = false;
+				}
+				if (ok) {
+					putChats(parsed);
+					if (isSet(newId)) {
+						document.getElementById('bad').style.display = '';
+						document.getElementById('newUsername').disabled = false;
+						document.getElementById('newClose').style.cursor = 'pointer';
+						okToClose = true;
+						document.getElementById('contain').removeChild(document.getElementById('loader3'));
+						document.getElementById('startChat').style.display = '';
+						document.getElementById('modalS').style.display = 'none';
+						openChat(newId, newName);
+						newId = undefined;
+						newName = undefined;
+					}
 					if (isSet(currentChat) && currentChat != 'processing') {
 						repeaterLoadingChat = currentChat;
 						ri.send('sess=' + mySess + '&id=' + repeaterLoadingChat);
@@ -232,34 +296,53 @@
 				}
 			});
 			ri.addEventListener('load', function() {
-				if (repeaterLoadingChat == currentChat && isSet(r.responseText)) {
-					var tmp = JSON.parse(ri.responseText);
-					if (Object.keys(tmp).length > currentLength) {
-						var msgs = '';
-						var itsMe;
-						var readyForTime = false;
-						var newTime;
-						var ind = currentLength;
-						currentLength = Object.keys(tmp).length;
-						var oldTime = new Date(tmp[ind - 1].time);
-						while (ind < Object.keys(tmp).length) {	
-							itsMe = tmp[ind].sender == myName;
-							newTime = new Date(tmp[ind].time)
-							if (newTime.getDate() != oldTime.getDate() || newTime.getMonth() != oldTime.getMonth() || newTime.getFullYear() != oldTime.getFullYear()) {
-								msgs += '<p class="small" style="margin:16px 0; text-align:center;">' + generateTS(newTime, 2) + '</p>';
+				if (repeaterLoadingChat == currentChat) {
+					var ok = true;
+					try {
+						var parsed = JSON.parse(ri.responseText);
+					} catch (err) {
+						ok = false;
+					}
+					if (ok) {
+						if (Object.keys(tmp).length > currentLength) {
+							var msgs = '';
+							var itsMe;
+							var readyForTime = false;
+							var newTime;
+							var ind = currentLength;
+							var alomftop = false;
+							currentLength = Object.keys(tmp).length;
+							if (isSet(tmp[ind - 1])) {
+								var oldTime = new Date(tmp[ind - 1].time);
+							} else {
+								var oldTime = new Date(0);
 							}
-							oldTime = newTime;
-							msgs += '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? '<div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + generateTS(tmp[ind].time, 1) + '</div>' : '') + '<div ' + (itsMe ? 'class="specialty" ' : '') + 'style="padding:8px 17.5px; border-radius:17.5px; display:inline-block; word-wrap:break-word; ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);') + '">' + putLinksInText(tmp[ind].message.replace(/</g, '&lt;').replace(/>/g, '&gt;')) + '</div></div>';
-							ind++;
-						}
-						var msgBox = document.getElementById('messages');
-						var stb = false;
-						if (msgBox.scrollTop >= msgBox.scrollHeight - msgBox.offsetHeight) {
-							stb = true;
-						}
-						msgBox.innerHTML += msgs;
-						if (stb) {
-							msgBox.scrollTop = msgBox.scrollHeight;
+							while (ind < Object.keys(tmp).length) {	
+								itsMe = tmp[ind].sender == myName;
+								if (!itsMe) {
+									alomftop = true;
+								} 
+								newTime = new Date(tmp[ind].time)
+								if (newTime.getDate() != oldTime.getDate() || newTime.getMonth() != oldTime.getMonth() || newTime.getFullYear() != oldTime.getFullYear()) {
+									msgs += '<p class="small" style="margin:16px 0; text-align:center;">' + generateTS(newTime, 2) + '</p>';
+								}
+								oldTime = newTime;
+								msgs += '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? '<div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + generateTS(tmp[ind].time, 1) + '</div>' : '') + '<div ' + (itsMe ? 'class="specialty" ' : '') + 'style="padding:8px 17.5px; border-radius:17.5px; border:1px solid var(--border); display:inline-block; word-wrap:break-word; ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);') + '">' + putLinksInText(tmp[ind].message.replace(/</g, '&lt;').replace(/>/g, '&gt;')) + '</div></div>';
+								ind++;
+							}
+							var msgBox = document.getElementById('messages');
+							var stb = false;
+							if (msgBox.scrollTop >= msgBox.scrollHeight - msgBox.offsetHeight) {
+								stb = true;
+							}
+							msgBox.innerHTML += msgs;
+							if (stb) {
+								msgBox.scrollTop = msgBox.scrollHeight;
+							}
+							if (localStorage.getItem('astiw_messagesound') != 'true' && alomftop) {
+								var msgTone = new Audio('res/new_message.wav');
+								msgTone.play();
+							}
 						}
 					}
 				}
@@ -297,12 +380,64 @@
 			if (isSet(message)) {
 				var jsonurl = 'https://messenger.stibarc.gq/api/postchat.sjs';
 				var r = new XMLHttpRequest();
-				r.addEventListener('load', function() {});
+				r.addEventListener('load', function() {
+					if (localStorage.getItem('astiw_sendsound') != 'true') {
+						var sendTone = new Audio('res/send_message.wav');
+						sendTone.play();
+					}
+				});
 				r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 				r.open('post', jsonurl, true);
 				r.send('sess=' + mySess + '&other=' + otherPerson + '&id=' + currentChat + '&message=' + encodeURIComponent(message));
 			}
 		};
+		
+		function newChat() {
+			document.getElementById('newUsername').value = '';
+			document.getElementById('bad').style.display = 'none';
+			openSpecificModal();
+			document.getElementById('newUsername').focus();
+		};
+		
+		function start() {
+			var theirs = document.getElementById('newUsername').value;
+			if (isSet(theirs)) {
+				okToClose = false;
+				document.getElementById('bad').style.display = 'none';
+				document.getElementById('startChat').style.display = 'none';
+				document.getElementById('newUsername').disabled = true;
+				document.getElementById('newClose').style.cursor = 'not-allowed';
+				var ldr = document.createElement('div');
+				ldr.className = 'loader';
+				ldr.id = 'loader3';
+				ldr.style.margin = '0';
+				document.getElementById('contain').appendChild(ldr);
+				var jsonurl = 'https://messenger.stibarc.gq/api/newchat.sjs';
+				var r = new XMLHttpRequest();
+				r.addEventListener('load', function() {
+					var tmp = r.responseText.split('\n');
+					if (tmp[0] != 'bad') {
+						newName = theirs;
+						newId = Number(tmp[0]);
+					} else {
+						document.getElementById('bad').style.display = '';
+						document.getElementById('newUsername').disabled = false;
+						document.getElementById('newClose').style.cursor = 'pointer';
+						okToClose = true;
+						document.getElementById('contain').removeChild(document.getElementById('loader3'));
+						document.getElementById('startChat').style.display = '';
+						document.getElementById('newUsername').focus();
+					}
+				});
+				r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
+				r.open('post', jsonurl, true);
+				r.send('sess=' + mySess + '&user=' + theirs);
+			}
+		};
+		
+		function saveMessage() {
+			localStorage.setItem('astiw_savedmsg' + currentChat, document.getElementById('messageBox').value);
+		}
 	</script>
 </head>
 <body style="overflow:hidden;">
@@ -326,6 +461,15 @@
 			<p style="margin:8px 0;"><a class="classic" href="register.html">Register a new account</a></p>
 		</div>
 	</div>
+	<div class="dbg" id="modalS">
+		<div class="dialog">
+			<a href="javascript:closeSpecificModal();" id="newClose" class="closeButton">&times;</a>
+			<h3>New chat</h3>
+			<input type="text" spellcheck="false" id="newUsername" class="txf" placeholder="Enter username" style="display:block; width:calc(100% - 34px); margin-bottom:16px;">
+			<div id="contain"><button id="startChat" onclick="start();" class="libut" style="display:block;">START</button></div>
+			<p class="small" style="color:var(--red); display:none; margin:16px 0 0 0;" id="bad">User does not exist</p>
+		</div>
+	</div>
 	<main id="rm" style="margin:0;">
 		<div id="hidden" style="display:none;">
 			<div style="position:absolute; width:30%; left:0; top:49px; bottom:0; border-right:1px solid var(--border); background-color:var(--content-bg);">
@@ -337,7 +481,7 @@
 				<div id="theChat" style="display:none;">
 					<div style="background-color:var(--content-bg); border-bottom: 1px solid var(--border); padding:8px;"><h3 style="margin:0; text-align:center;"><a class="classic" target="_blank" id="chatPersonUsername"></a></h3></div>
 					<div style="overflow-y:auto; overflow-x:hidden; height:calc(100vh - 137.5px);" id="messages"></div>
-					<textarea type="text" autocomplete="off" id="messageBox" class="chattxf" placeholder="Type a message"></textarea>
+					<textarea onchange="saveMessage();" autocomplete="off" id="messageBox" class="chattxf" placeholder="Type a message"></textarea>
 				</div>
 			</div>
 		</div>

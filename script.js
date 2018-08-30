@@ -9,7 +9,7 @@ window.onload = function() {
 	window.addEventListener('keydown', function(e) {
 		if (e.keyCode == 27) {
 			closeUserMenu();
-			if (typeof modalS !== 'undefined') {
+			if (typeof modalS !== 'undefined' && okToClose) {
 				modalS.style.display = 'none';
 			}
 		}
@@ -198,13 +198,15 @@ window.onclick = function(event) {
 	/* if (event.target == modal2) {
 		modal2.style.display = 'none';
 	} */
-	if (typeof modalS !== 'undefined' && event.target == modalS) {
+	if (typeof modalS !== 'undefined' && event.target == modalS && okToClose) {
 		modalS.style.display = 'none';
 	}
 };
 
 function closeSpecificModal() {
-	modalS.style.display = 'none';
+	if (okToClose) {
+		modalS.style.display = 'none';
+	}
 };
 
 function openSpecificModal() {

@@ -63,6 +63,8 @@
 			var replacesl = localStorage.getItem('astiw_replacesl') == 'true';
 			var showsess = localStorage.getItem('astiw_showsess') == 'true';
 			var markread = localStorage.getItem('astiw_markread') == 'true';
+			var messagesound = localStorage.getItem('astiw_messagesound') == 'true';
+			var sendsound = localStorage.getItem('astiw_sendsound') == 'true';
 			var theme = localStorage.getItem('astiw_theme');
 			if (!isSet(theme)) {
 				theme = 'dark.css';
@@ -82,6 +84,10 @@
 			document.getElementById('replacesl').style.backgroundColor = (replacesl ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('showsess').innerHTML = (showsess ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('showsess').style.backgroundColor = (showsess ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('messagesound').innerHTML = (!messagesound ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('messagesound').style.backgroundColor = (!messagesound ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('sendsound').innerHTML = (!sendsound ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('sendsound').style.backgroundColor = (!sendsound ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('theme').value = theme;
 			document.getElementById('customtheme').value = customtheme;
 			var mar = document.getElementById('markallread')
@@ -98,6 +104,11 @@
 			var cbiq = document.getElementById(id)
 			cbiq.disabled = !bool;
 			cbiq.parentNode.style.opacity = (bool ? 1 : 0.5)
+		};
+		
+		function testSound(soundName) {
+			var sound = new Audio(soundName);
+			sound.play();
 		};
 	</script>
 </head>
@@ -185,6 +196,15 @@
 			<div>
 				<button class="cb" id="docache" onclick="toggleSetting('docache');"></button><p style="margin-bottom:9px;">Cache images</p>
 				<p class="small">Save images to your browser to not have to load them again (turning this off does not delete already cached images)</p>
+			</div>
+			<h4>Messenger</h4>
+			<div>
+				<button class="cb" id="messagesound" onclick="toggleSetting('messagesound');"></button><p style="margin-bottom:9px;">Play sound for new messages</p>
+				<p class="small">Play a <a class="classic" href="javascript:testSound('res/new_message.wav')">sound</a> when a message is received in the current chat</p>
+			</div>
+			<div>
+				<button class="cb" id="sendsound" onclick="toggleSetting('sendsound');"></button><p style="margin-bottom:9px;">Play sound for sent messages</p>
+				<p class="small">Play a <a class="classic" href="javascript:testSound('res/send_message.wav')">sound</a> when your message is sent</p>
 			</div>
 			<h4>Extras</h4>
 			<p style="margin-bottom:9px;">Bookmarklet: <a class="classic" href="javascript:(function()%7Bvar%20cpURL%20%3D%20window.location.href%3Bvar%20rptn%20%3D%20'bad'%3Bif%20(cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2F'%20%7C%7C%20cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2Findex.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2F'%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fstibarc.gq%2Fpost.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fpost.html'%20%2B%20cpURL.substring(28)%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2Fnewpost.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fnewpost.html'%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fstibarc.gq%2Feditprofile.sjs')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Feditprofile.html'%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2Fsearch.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fsearch.html%3Fq%3D'%20%2B%20encodeURIComponent(document.getElementById('q').value)%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fstibarc.gq%2Fuser.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fuser.html'%20%2B%20cpURL.substring(28)%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2Flogin.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Flogin.html'%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2Fregister.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fregister.html'%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fstibarc.gq%2Fpasswd.sjs')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fchangepassword.html'%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2F'%20%7C%7C%20cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Findex.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2F'%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fpost.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Fpost.html'%20%2B%20cpURL.substring(41)%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fnewpost.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Fnewpost.html'%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Feditprofile.html')%20%7Bif%20(confirm('Cannot%20switch%20in%20this%20direction%2C%20go%20to%20STiBaRC%20home%20page%3F'))%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2F'%3B%7D%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fsearch.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Fsearch.html'%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fuser.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Fuser.html'%20%2B%20cpURL.substring(41)%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Flogin.html')%20%7Bif%20(confirm('Target%20page%20may%20not%20be%20relevant%2C%20continue%20anyway%3F'))%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Flogin.html'%3B%7D%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fregister.html')%20%7Bif%20(confirm('Target%20page%20may%20not%20be%20relevant%2C%20continue%20anyway%3F'))%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Fregister.html'%3B%7D%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fchangepassword.html')%20%7Bif%20(confirm('Cannot%20switch%20in%20this%20direction%2C%20go%20to%20STiBaRC%20home%20page%3F'))%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2F'%3B%7D%7Dif%20(rptn%20!%3D%20'bad')%20%7Bwindow.location.href%20%3D%20rptn%3B%7D%7D)()">STiBaRC &#x21c4; ASTiW</a></p>
