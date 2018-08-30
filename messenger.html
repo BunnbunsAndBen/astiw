@@ -10,71 +10,208 @@
 	<script>
 		var sesses;
 		var mySess;
+		var oldresp = '';
+		var myName;
+		var hfb;
+		var currentChat;
+		var currentLength;
+		var highlightChat;
+		var repeaterLoadingChat;
 		
 		function load() {
 			sesses = localStorage.getItem('astiw_sesses');
 			if (isSet(sesses) && JSON.parse(sesses).length > 0) {} else {
 				window.location.replace('login.html');
 			}
-			var mySess = JSON.parse(sesses)[0];
-			var myName = getCurrentUser();
-			var jsonurl = 'https://messenger.stibarc.gq/api/getuserchats.sjs';
+			mySess = JSON.parse(sesses)[0];
+			myName = getCurrentUser();
+			document.getElementById('messages').onscroll = function(e) {
+				var msgBox = document.getElementById('messages');
+				if (msgBox.scrollTop == 0) {
+					var msgs = generateMsgs(oldresp, hfb)
+					msgBox.innerHTML = msgs + msgBox.innerHTML;
+				}
+			};
+			var jsonurl = 'https://messenger.stibarc.gq/api/v2/getuserchats.sjs';
 			var r = new XMLHttpRequest();
 			r.addEventListener('load', function() {
-				var tmp = JSON.parse(r.responseText);
-				var keys = [];
-				var keysi = 0;
-				var el;
-				var beforeSplit;
-				var finishedMessage;
-				var jsonurl2 = 'https://messenger.stibarc.gq/api/getuserchat.sjs';
-				var main = document.getElementById('main');
-				for (key in tmp) {
-					keys.push(key);
-				}
-				var r2 = new XMLHttpRequest();
-				r2.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
-				r2.addEventListener('load', function() {
-					var tmp3 = r2.responseText.split('\n');
-					el = document.createElement('a');
-					el.href = 'javascript:openChat(' + keys[keysi] + ')';
-					el.className = 'recentLinks';
-					beforeSplit = tmp3[tmp3.length - 2];
-					finishedMessage = (beforeSplit.split(':')[0] == myName ? '&#x2197;&#xFE0E;' : '&#x2199;&#xFE0E;') + ' ' + beforeSplit.substring(beforeSplit.indexOf(':') + 1);
-					el.innerHTML = '<div id="chatItem' + keys[keysi] + '" class="recent" style="border-left:none; border-right:none;"><b>' + tmp[keys[keysi]].user.replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b><p class="small" style="margin-bottom:0;">' + finishedMessage.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</p></div>';
-					main.appendChild(el);
-					keysi++;
-					if (keysi >= keys.length) {
-						document.getElementById('rm').removeChild(document.getElementById('loader'));
-						document.getElementById('hidden').style.display = '';
-						setTimeout(repeater, 500);
-					} else {
-						r2.open('post', jsonurl2, true);
-						r2.send('sess=' + mySess + '&id=' + keys[keysi]);
-					}
-				});
-				r2.open('post', jsonurl2, true);
-				r2.send('sess=' + mySess + '&id=' + keys[keysi]);
+				putChats(JSON.parse(r.responseText));
+				document.getElementById('rm').removeChild(document.getElementById('loader'));
+				document.getElementById('hidden').style.display = '';
+				setTimeout(repeater, 500);
 			});
 			r.addEventListener('error', function() {alert('Please connect to the internet and reload the page')});
 			r.open('post', jsonurl, true);
 			r.send('sess=' + mySess);
 		};
 		
+		function putChats(tmp) {
+			var main = document.getElementById('main');
+			var elInside;
+			var els = '';
+			for (key in tmp) {
+				elInside = '<div id="chatItem' + key + '" class="recent' + (key == highlightChat ? ' selectedChatItem' : '') + '" style="border-left:none; border-right:none;"><b>' + tmp[key].user.replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b>' + (isSet(tmp[key].lastmessage) && isSet(tmp[key].lastmessage.time) && tmp[key].lastmessage.time != 'unknown' ? '<span style="float:right; margin:3.5px 0 0 0;" class="small">' + generateTS(tmp[key].lastmessage.time, 0) + '</span>' : '') + (isSet(tmp[key].lastmessage) ? '<p class="small" style="margin-bottom:0;">' + (tmp[key].lastmessage.sender == myName ? '&#x2197;&#xFE0E;' : '&#x2199;&#xFE0E;') + ' ' + tmp[key].lastmessage.message.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</p>' : '') + '</div>';
+				els += '<a href="javascript:openChat(' + key + ', \'' + tmp[key].user.replace(/'/g, '\\\'') + '\')" class="recentLinks">' + elInside + '</a>';
+			}
+			main.innerHTML = els;
+		};
+		
+		function generateTS(millis, type) {
+			var d = new Date(millis);
+			var now = new Date();
+			if (type == 2 & d.getFullYear() == now.getFullYear() && d.getMonth() == now.getMonth() && d.getDate() == now.getDate()) {
+				return 'Today';
+			} else if (type != 1 && isYesterday(d, now)) {
+				return 'Yesterday';
+			} else if (type != 1 && d.getFullYear() != now.getFullYear()) {
+				return d.getFullYear().toString() + '-' + r2d(d.getMonth() + 1) + '-' + r2d(d.getDate());
+			} else if (type == 2 || (type != 1 && d.getDate() != now.getDate())) {
+				var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+				return monthNames[d.getMonth()] + ' ' + r2d(d.getDate());
+			} else {
+				var pm = false;
+				var hours = d.getHours();
+				if (hours == 0) {
+					hours = 12;
+				} else if (hours > 12) {
+					hours = hours - 12;
+					pm = true;
+				}
+				return hours.toString() + ':' + r2d(d.getMinutes()) + ' ' + (pm ? 'PM' : 'AM');
+			}
+		};
+		
+		function isLeap(year) {
+			return new Date(year, 1, 29).getDate() === 29;
+		};
+		
+		function isYesterday(d, now) {
+			var ans = false;
+			var finalDays = [31, (isLeap(d.getFullYear()) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+			if (d.getFullYear() == now.getFullYear() && d.getMonth() == now.getMonth() && d.getDate() == now.getDate() - 1) {
+				ans = true;
+			} else if (now.getDate() == 1 && d.getFullYear() == now.getFullYear() && d.getMonth() == now.getMonth() - 1 && d.getDate() == finalDays[d.getMonth()]) {
+				ans = true;
+			} else if (d.getFullYear() == now.getFullYear() - 1 && d.getMonth() == 11 && d.getDate() == 31) {
+				ans = true;
+			}
+			return ans;
+		}
+		
+		function r2d(inp) {
+			var inpStr = inp.toString();
+			return (inp < 10 ? '0' + inpStr : inpStr);
+		};
+		
+		function openChat(chatid, thePerson) {
+			if (currentChat != 'processing' && currentChat != chatid) {
+				if (isSet(currentChat)) {
+					document.getElementById('chatItem' + currentChat).className = 'recent';
+				}
+				currentChat = 'processing';
+				document.getElementById('theChat').style.display = 'none';
+				document.getElementById('noChat').style.display = 'none';
+				var ldr = document.createElement('div');
+				ldr.className = 'loader';
+				ldr.style.margin = 'auto';
+				ldr.id = 'loader2';
+				document.getElementById('rightSide').appendChild(ldr);
+				document.getElementById('chatItem' + chatid).className = 'recent selectedChatItem';
+				highlightChat = chatid;
+				var jsonurli = 'https://messenger.stibarc.gq/api/v2/getuserchat.sjs';
+				var ri = new XMLHttpRequest();
+				ri.addEventListener('load', function() {
+					if (ri.responseText != oldresp) {
+						oldresp = ri.responseText;
+						var msgs = generateMsgs(ri.responseText, 'start');
+						document.getElementById('chatPersonUsername').innerHTML = thePerson.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+						document.getElementById('chatPersonUsername').href = 'user.html?id=' + encodeURIComponent(thePerson);
+						var msgBox = document.getElementById('messages');
+						msgBox.innerHTML = msgs;
+						document.getElementById('rightSide').removeChild(document.getElementById('loader2'));
+						document.getElementById('theChat').style.display = '';
+						msgBox.scrollTop = msgBox.scrollHeight;
+						currentChat = chatid;
+					}
+				});
+				ri.addEventListener('error', function() {alert('darn')});
+				ri.open('post', jsonurli, true);
+				ri.send('sess=' + mySess + '&id=' + chatid);
+			}
+		};
+		
+		function generateMsgs(resp, inputind) {
+			var tmp = JSON.parse(resp);
+			var msgs = '';
+			var itsMe;
+			var readyForTime = false;
+			var oldTime = new Date(0);
+			var newTime;
+			if (inputind == 'start') {
+				var ind = Object.keys(tmp).length;
+				currentLength = ind;
+			} else {
+				var ind = inputind;
+				readyForTime = true;
+				oldTime = (tmp[ind + 1].time == 'unknown' ? 'unknown' : new Date(tmp[ind + 1].time));
+			}
+			hfb = ind - 20;
+			while (ind > hfb && isSet(tmp[ind - 1])) {
+				ind--;
+				itsMe = tmp[ind].sender == myName;
+				newTime = (tmp[ind].time == 'unknown' ? 'unknown' : new Date(tmp[ind].time));
+				if (readyForTime && (newTime == 'unknown' ? oldTime != 'unknown' : newTime.getDate() != oldTime.getDate() || newTime.getMonth() != oldTime.getMonth() || newTime.getFullYear() != oldTime.getFullYear())) {
+					msgs = '<p class="small" style="margin:16px 0; text-align:center;">' + generateTS(oldTime, 2) + '</p>' + msgs;
+				}
+				readyForTime = true;
+				oldTime = newTime;
+				msgs = '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? '<div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + generateTS(tmp[ind].time, 1) + '</div>' : '') + '<div ' + (itsMe ? 'class="specialty" ' : '') + 'style="padding:8px 17.5px; border-radius:17.5px; display:inline-block; word-wrap:break-word; ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);') + '">' + putLinksInText(tmp[ind].message.replace(/</g, '&lt;').replace(/>/g, '&gt;')) + '</div></div>' + msgs;
+			}
+			if (oldTime != 'unknown' && !isSet(tmp[ind - 1])) {
+				msgs = '<p class="small" style="margin:16px 0; text-align:center;">' + generateTS(oldTime, 2) + '</p>' + msgs;
+			}
+			return msgs;
+		};
+		
 		function repeater() {
-			var jsonurl = 'https://messenger.stibarc.gq/api/getuserchats.sjs';
-			var jsonurli = 'https://messenger.stibarc.gq/api/getuserchat.sjs';
+			var jsonurl = 'https://messenger.stibarc.gq/api/v2/getuserchats.sjs';
+			var jsonurli = 'https://messenger.stibarc.gq/api/v2/getuserchat.sjs';
 			var r = new XMLHttpRequest();
 			var ri = new XMLHttpRequest();
 			r.addEventListener('load', function() {
-				var main = document.getElementById('main');
-				if (false) {
-					ri.send();
+				putChats(JSON.parse(r.responseText));
+				if (isSet(currentChat) && currentChat != 'processing') {
+					repeaterLoadingChat = currentChat;
+					ri.send('sess=' + mySess + '&id=' + repeaterLoadingChat);
 				} else {
 					setTimeout(repeater, 500);
 				}
 			});
 			ri.addEventListener('load', function() {
+				if (repeaterLoadingChat == currentChat) {
+					var tmp = JSON.parse(ri.responseText);
+					if (Object.keys(tmp).length > currentLength) {
+						var msgs = '';
+						var itsMe;
+						var readyForTime = false;
+						var newTime;
+						var ind = currentLength;
+						currentLength = Object.keys(tmp).length;
+						var oldTime = new Date(tmp[ind - 1].time);
+						while (ind < Object.keys(tmp).length) {	
+							itsMe = tmp[ind].sender == myName;
+							newTime = new Date(tmp[ind].time)
+							if (newTime.getDate() != oldTime.getDate() || newTime.getMonth() != oldTime.getMonth() || newTime.getFullYear() != oldTime.getFullYear()) {
+								msgs += '<p class="small" style="margin:16px 0; text-align:center;">' + generateTS(newTime, 2) + '</p>';
+							}
+							oldTime = newTime;
+							msgs += '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? '<div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + generateTS(tmp[ind].time, 1) + '</div>' : '') + '<div ' + (itsMe ? 'class="specialty" ' : '') + 'style="padding:8px 17.5px; border-radius:17.5px; display:inline-block; word-wrap:break-word; ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);') + '">' + putLinksInText(tmp[ind].message.replace(/</g, '&lt;').replace(/>/g, '&gt;')) + '</div></div>';
+							ind++;
+						}
+						var msgBox = document.getElementById('messages');
+						msgBox.innerHTML += msgs;
+					}
+				}
 				setTimeout(repeater, 500);
 			});
 			r.addEventListener('error', function() {setTimeout(repeater, 500);});
@@ -116,7 +253,7 @@
 				<div id="noChat" style="color:var(--border); margin:auto;">No chat selected</div>
 				<div id="theChat" style="display:none;">
 					<div style="background-color:var(--content-bg); border-bottom: 1px solid var(--border); padding:8px;"><h3 style="margin:0; text-align:center;"><a class="classic" target="_blank" id="chatPersonUsername"></a></h3></div>
-					<div style="overflow:auto; height:calc(100vh - 137.5px);" id="messages"></div>
+					<div style="overflow-y:auto; overflow-x:hidden; height:calc(100vh - 137.5px);" id="messages"></div>
 					<textarea type="text" autocomplete="off" id="messageBox" class="chattxf" placeholder="Type a message"></textarea>
 				</div>
 			</div>
@@ -125,3 +262,30 @@
 	</main>
 </body>
 </html>
+<style>
+	.selectedChatItem, .selectedChatItem:hover, .selectedChatItem:active {
+		background-color: var(--link);
+	}
+
+	.selectedChatItem > * {
+		color: var(--opposing);
+	}
+	
+	.chattxf {
+		border-top: 1px solid var(--border);
+		border-style: solid none none none;
+		height: 1.2em;
+		background-color: var(--tb-back);
+		color: var(--content);
+		outline: none;
+		width: calc(100% - 32px);
+		display: block;
+		resize: none;
+		position: absolute;
+		bottom: 0;
+	}
+	
+	.specialty .classic {
+		color: var(--content-bg);
+	}
+</style>
