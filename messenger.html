@@ -95,7 +95,7 @@
 			var elInside;
 			var els = '';
 			for (key in tmp) {
-				elInside = '<div id="chatItem' + key + '" class="recent' + (key == highlightChat ? ' selectedChatItem' : '') + '" style="border-left:none; border-right:none;"><b>' + tmp[key].user.replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b>' + (isSet(tmp[key].lastmessage) && isSet(tmp[key].lastmessage.time) && tmp[key].lastmessage.time != 'unknown' ? '<span style="float:right; margin:3.5px 0 0 0;" class="small">' + generateTS(tmp[key].lastmessage.time, 0) + '</span>' : '') + (isSet(tmp[key].lastmessage) ? '<p class="small" style="margin-bottom:0;">' + (tmp[key].lastmessage.sender == myName ? '&#x2197;&#xFE0E;' : '&#x2199;&#xFE0E;') + ' ' + tmp[key].lastmessage.message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>') + '</p>' : '') + '</div>';
+				elInside = '<div id="chatItem' + key + '" class="recent' + (key == highlightChat ? ' selectedChatItem' : '') + '" style="border-left:none; border-right:none;"><b>' + tmp[key].user.replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b>' + (isSet(tmp[key].lastmessage) && isSet(tmp[key].lastmessage.time) && tmp[key].lastmessage.time != 'unknown' ? '<span style="float:right; margin:3.5px 0 0 0;" class="small">' + generateTS(tmp[key].lastmessage.time, 0) + '</span>' : '') + (isSet(tmp[key].lastmessage) ? '<p class="small" style="margin-bottom:0;">' + (tmp[key].lastmessage.sender == myName ? '&#x2197;&#xFE0E;' : '&#x2199;&#xFE0E;') + ' ' + tmp[key].lastmessage.message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>') + '</p>' : '') + '</div>';
 				els += '<a href="javascript:openChat(' + key + ', \'' + tmp[key].user.replace(/'/g, '\\\'') + '\')" class="recentLinks">' + elInside + '</a>';
 			}
 			main.innerHTML = els;
@@ -238,7 +238,7 @@
 					}
 					readyForTime = true;
 					oldTime = newTime;
-					msgs = '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? '<div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + generateTS(tmp[ind].time, 1) + '</div>' : '') + '<div ' + (itsMe ? 'class="specialty" ' : '') + 'style="padding:8px 18.5px; border-radius:18.5px; border:1px solid var(--border); display:inline-block; word-wrap:break-word; ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);') + '">' + putLinksInText(tmp[ind].message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>')) + '</div></div>' + msgs;
+					msgs = '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? '<div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + generateTS(tmp[ind].time, 1) + '</div>' : '') + '<div ' + (itsMe ? 'class="specialty" ' : '') + 'style="padding:8px 18.5px; border-radius:18.5px; border:1px solid var(--border); display:inline-block; word-wrap:break-word; ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);') + '">' + putLinksInText(tmp[ind].message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>')) + '</div></div>' + msgs;
 				}
 				if (oldTime != 'unknown' && !isSet(tmp[ind - 1])) {
 					msgs = '<p class="small" style="margin:16px 0; text-align:center;">' + generateTS(oldTime, 2) + '</p>' + msgs;
@@ -328,7 +328,7 @@
 									msgs += '<p class="small" style="margin:16px 0; text-align:center;">' + generateTS(newTime, 2) + '</p>';
 								}
 								oldTime = newTime;
-								msgs += '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? '<div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + generateTS(tmp[ind].time, 1) + '</div>' : '') + '<div ' + (itsMe ? 'class="specialty" ' : '') + 'style="padding:8px 18.5px; border-radius:18.5px; border:1px solid var(--border); display:inline-block; word-wrap:break-word; ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);') + '">' + putLinksInText(tmp[ind].message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>')) + '</div></div>';
+								msgs += '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? '<div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + generateTS(tmp[ind].time, 1) + '</div>' : '') + '<div ' + (itsMe ? 'class="specialty" ' : '') + 'style="padding:8px 18.5px; border-radius:18.5px; border:1px solid var(--border); display:inline-block; word-wrap:break-word; ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);') + '">' + putLinksInText(tmp[ind].message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>')) + '</div></div>';
 								ind++;
 							}
 							var msgBox = document.getElementById('messages');
