@@ -477,7 +477,10 @@
 				<div id="main" style="overflow:auto; height:calc(100vh - 88.5px);"></div>
 			</div>
 			<div id="rightSide" style="position:absolute; width:calc(70% - 1px); right:0; top:49px; bottom:0; display:flex; flex-direction:column;">
-				<div id="noChat" style="color:var(--border); margin:auto;">No chat selected</div>
+				<div id="noChat" style="color:var(--border); margin:auto;">
+					<p>No chat selected</p>
+					<p><a class="classic" href="javascript:newChat();">Start a new chat</a>?</p>
+				</div>
 				<div id="theChat" style="display:none;">
 					<div style="background-color:var(--content-bg); border-bottom: 1px solid var(--border); padding:8px;"><h3 style="margin:0; text-align:center;"><a class="classic" target="_blank" id="chatPersonUsername"></a></h3></div>
 					<div style="overflow-y:auto; overflow-x:hidden; height:calc(100vh - 137.5px);" id="messages"></div>
