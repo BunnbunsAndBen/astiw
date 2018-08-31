@@ -37,14 +37,14 @@ window.onload = function() {
 				var ibs = document.getElementsByClassName('ib');
 				var usermenu = document.getElementById('usermenu');
 				usermenu.innerHTML = usernameList[0];
+				for (i = 0; i < ibs.length; i++) {
+					ibs[i].style.display = 'initial';
+				}
 				if (usernameList[0] == 'Anon') {
 					var stsbsiyaa = document.getElementsByClassName('noanon');
 					for (ite = 0; ite < stsbsiyaa.length; ite++) {
 						stsbsiyaa[ite].style.display = 'none';
 					}
-				}
-				for (i = 0; i < ibs.length; i++) {
-					ibs[i].style.display = 'initial';
 				}
 				checkSess(sessList[0]);
 			} else {
