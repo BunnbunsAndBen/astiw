@@ -461,7 +461,7 @@
 				if (text.indexOf('.png') == text.length - 4 || text.indexOf('.jpeg') == text.length - 5 || text.indexOf('.jpg') == text.length - 4 || text.indexOf('.gif') == text.length - 4 || text.indexOf('.bmp') == text.length - 4) {
 					return '<br/><a href="' + encodeURI(text) + '" target="_blank"><img src="' + text + '" class="msgImage"></a>';
 				} else if (text.indexOf('https://www.youtube.com/watch') == 0) {
-					var videoId = getAllUrlParams(text);
+					var videoId = getAllUrlParams(text).v;
 					return '<br/><a href="' + encodeURI(text) + '" target="_blank"><img src="https://img.youtube.com/vi/' + videoId + '/0.png" class="msgImage"></a>';
 				} else if (text.indexOf('https://youtu.be/') == 0) {
 					var videoId = text.substring(17);
