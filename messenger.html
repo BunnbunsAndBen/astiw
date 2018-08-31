@@ -120,6 +120,8 @@
 				var hours = d.getHours();
 				if (hours == 0) {
 					hours = 12;
+				} else if (hours == 12) {
+					pm = true;
 				} else if (hours > 12) {
 					hours = hours - 12;
 					pm = true;
