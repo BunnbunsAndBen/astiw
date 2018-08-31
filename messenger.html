@@ -389,6 +389,7 @@
 			var message = document.getElementById('messageBox').value;
 			document.getElementById('messageBox').value = '';
 			if (isSet(message)) {
+				saveMessage();
 				var jsonurl = 'https://messenger.stibarc.gq/api/postchat.sjs';
 				var r = new XMLHttpRequest();
 				r.addEventListener('load', function() {
