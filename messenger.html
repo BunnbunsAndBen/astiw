@@ -23,6 +23,7 @@
 		var okToClose = true;
 		var newId;
 		var newName;
+		var oldDate;
 		
 		function load() {
 			sesses = localStorage.getItem('astiw_sesses');
@@ -61,6 +62,7 @@
 					shifted = false;
 				}
 			});
+			oldDate = new Date().getDate();
 			var jsonurl = 'https://messenger.stibarc.gq/api/v2/getuserchats.sjs';
 			var r = new XMLHttpRequest();
 			r.addEventListener('load', function() {
@@ -96,7 +98,7 @@
 			var els = '';
 			for (key in tmp) {
 				elInside = '<div id="chatItem' + key + '" class="recent' + (key == highlightChat ? ' selectedChatItem' : '') + '" style="border-left:none; border-right:none;"><b>' + tmp[key].user.replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b>' + (isSet(tmp[key].lastmessage) && isSet(tmp[key].lastmessage.time) && tmp[key].lastmessage.time != 'unknown' ? '<span style="float:right; margin:3.5px 0 0 0;" class="small">' + generateTS(tmp[key].lastmessage.time, 0) + '</span>' : '') + (isSet(tmp[key].lastmessage) ? '<p class="small" style="margin-bottom:0;">' + (tmp[key].lastmessage.sender == myName ? '&#x2197;&#xFE0E;' : '&#x2199;&#xFE0E;') + ' ' + tmp[key].lastmessage.message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>') + '</p>' : '') + '</div>';
-				els += '<a href="javascript:openChat(' + key + ', \'' + tmp[key].user.replace(/'/g, '\\\'') + '\')" class="recentLinks">' + elInside + '</a>';
+				els += '<a href="javascript:openChat(' + key + ', \'' + tmp[key].user.replace(/'/g, '\\\'') + '\', false)" class="recentLinks">' + elInside + '</a>';
 			}
 			main.innerHTML = els;
 		};
@@ -148,8 +150,8 @@
 			return (inp < 10 ? '0' + inpStr : inpStr);
 		};
 		
-		function openChat(chatid, thePerson) {
-			if (currentChat != 'processing' && currentChat != chatid) {
+		function openChat(chatid, thePerson, override) {
+			if (currentChat != 'processing' && (currentChat != chatid || override)) {
 				if (isSet(currentChat)) {
 					document.getElementById('chatItem' + currentChat).className = 'recent';
 				}
@@ -272,13 +274,18 @@
 						document.getElementById('contain').removeChild(document.getElementById('loader3'));
 						document.getElementById('startChat').style.display = '';
 						document.getElementById('modalS').style.display = 'none';
-						openChat(newId, newName);
+						openChat(newId, newName, false);
 						newId = undefined;
 						newName = undefined;
 					}
+					var newDate = new Date().getDate();
 					if (isSet(currentChat) && currentChat != 'processing') {
-						repeaterLoadingChat = currentChat;
-						ri.send('sess=' + mySess + '&id=' + repeaterLoadingChat);
+						if (newDate != oldDate) {
+							openChat(currentChat, otherPerson, true);
+						} else {
+							repeaterLoadingChat = currentChat;
+							ri.send('sess=' + mySess + '&id=' + repeaterLoadingChat);
+						}
 					} else {
 						if (sessHasChanged()) {
 							document.getElementById('cssshade').style.display = '';
@@ -287,6 +294,7 @@
 							setTimeout(repeater, 500);
 						}
 					}
+					oldDate = newDate;
 				} else {
 					if (sessHasChanged()) {
 						document.getElementById('cssshade').style.display = '';
@@ -492,7 +500,7 @@
 				<div id="theChat" style="display:none;">
 					<div style="background-color:var(--content-bg); border-bottom: 1px solid var(--border); padding:8px;"><h3 style="margin:0; text-align:center;"><a class="classic" target="_blank" id="chatPersonUsername"></a></h3></div>
 					<div style="overflow-y:auto; overflow-x:hidden; height:calc(100vh - 137.5px);" id="messages"></div>
-					<textarea onchange="saveMessage();" autocomplete="off" id="messageBox" class="chattxf" placeholder="Type a message"></textarea>
+					<textarea oninput="saveMessage();" autocomplete="off" id="messageBox" class="chattxf" placeholder="Type a message"></textarea>
 				</div>
 			</div>
 		</div>
