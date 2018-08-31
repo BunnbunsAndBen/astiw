@@ -462,10 +462,10 @@
 					return '<br/><a href="' + encodeURI(text) + '" target="_blank"><img src="' + text + '" class="msgImage"></a>';
 				} else if (text.indexOf('https://www.youtube.com/watch') == 0) {
 					var videoId = getAllUrlParams(text).v;
-					return '<br/><a href="' + encodeURI(text) + '" target="_blank"><img src="https://img.youtube.com/vi/' + videoId + '/0.png" class="msgImage"></a>';
+					return '<br/><a href="' + encodeURI(text) + '" target="_blank"><img src="https://img.youtube.com/vi/' + videoId + '/0.jpg" class="msgImage"></a>';
 				} else if (text.indexOf('https://youtu.be/') == 0) {
 					var videoId = text.substring(17);
-					return '<br/><a href="' + encodeURI(text) + '" target="_blank"><img src="https://img.youtube.com/vi/' + videoId + '/0.png" class="msgImage"></a>';
+					return '<br/><a href="' + encodeURI(text) + '" target="_blank"><img src="https://img.youtube.com/vi/' + videoId + '/0.jpg" class="msgImage"></a>';
 				} else {
 					return '';
 				}
