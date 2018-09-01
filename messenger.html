@@ -354,7 +354,7 @@
 							}
 							var msgBox = document.getElementById('messages');
 							var stb = false;
-							if (msgBox.scrollTop >= msgBox.scrollHeight - msgBox.offsetHeight) {
+							if (msgBox.scrollTop >= msgBox.scrollHeight - msgBox.offsetHeight - 16) {
 								stb = true;
 							}
 							msgBox.innerHTML += msgs;
