@@ -98,7 +98,9 @@
 			var main = document.getElementById('main');
 			var chatslist = [];
 			for (key in tmp) {
-				chatslist.push([key, tmp[key]]);
+				if (tmp[key].user != myName && tmp[key].user != 'Anon') {
+					chatslist.push([key, tmp[key]]);
+				}
 			}
 			chatslist.sort(function (a, b) {return (isSet(b[1].lastmessage) && isSet(b[1].lastmessage.time) && b[1].lastmessage.time != 'unknown' ? b[1].lastmessage.time : 0) - (isSet(a[1].lastmessage) && isSet(a[1].lastmessage.time) && a[1].lastmessage.time != 'unknown' ? a[1].lastmessage.time : 0);});
 			var elInside;
