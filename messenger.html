@@ -96,11 +96,20 @@
 		
 		function putChats(tmp) {
 			var main = document.getElementById('main');
+			var chatslist = [];
+			for (key in tmp) {
+				chatslist.push([key, tmp[key]]);
+			}
+			chatslist.sort(function (a, b) {return (isSet(b[1].lastmessage) && isSet(b[1].lastmessage.time) && b[1].lastmessage.time != 'unknown' ? b[1].lastmessage.time : 0) - (isSet(a[1].lastmessage) && isSet(a[1].lastmessage.time) && a[1].lastmessage.time != 'unknown' ? a[1].lastmessage.time : 0);});
 			var elInside;
 			var els = '';
-			for (key in tmp) {
-				elInside = '<div id="chatItem' + key + '" class="recent' + (key == highlightChat ? ' selectedChatItem' : '') + '" style="border-left:none; border-right:none;"><b>' + tmp[key].user.replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b>' + (isSet(tmp[key].lastmessage) && isSet(tmp[key].lastmessage.time) && tmp[key].lastmessage.time != 'unknown' ? '<span style="float:right; margin:3.5px 0 0 0;" class="small">' + generateTS(tmp[key].lastmessage.time, 0) + '</span>' : '') + (isSet(tmp[key].lastmessage) ? '<p class="small" style="margin-bottom:0;">' + (tmp[key].lastmessage.sender == myName ? '&#x2197;&#xFE0E;' : '&#x2199;&#xFE0E;') + ' ' + tmp[key].lastmessage.message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>') + '</p>' : '') + '</div>';
-				els += '<a href="javascript:openChat(' + key + ', \'' + tmp[key].user.replace(/'/g, '\\\'') + '\', false)" class="recentLinks">' + elInside + '</a>';
+			var msgId;
+			var msgDetail;
+			for (eg = 0; eg < chatslist.length; eg++) {
+				msgId = chatslist[eg][0];
+				msgDetail = chatslist[eg][1];
+				elInside = '<div id="chatItem' + msgId + '" class="recent' + (msgId == highlightChat ? ' selectedChatItem' : '') + '" style="border-left:none; border-right:none;"><b>' + msgDetail.user.replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b>' + (isSet(msgDetail.lastmessage) && isSet(msgDetail.lastmessage.time) && msgDetail.lastmessage.time != 'unknown' ? '<span style="float:right; margin:3.5px 0 0 0;" class="small">' + generateTS(msgDetail.lastmessage.time, 0) + '</span>' : '') + (isSet(msgDetail.lastmessage) ? '<p class="small" style="margin-bottom:0;">' + (msgDetail.lastmessage.sender == myName ? '&#x2197;&#xFE0E;' : '&#x2199;&#xFE0E;') + ' ' + msgDetail.lastmessage.message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>') + '</p>' : '') + '</div>';
+				els += '<a href="javascript:openChat(' + msgId + ', \'' + msgDetail.user.replace(/'/g, '\\\'') + '\', false)" class="recentLinks">' + elInside + '</a>';
 			}
 			main.innerHTML = els;
 		};
