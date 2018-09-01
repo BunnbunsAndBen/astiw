@@ -459,8 +459,11 @@
 		
 		function insertImage(text) {
 			if (text.split(/( |\n)/g).length == 1 && (text.indexOf('http://') == 0 || text.indexOf('https://') == 0)) {
-				if (text.indexOf('.png') == text.length - 4 || text.indexOf('.jpeg') == text.length - 5 || text.indexOf('.jpg') == text.length - 4 || text.indexOf('.gif') == text.length - 4 || text.indexOf('.bmp') == text.length - 4) {
+				if (text.toLowerCase().indexOf('.png') == text.length - 4 || text.toLowerCase().indexOf('.jpeg') == text.length - 5 || text.toLowerCase().indexOf('.jpg') == text.length - 4 || text.toLowerCase().indexOf('.gif') == text.length - 4 || text.toLowerCase().indexOf('.bmp') == text.length - 4) {
 					return '<br/><a href="' + encodeURI(text) + '" target="_blank"><img src="' + text + '" class="msgImage"></a>';
+				} else if (text.toLowerCase().indexOf('.mp3') == text.length - 4 || text.toLowerCase().indexOf('.wav') == text.length - 4 || text.toLowerCase().indexOf('.ogg') == text.length - 4) {
+					var filetype = text.toLowerCase().substring(text.length - 3);
+					return '<br/><audio controls style="margin-top:8px;"><source src="' + text + '" type="audio/' + (filetype == 'mp3' ? 'mpeg' : filetype) + '"></audio>';
 				} else if (text.indexOf('https://www.youtube.com/watch') == 0) {
 					var videoId = getAllUrlParams(text).v;
 					return '<br/><a href="' + encodeURI(text) + '" target="_blank"><img src="https://img.youtube.com/vi/' + videoId + '/0.jpg" class="msgImage"></a>';
