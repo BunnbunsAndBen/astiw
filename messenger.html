@@ -25,6 +25,7 @@
 		var newName;
 		var oldDate;
 		var noPreviews;
+		var newChatDialog;
 		
 		function load() {
 			sesses = localStorage.getItem('astiw_sesses');
@@ -42,6 +43,12 @@
 					msgBox.scrollTop = msgBox.scrollHeight - oldSH;
 				}
 			};
+			newChatDialog = document.getElementById('newChatDialog');
+			window.addEventListener('click', function (e) {
+				if (e.target == newChatDialog) {
+					closeNCD();
+				}
+			});
 			document.getElementById('messageBox').addEventListener('keydown', function(e) {
 				if (e.keyCode == 13 && !shifted) {
 					e.preventDefault();
@@ -56,6 +63,9 @@
 			window.addEventListener('keydown', function (e) {
 				if (e.keyCode == 16) {
 					shifted = true;
+				}
+				if (e.keyCode == 27) {
+					closeNCD();
 				}
 			});
 			window.addEventListener('keyup', function (e) {
@@ -288,7 +298,7 @@
 						okToClose = true;
 						document.getElementById('contain').removeChild(document.getElementById('loader3'));
 						document.getElementById('startChat').style.display = '';
-						document.getElementById('modalS').style.display = 'none';
+						newChatDialog.style.display = 'none';
 						openChat(newId, newName, false);
 						newId = undefined;
 						newName = undefined;
@@ -421,8 +431,14 @@
 			document.getElementById('newUsername').value = '';
 			document.getElementById('bad').style.display = 'none';
 			document.getElementById('same').style.display = 'none';
-			openSpecificModal();
+			newChatDialog.style.display = 'initial';
 			document.getElementById('newUsername').focus();
+		};
+		
+		function closeNCD() {
+			if (okToClose) {
+				newChatDialog.style.display = 'none';
+			}
 		};
 		
 		function start() {
@@ -513,9 +529,9 @@
 			<p style="margin:8px 0;"><a class="classic" href="register.html">Register a new account</a></p>
 		</div>
 	</div>
-	<div class="dbg" id="modalS">
+	<div class="dbg" id="newChatDialog">
 		<div class="dialog">
-			<a href="javascript:closeSpecificModal();" id="newClose" class="closeButton">&times;</a>
+			<a href="javascript:closeNCD();" id="newClose" class="closeButton">&times;</a>
 			<h3>New chat</h3>
 			<input type="text" spellcheck="false" id="newUsername" class="txf" placeholder="Enter username" style="display:block; width:calc(100% - 34px); margin-bottom:16px;">
 			<div id="contain"><button id="startChat" onclick="start();" class="libut" style="display:block;">START</button></div>

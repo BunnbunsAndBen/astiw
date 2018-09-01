@@ -1,5 +1,4 @@
 var modal;
-// var modal2;
 var sessesAtLoad;
 
 window.onload = function() {
@@ -9,9 +8,6 @@ window.onload = function() {
 	window.addEventListener('keydown', function(e) {
 		if (e.keyCode == 27) {
 			closeUserMenu();
-			if (typeof modalS !== 'undefined' && okToClose) {
-				modalS.style.display = 'none';
-			}
 		}
 	});
 	sb.addEventListener('keydown', function(e) {
@@ -25,7 +21,11 @@ window.onload = function() {
 		importantLoad();
 	}
 	modal = document.getElementById('usermenubox');
-	// modal2 = document.getElementById('menubox');
+	window.addEventListener('click', function(e) {
+		if (event.target == modal) {
+			modal.style.display = 'none';
+		}
+	});
 	var sesses = localStorage.getItem('astiw_sesses');
 	var usernames = localStorage.getItem('astiw_usernames');
 	if (isSet(sesses)) {
@@ -189,28 +189,6 @@ function openUserMenu() {
 
 function closeUserMenu() {
 	modal.style.display = 'none';
-};
-
-window.onclick = function(event) {
-	if (event.target == modal) {
-		modal.style.display = 'none';
-	}
-	/* if (event.target == modal2) {
-		modal2.style.display = 'none';
-	} */
-	if (typeof modalS !== 'undefined' && event.target == modalS && okToClose) {
-		modalS.style.display = 'none';
-	}
-};
-
-function closeSpecificModal() {
-	if (okToClose) {
-		modalS.style.display = 'none';
-	}
-};
-
-function openSpecificModal() {
-	modalS.style.display = 'initial';
 };
 
 function logoutCurrentUser() {
