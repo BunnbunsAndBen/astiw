@@ -537,6 +537,7 @@
 					<div style="height:22.5px; background-color:var(--content-bg); border-bottom: 1px solid var(--border); padding:8px;"><h3 style="margin:0; text-align:center;"><a class="classic" target="_blank" id="chatPersonUsername"></a></h3></div>
 					<div style="overflow-y:auto; overflow-x:hidden; height:calc(100vh - 137.5px);" id="messages"></div>
 					<textarea oninput="saveMessage();" autocomplete="off" id="messageBox" class="chattxf" placeholder="Type a message"></textarea>
+					<button id="sendButton" onclick="submitMessage()">&#x25b6;&#xfe0e;</button>
 				</div>
 			</div>
 		</div>
@@ -560,11 +561,29 @@
 		background-color: var(--tb-back);
 		color: var(--content);
 		outline: none;
-		width: calc(100% - 32px);
+		width: calc(100% - 65px - 1.2em);
 		display: block;
 		resize: none;
 		position: absolute;
 		bottom: 0;
+	}
+	
+	#sendButton {
+		position:absolute;
+		height: 49px;
+		width: 49px;
+		border-style: solid none none none;
+		bottom: 0;
+		right: 0;
+		border-width: 1px;
+		border-color: var(--border);
+		padding: 0;
+		font-size: 2em;
+		line-height: 38px;
+		outline: none;
+		cursor: pointer;
+		background-color: var(--link);
+		color: var(--opposing);
 	}
 	
 	.specialty .classic {
