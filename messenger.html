@@ -48,6 +48,11 @@
 					msgBox.innerHTML = msgs + msgBox.innerHTML;
 					msgBox.scrollTop = msgBox.scrollHeight - oldSH;
 				}
+				if (msgBox.scrollTop >= msgBox.scrollHeight - msgBox.offsetHeight - 16) {
+					document.getElementById('toBottom').style.display = 'none';
+				} else {
+					document.getElementById('toBottom').style.display = '';
+				}
 			};
 			newChatDialog = document.getElementById('newChatDialog');
 			chatOptionsDialog = document.getElementById('chatOptions');
@@ -262,7 +267,7 @@
 						otherPerson = thePerson;
 						document.getElementById('chatPersonUsername').href = 'user.html?id=' + encodeURIComponent(thePerson);
 						var msgBox = document.getElementById('messages');
-						msgBox.innerHTML = msgs;
+						msgBox.innerHTML = msgs + '<button id="toBottom" style="display:none;" onclick="scrollToBottom();">&#x2913;</button>';
 						document.getElementById('rightSide').removeChild(document.getElementById('loader2'));
 						document.getElementById('theChat').style.display = '';
 						msgBox.scrollTop = msgBox.scrollHeight;
@@ -284,6 +289,11 @@
 				ri.open('post', jsonurli, true);
 				ri.send('sess=' + mySess + '&id=' + chatid);
 			}
+		};
+		
+		function scrollToBottom() {
+			var msgBox = document.getElementById('messages');
+			msgBox.scrollTop = msgBox.scrollHeight;
 		};
 		
 		function generateMsgs(resp, inputind) {
@@ -837,5 +847,22 @@
 	.nosides {
 		border-left: none;
 		border-right: none;
+	}
+	
+	#toBottom {
+		position: absolute;
+		height: 48px;
+		width: 48px;
+		border: 1px solid var(--link);
+		background-color: var(--content-bg);
+		z-index: 1;
+		bottom: 65px;
+		border-radius: 100%;
+		color: var(--link);
+		font-size: 2em;
+		outline: none;
+		cursor: pointer;
+		left: 16px;
+		padding: 0px;
 	}
 </style>
