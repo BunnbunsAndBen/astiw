@@ -422,6 +422,7 @@
 							var newTime;
 							var ind = currentLength;
 							var alomftop = false;
+							var alomfm = false;
 							currentLength = Object.keys(tmp).length;
 							if (isSet(tmp[ind - 1])) {
 								var oldTime = new Date(tmp[ind - 1].time);
@@ -430,9 +431,11 @@
 							}
 							while (ind < Object.keys(tmp).length) {	
 								itsMe = tmp[ind].sender == myName;
-								if (!itsMe) {
+								if (itsMe) {
+									alomfm = true;
+								} else {
 									alomftop = true;
-								} 
+								}
 								newTime = new Date(tmp[ind].time)
 								if (newTime.getDate() != oldTime.getDate() || newTime.getMonth() != oldTime.getMonth() || newTime.getFullYear() != oldTime.getFullYear()) {
 									msgs += '<p class="small" style="margin:16px 0; text-align:center;">' + generateTS(newTime, 2) + '</p>';
@@ -448,7 +451,7 @@
 								stb = true;
 							}
 							msgBox.innerHTML += msgs;
-							if (stb) {
+							if (stb || alomfm) {
 								msgBox.scrollTop = msgBox.scrollHeight;
 							}
 							if (localStorage.getItem('astiw_messagesound') != 'true' && alomftop) {
