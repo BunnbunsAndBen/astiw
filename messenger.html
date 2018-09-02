@@ -28,6 +28,10 @@
 		var noPreviews;
 		var newChatDialog;
 		var chatOptionsDialog;
+		var sortDialog;
+		var mostRecentTime;
+		var doPinning = true;
+		var doHiding = true;
 		
 		function load() {
 			sesses = localStorage.getItem('astiw_sesses');
@@ -47,12 +51,16 @@
 			};
 			newChatDialog = document.getElementById('newChatDialog');
 			chatOptionsDialog = document.getElementById('chatOptions');
+			sortDialog = document.getElementById('sorter');
 			window.addEventListener('click', function (e) {
 				if (e.target == newChatDialog) {
 					closeNCD();
 				}
 				if (e.target == chatOptionsDialog) {
 					closeCO();
+				}
+				if (e.target == sortDialog) {
+					closeSD();
 				}
 			});
 			document.getElementById('messageBox').addEventListener('keydown', function(e) {
@@ -73,6 +81,7 @@
 				if (e.keyCode == 27) {
 					closeNCD();
 					closeCO();
+					closeSD();
 				}
 			});
 			window.addEventListener('keyup', function (e) {
@@ -115,11 +124,19 @@
 			var main = document.getElementById('main');
 			var chatslist = [];
 			var favslist = [];
-			var doFavs = true;
+			var doFavs = doPinning;
+			var doHide = doHiding;
+			if (!doFavs || !doHide) {
+				document.getElementById('sortLink').style.color = 'var(--red)';
+			} else {
+				document.getElementById('sortLink').style.color = '';
+			}
+			var hidValue;
 			var blocksValue = localStorage.getItem('astiw_blocks');
 			var blocksArr = (isSet(blocksValue) ? JSON.parse(blocksValue) : [])
 			for (key in tmp) {
-				if (tmp[key].user != myName && tmp[key].user != 'Anon' && blocksArr.indexOf(tmp[key].user) == -1) {
+				hidValue = localStorage.getItem('astiw_hidechat' + key);
+				if (tmp[key].user != myName && tmp[key].user != 'Anon' && blocksArr.indexOf(tmp[key].user) == -1 && (!doHide || (isSet(tmp[key].lastmessage) && isSet(tmp[key].lastmessage.time) && tmp[key].lastmessage.time != 'unknown' ? tmp[key].lastmessage.time : 0) >= (isSet(hidValue) ? Number(hidValue) : 0))) {
 					if (doFavs && localStorage.getItem('astiw_pinchat' + key) == 'true') {
 						favslist.push([key, tmp[key], true]);
 					} else {
@@ -135,11 +152,11 @@
 			var msgId;
 			var msgDetail;
 			if (favslist.length > 0) {
-				els += '<div class="recent nosides" style="background-color:var(--content-bg);">Pinned</div>'
+				els += '<div class="recent nosides small" style="background-color:var(--content-bg); margin:0;">Pinned</div>'
 			}
 			for (eg = 0; eg < chatslist.length; eg++) {
 				if (favslist.length > 0 && eg == favslist.length) {
-					els += '<div class="recent nosides" style="background-color:var(--content-bg);">Other</div>'
+					els += '<div class="recent nosides small" style="background-color:var(--content-bg); margin:0;">Other</div>'
 				}
 				msgId = chatslist[eg][0];
 				msgDetail = chatslist[eg][1];
@@ -204,6 +221,7 @@
 			}
 			currentChat = undefined;
 			highlightChat = undefined;
+			mostRecentTime = undefined;
 			document.getElementById('theChat').style.display = 'none';
 			document.getElementById('noChat').style.display = '';
 			oldresp = undefined;
@@ -304,6 +322,9 @@
 					readyForTime = true;
 					oldTime = newTime;
 					msgs = '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? '<div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + generateTS(tmp[ind].time, 1) + '</div>' : '') + '<div ' + (itsMe ? 'class="specialty" ' : '') + 'style="max-width:calc(100% - 39px); padding:8px 18.5px; border-radius:18.5px; border:1px solid var(--border); display:inline-block; word-wrap:break-word; ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);') + '">' + putLinksInText(tmp[ind].message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>')) + '</div>' + insertImage(tmp[ind].message) + '</div>' + msgs;
+					if (ind == Object.keys(tmp).length - 1 && inputind == 'start') {
+						mostRecentTime = (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? tmp[ind].time : 0);
+					}
 				}
 				if (oldTime != 'unknown' && !isSet(tmp[ind - 1])) {
 					msgs = '<p class="small" style="margin:16px 0; text-align:center;">' + generateTS(oldTime, 2) + '</p>' + msgs;
@@ -334,6 +355,7 @@
 							closeChat();
 						}
 						closeCO();
+						closeSD();
 					}
 					if (isSet(newId)) {
 						document.getElementById('bad').style.display = '';
@@ -407,6 +429,7 @@
 								}
 								oldTime = newTime;
 								msgs += '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? '<div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + generateTS(tmp[ind].time, 1) + '</div>' : '') + '<div ' + (itsMe ? 'class="specialty" ' : '') + 'style="max-width:calc(100% - 39px); padding:8px 18.5px; border-radius:18.5px; border:1px solid var(--border); display:inline-block; word-wrap:break-word; ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);') + '">' + putLinksInText(tmp[ind].message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>')) + '</div>' + insertImage(tmp[ind].message) + '</div>';
+								mostRecentTime = (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? tmp[ind].time : 0);
 								ind++;
 							}
 							var msgBox = document.getElementById('messages');
@@ -492,41 +515,95 @@
 			}
 		};
 		
+		function closeSD() {
+			if (okToCloseCM) {
+				sortDialog.style.display = 'none';
+			}
+		};
+		
 		function chatMenu() {
 			var pinned = localStorage.getItem('astiw_pinchat' + currentChat) == 'true';
-			// var hidValue = localStorage.getItem('astiw_hidechat' + currentChat);
-			// var hid = isSet(hiddenValue) && 
+			var hidValue = localStorage.getItem('astiw_hidechat' + currentChat);
+			var hid = mostRecentTime < (isSet(hidValue) ? Number(hidValue) : 0);
 			var blocksValue = localStorage.getItem('astiw_blocks');
 			var blocked = isSet(blocksValue) && JSON.parse(blocksValue).indexOf(otherPerson) >= 0;
 			var pinner = document.getElementById('pinner');
-			// var hider = document.getElementById('hider');
+			var hider = document.getElementById('hider');
 			var blocker = document.getElementById('blocker');
 			pinner.getElementsByTagName('b')[0].innerHTML = (pinned ? 'Unpin chat' : 'Pin chat');
 			pinner.parentElement.href = (pinned ? 'javascript:setPin(\'false\');' : 'javascript:setPin(\'true\');');
-			// hider.getElementsByTagName('b')[0].innerHTML = (hid ? 'Unhide chat' : 'Hide chat');
+			hider.getElementsByTagName('b')[0].innerHTML = (hid ? 'Unhide chat' : 'Hide chat');
+			hider.parentElement.href = (hid ? 'javascript:setHide(false);' : 'javascript:setHide(true);');
 			blocker.getElementsByTagName('b')[0].innerHTML = 'Block ' + otherPerson.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 			pinner.getElementsByTagName('p')[0].innerHTML = (pinned ? 'Stop displaying this chat above other chats in the list' : 'Display this chat above other chats in the list');
-			// hider.getElementsByTagName('p')[0].innerHTML = (hid ? 'Show this chat in the list' : 'Temporarily hide this chat from the list (until there is new activity in the chat)');
+			hider.getElementsByTagName('p')[0].innerHTML = (hid ? 'Show this chat in the list' : 'Temporarily hide this chat from the list (until there is new activity in the chat)');
 			pinner.style.backgroundColor = '';
-			// hider.style.backgroundColor = '';
+			hider.style.backgroundColor = '';
 			blocker.style.backgroundColor = '';
 			chatOptionsDialog.style.display = 'initial';
 		};
 		
+		function sortMenu() {
+			var noHiding = document.getElementById('noHiding');
+			var noPinning = document.getElementById('noPinning');
+			noHiding.getElementsByTagName('b')[0].innerHTML = (doHiding ? 'Show hidden chats' : 'Hide hidden chats');
+			noPinning.getElementsByTagName('b')[0].innerHTML = (doPinning ? 'Turn off pinning' : 'Turn on pinning');
+			noHiding.style.backgroundColor = '';
+			noPinning.style.backgroundColor = '';
+			sortDialog.style.display = 'initial';
+		};
+		
+		function togglePinning() {
+			if (okToCloseCM) {
+				doPinning = !doPinning;
+				okToCloseCM = false;
+				freezeSorterColor('noPinning');
+			}
+		};
+		
+		function toggleHiding() {
+			if (okToCloseCM) {
+				doHiding = !doHiding;
+				okToCloseCM = false;
+				freezeSorterColor('noHiding');
+			}
+		};
+		
 		function freezeColor(menuItem) {
 			var pinner = document.getElementById('pinner');
-			// var hider = document.getElementById('hider');
+			var hider = document.getElementById('hider');
 			var blocker = document.getElementById('blocker');
 			pinner.style.backgroundColor = (menuItem == 'pinner' ? 'var(--rollover)' : 'var(--content-bg)');
-			// hider.style.backgroundColor = (menuItem == 'hider' ? 'var(--rollover)' : 'var(--content-bg)');
+			hider.style.backgroundColor = (menuItem == 'hider' ? 'var(--rollover)' : 'var(--content-bg)');
 			blocker.style.backgroundColor = (menuItem == 'blocker' ? 'var(--rollover)' : 'var(--content-bg)');
+		};
+		
+		function freezeSorterColor(menuItem) {
+			var noHiding = document.getElementById('noHiding');
+			var noPinning = document.getElementById('noPinning');
+			noPinning.style.backgroundColor = (menuItem == 'noPinning' ? 'var(--rollover)' : 'var(--content-bg)');
+			noHiding.style.backgroundColor = (menuItem == 'noHiding' ? 'var(--rollover)' : 'var(--content-bg)');
 		};
 		
 		function setPin(bool) {
 			if (okToCloseCM) {
 				localStorage.setItem('astiw_pinchat' + currentChat, bool);
+				if (isSet(localStorage.getItem('astiw_hidechat' + currentChat))) {
+					localStorage.setItem('astiw_hidechat' + currentChat, '0');
+				}
 				okToCloseCM = false;
 				freezeColor('pinner');
+			}
+		};
+		
+		function setHide(bool) {
+			if (okToCloseCM) {
+				localStorage.setItem('astiw_hidechat' + currentChat, (bool ? new Date().getTime().toString() : '0'));
+				if (localStorage.getItem('astiw_pinchat' + currentChat) == 'true') {
+					localStorage.setItem('astiw_pinchat' + currentChat, 'false');
+				}
+				okToCloseCM = false;
+				freezeColor('hider');
 			}
 		};
 		
@@ -652,12 +729,12 @@
 					<p class="small" style="margin-bottom:0;"></p>
 				</div>
 			</a>
-			<!-- <a class="recentLinks">
+			<a class="recentLinks">
 				<div class="recent" id="hider">
 					<b></b>
 					<p class="small" style="margin-bottom:0;"></p>
 				</div>
-			</a> -->
+			</a>
 			<a class="recentLinks" href="javascript:blockUser();">
 				<div class="recent" id="blocker">
 					<b></b>
@@ -666,10 +743,24 @@
 			</a>
 		</div>
 	</div>
+	<div class="dbg" id="sorter">
+		<div class="dialog" style="padding:0; border:0; width:30%;">
+			<a class="recentLinks" href="javascript:togglePinning();">
+				<div class="recent bb" id="noPinning">
+					<b></b>
+				</div>
+			</a>
+			<a class="recentLinks" href="javascript:toggleHiding();">
+				<div class="recent" id="noHiding">
+					<b></b>
+				</div>
+			</a>
+		</div>
+	</div>
 	<main id="rm" style="margin:0;">
 		<div id="hidden" style="display:none;">
 			<div style="position:absolute; width:30%; left:0; top:49px; bottom:0; border-right:1px solid var(--border); background-color:var(--content-bg);">
-				<div style="height:22.5px; background-color:var(--content-bg); border-bottom: 1px solid var(--border); padding:8px;"><h3 style="margin:0; display:inline-block;">Messenger</h3><h3 style="margin:0; float:right; display:inline-block;"><a class="classic" href="javascript:newChat();">New</a></h3></div>
+				<div style="height:22.5px; background-color:var(--content-bg); border-bottom: 1px solid var(--border); padding:8px;"><h3 style="margin:0; display:inline-block;">Messenger</h3><h3 style="margin:0; float:right; display:inline-block;"><a class="classic" href="javascript:newChat();">New</a><a style="margin-left:8px;" id="sortLink" class="classic" href="javascript:sortMenu();">&#x21c5;</a></h3></div>
 				<div id="main" style="overflow:auto; height:calc(100vh - 88.5px);"></div>
 			</div>
 			<div id="rightSide" style="position:absolute; width:calc(70% - 1px); right:0; top:49px; bottom:0; display:flex; flex-direction:column;">
