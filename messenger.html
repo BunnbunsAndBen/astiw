@@ -21,11 +21,13 @@
 		var queue = [];
 		var otherPerson;
 		var okToClose = true;
+		var okToCloseCM = true;
 		var newId;
 		var newName;
 		var oldDate;
 		var noPreviews;
 		var newChatDialog;
+		var chatOptionsDialog;
 		
 		function load() {
 			sesses = localStorage.getItem('astiw_sesses');
@@ -44,9 +46,13 @@
 				}
 			};
 			newChatDialog = document.getElementById('newChatDialog');
+			chatOptionsDialog = document.getElementById('chatOptions');
 			window.addEventListener('click', function (e) {
 				if (e.target == newChatDialog) {
 					closeNCD();
+				}
+				if (e.target == chatOptionsDialog) {
+					closeCO();
 				}
 			});
 			document.getElementById('messageBox').addEventListener('keydown', function(e) {
@@ -66,6 +72,7 @@
 				}
 				if (e.keyCode == 27) {
 					closeNCD();
+					closeCO();
 				}
 			});
 			window.addEventListener('keyup', function (e) {
@@ -107,20 +114,36 @@
 		function putChats(tmp) {
 			var main = document.getElementById('main');
 			var chatslist = [];
+			var favslist = [];
+			var doFavs = true;
+			var blocksValue = localStorage.getItem('astiw_blocks');
+			var blocksArr = (isSet(blocksValue) ? JSON.parse(blocksValue) : [])
 			for (key in tmp) {
-				if (tmp[key].user != myName && tmp[key].user != 'Anon') {
-					chatslist.push([key, tmp[key]]);
+				if (tmp[key].user != myName && tmp[key].user != 'Anon' && blocksArr.indexOf(tmp[key].user) == -1) {
+					if (doFavs && localStorage.getItem('astiw_pinchat' + key) == 'true') {
+						favslist.push([key, tmp[key], true]);
+					} else {
+						chatslist.push([key, tmp[key], false]);
+					}
 				}
 			}
+			favslist.sort(function (a, b) {return (isSet(b[1].lastmessage) && isSet(b[1].lastmessage.time) && b[1].lastmessage.time != 'unknown' ? b[1].lastmessage.time : 0) - (isSet(a[1].lastmessage) && isSet(a[1].lastmessage.time) && a[1].lastmessage.time != 'unknown' ? a[1].lastmessage.time : 0);});
 			chatslist.sort(function (a, b) {return (isSet(b[1].lastmessage) && isSet(b[1].lastmessage.time) && b[1].lastmessage.time != 'unknown' ? b[1].lastmessage.time : 0) - (isSet(a[1].lastmessage) && isSet(a[1].lastmessage.time) && a[1].lastmessage.time != 'unknown' ? a[1].lastmessage.time : 0);});
+			chatslist = favslist.concat(chatslist);
 			var elInside;
 			var els = '';
 			var msgId;
 			var msgDetail;
+			if (favslist.length > 0) {
+				els += '<div class="recent nosides" style="background-color:var(--content-bg);">Pinned</div>'
+			}
 			for (eg = 0; eg < chatslist.length; eg++) {
+				if (favslist.length > 0 && eg == favslist.length) {
+					els += '<div class="recent nosides" style="background-color:var(--content-bg);">Other</div>'
+				}
 				msgId = chatslist[eg][0];
 				msgDetail = chatslist[eg][1];
-				elInside = '<div id="chatItem' + msgId + '" class="recent' + (msgId == highlightChat ? ' selectedChatItem' : '') + '" style="border-left:none; border-right:none;"><b>' + msgDetail.user.replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b>' + (isSet(msgDetail.lastmessage) && isSet(msgDetail.lastmessage.time) && msgDetail.lastmessage.time != 'unknown' ? '<span style="float:right; margin:3.5px 0 0 0;" class="small">' + generateTS(msgDetail.lastmessage.time, 0) + '</span>' : '') + (isSet(msgDetail.lastmessage) ? '<p class="small" style="margin-bottom:0;">' + (msgDetail.lastmessage.sender == myName ? '&#x2197;&#xFE0E;' : '&#x2199;&#xFE0E;') + ' ' + msgDetail.lastmessage.message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>') + '</p>' : '') + '</div>';
+				elInside = '<div id="chatItem' + msgId + '" class="recent nosides' + (msgId == highlightChat ? ' selectedChatItem' : '') + '"><b>' + msgDetail.user.replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b>' + (isSet(msgDetail.lastmessage) && isSet(msgDetail.lastmessage.time) && msgDetail.lastmessage.time != 'unknown' ? '<span style="float:right; margin:3.5px 0 0 0;" class="small">' + generateTS(msgDetail.lastmessage.time, 0) + '</span>' : '') + (isSet(msgDetail.lastmessage) ? '<p class="small" style="margin-bottom:0;">' + (msgDetail.lastmessage.sender == myName ? '&#x2197;&#xFE0E;' : '&#x2199;&#xFE0E;') + ' ' + msgDetail.lastmessage.message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>') + '</p>' : '') + '</div>';
 				els += '<a href="javascript:openChat(' + msgId + ', \'' + msgDetail.user.replace(/'/g, '\\\'') + '\', false)" class="recentLinks">' + elInside + '</a>';
 			}
 			main.innerHTML = els;
@@ -175,10 +198,25 @@
 			return (inp < 10 ? '0' + inpStr : inpStr);
 		};
 		
+		function closeChat() {
+			if (isSet(currentChat) && isSet(document.getElementById('chatItem' + currentChat))) {
+				document.getElementById('chatItem' + currentChat).className = 'recent nosides';
+			}
+			currentChat = undefined;
+			highlightChat = undefined;
+			document.getElementById('theChat').style.display = 'none';
+			document.getElementById('noChat').style.display = '';
+			oldresp = undefined;
+			otherPerson = undefined;
+			document.getElementById('chatPersonUsername').innerHTML = '';
+			document.getElementById('chatPersonUsername').href = '';
+			document.getElementById('messages').innerHTML = '';
+		};
+		
 		function openChat(chatid, thePerson, override) {
 			if (currentChat != 'processing' && (currentChat != chatid || override)) {
 				if (isSet(currentChat)) {
-					document.getElementById('chatItem' + currentChat).className = 'recent';
+					document.getElementById('chatItem' + currentChat).className = 'recent nosides';
 				}
 				currentChat = 'processing';
 				document.getElementById('theChat').style.display = 'none';
@@ -188,7 +226,7 @@
 				ldr.style.margin = 'auto';
 				ldr.id = 'loader2';
 				document.getElementById('rightSide').appendChild(ldr);
-				document.getElementById('chatItem' + chatid).className = 'recent selectedChatItem';
+				document.getElementById('chatItem' + chatid).className = 'recent selectedChatItem nosides';
 				highlightChat = chatid;
 				var jsonurli = 'https://messenger.stibarc.gq/api/v2/getuserchat.sjs';
 				var ri = new XMLHttpRequest();
@@ -290,6 +328,13 @@
 				}
 				if (ok) {
 					putChats(parsed);
+					if (!okToCloseCM) {
+						okToCloseCM = true;
+						if (!isSet(document.getElementById('chatItem' + currentChat))) {
+							closeChat();
+						}
+						closeCO();
+					}
 					if (isSet(newId)) {
 						document.getElementById('bad').style.display = '';
 						document.getElementById('same').style.display = '';
@@ -441,6 +486,66 @@
 			}
 		};
 		
+		function closeCO() {
+			if (okToCloseCM) {
+				chatOptionsDialog.style.display = 'none';
+			}
+		};
+		
+		function chatMenu() {
+			var pinned = localStorage.getItem('astiw_pinchat' + currentChat) == 'true';
+			// var hidValue = localStorage.getItem('astiw_hidechat' + currentChat);
+			// var hid = isSet(hiddenValue) && 
+			var blocksValue = localStorage.getItem('astiw_blocks');
+			var blocked = isSet(blocksValue) && JSON.parse(blocksValue).indexOf(otherPerson) >= 0;
+			var pinner = document.getElementById('pinner');
+			// var hider = document.getElementById('hider');
+			var blocker = document.getElementById('blocker');
+			pinner.getElementsByTagName('b')[0].innerHTML = (pinned ? 'Unpin chat' : 'Pin chat');
+			pinner.parentElement.href = (pinned ? 'javascript:setPin(\'false\');' : 'javascript:setPin(\'true\');');
+			// hider.getElementsByTagName('b')[0].innerHTML = (hid ? 'Unhide chat' : 'Hide chat');
+			blocker.getElementsByTagName('b')[0].innerHTML = 'Block ' + otherPerson.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+			pinner.getElementsByTagName('p')[0].innerHTML = (pinned ? 'Stop displaying this chat above other chats in the list' : 'Display this chat above other chats in the list');
+			// hider.getElementsByTagName('p')[0].innerHTML = (hid ? 'Show this chat in the list' : 'Temporarily hide this chat from the list (until there is new activity in the chat)');
+			pinner.style.backgroundColor = '';
+			// hider.style.backgroundColor = '';
+			blocker.style.backgroundColor = '';
+			chatOptionsDialog.style.display = 'initial';
+		};
+		
+		function freezeColor(menuItem) {
+			var pinner = document.getElementById('pinner');
+			// var hider = document.getElementById('hider');
+			var blocker = document.getElementById('blocker');
+			pinner.style.backgroundColor = (menuItem == 'pinner' ? 'var(--rollover)' : 'var(--content-bg)');
+			// hider.style.backgroundColor = (menuItem == 'hider' ? 'var(--rollover)' : 'var(--content-bg)');
+			blocker.style.backgroundColor = (menuItem == 'blocker' ? 'var(--rollover)' : 'var(--content-bg)');
+		};
+		
+		function setPin(bool) {
+			if (okToCloseCM) {
+				localStorage.setItem('astiw_pinchat' + currentChat, bool);
+				okToCloseCM = false;
+				freezeColor('pinner');
+			}
+		};
+		
+		function blockUser() {
+			if (okToCloseCM) {
+				if (confirm('Block this user? (go to settings to unblock users)')) {
+					var blocksValue = localStorage.getItem('astiw_blocks');
+					if (!isSet(blocksValue)) {
+						blocksValue = '[]';
+					}
+					var blocksArr = JSON.parse(blocksValue);
+					blocksArr.push(otherPerson);
+					localStorage.setItem('astiw_blocks', JSON.stringify(blocksArr));
+					okToCloseCM = false;
+					freezeColor('blocker');
+				}
+			}
+		};
+		
 		function start() {
 			var theirs = document.getElementById('newUsername').value;
 			if (isSet(theirs)) {
@@ -539,6 +644,28 @@
 			<p class="small" style="color:var(--red); display:none; margin:16px 0 0 0;" id="same">Type another user's username</p>
 		</div>
 	</div>
+	<div class="dbg" id="chatOptions">
+		<div class="dialog" style="padding:0; border:0; width:30%;">
+			<a class="recentLinks">
+				<div class="recent bb" id="pinner">
+					<b></b>
+					<p class="small" style="margin-bottom:0;"></p>
+				</div>
+			</a>
+			<!-- <a class="recentLinks">
+				<div class="recent" id="hider">
+					<b></b>
+					<p class="small" style="margin-bottom:0;"></p>
+				</div>
+			</a> -->
+			<a class="recentLinks" href="javascript:blockUser();">
+				<div class="recent" id="blocker">
+					<b></b>
+					<p class="small" style="margin-bottom:0;">Ignore all chats between you and this user</p>
+				</div>
+			</a>
+		</div>
+	</div>
 	<main id="rm" style="margin:0;">
 		<div id="hidden" style="display:none;">
 			<div style="position:absolute; width:30%; left:0; top:49px; bottom:0; border-right:1px solid var(--border); background-color:var(--content-bg);">
@@ -550,7 +677,7 @@
 					<div class="stdc" style="margin: 16px;"><p style="color:var(--border);">Select a chat from the list or <a class="classic" href="javascript:newChat();">start a new chat</a></p></div>
 				</div>
 				<div id="theChat" style="display:none;">
-					<div style="height:22.5px; background-color:var(--content-bg); border-bottom: 1px solid var(--border); padding:8px;"><h3 style="margin:0; text-align:center;"><a class="classic" target="_blank" id="chatPersonUsername"></a></h3></div>
+					<div style="height:22.5px; background-color:var(--content-bg); border-bottom: 1px solid var(--border); padding:8px 16px;"><h3 style="margin:0; display:inline-block;"><a class="classic" target="_blank" id="chatPersonUsername"></a></h3><h3 style="margin:0; display:inline-block; float:right;"><a class="classic" href="javascript:chatMenu();">&#8943;</a></h3></div>
 					<div style="overflow-y:auto; overflow-x:hidden; height:calc(100vh - 137.5px);" id="messages"></div>
 					<textarea oninput="saveMessage();" autocomplete="off" id="messageBox" class="chattxf" placeholder="Type a message"></textarea>
 					<button id="sendButton" onclick="submitMessage()">&#x25b6;&#xfe0e;</button>
@@ -614,5 +741,10 @@
 		height: 200px;
 		min-width: 200px;
 		object-fit: cover;
+	}
+	
+	.nosides {
+		border-left: none;
+		border-right: none;
 	}
 </style>
