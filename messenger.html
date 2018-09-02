@@ -17,7 +17,6 @@
 		var currentLength;
 		var highlightChat;
 		var repeaterLoadingChat;
-		var shifted = false;
 		var queue = [];
 		var otherPerson;
 		var okToClose = true;
@@ -68,30 +67,22 @@
 					closeSD();
 				}
 			});
-			document.getElementById('messageBox').addEventListener('keydown', function(e) {
-				if (e.keyCode == 13 && !shifted) {
+			document.getElementById('messageBox').addEventListener('keydown', function (e) {
+				if (e.keyCode == 13 && !e.shiftKey) {
 					e.preventDefault();
 					submitMessage();
 				}
 			});
-			document.getElementById('newUsername').addEventListener('keydown', function(e) {
+			document.getElementById('newUsername').addEventListener('keydown', function (e) {
 				if (e.keyCode == 13 && document.getElementById('startChat').style.display != 'none') {
 					start();
 				}
 			});
 			window.addEventListener('keydown', function (e) {
-				if (e.keyCode == 16) {
-					shifted = true;
-				}
 				if (e.keyCode == 27) {
 					closeNCD();
 					closeCO();
 					closeSD();
-				}
-			});
-			window.addEventListener('keyup', function (e) {
-				if (e.keyCode == 16) {
-					shifted = false;
 				}
 			});
 			noPreviews = localStorage.getItem('astiw_showpreviews') == 'true';
