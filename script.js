@@ -237,7 +237,7 @@ function getAllUrlParams(url) {
 		for (var i = 0; i < arr.length; i++) {
 			var a = arr[i].split('=');
 			var paramNum = undefined;
-			var paramName = a[0].replace(/\[\d*\]/, function (v) {
+			var paramName = a[0].replace(/\[\d*\]/, function(v) {
 				paramNum = v.slice(1, -1);
 				return '';
 			});

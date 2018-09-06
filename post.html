@@ -32,7 +32,7 @@
 				document.getElementById('comment').style.display = 'block';
 				document.getElementById('youArentLoggedIn').style.display = 'none';
 			}
-			document.getElementById('editTitle').addEventListener('keydown', function (e) {
+			document.getElementById('editTitle').addEventListener('keydown', function(e) {
 				if (e.keyCode == 13) {
 					e.preventDefault();
 					if (e.ctrlKey) {
@@ -42,13 +42,13 @@
 					}
 				}
 			});
-			document.getElementById('editText').addEventListener('keydown', function (e) {
+			document.getElementById('editText').addEventListener('keydown', function(e) {
 				if (e.keyCode == 13 && e.ctrlKey) {
 					e.preventDefault();
 					saveEdit();
 				}
 			});
-			document.getElementById('commentBox').addEventListener('keydown', function (e) {
+			document.getElementById('commentBox').addEventListener('keydown', function(e) {
 				if (e.keyCode == 13 && e.ctrlKey) {
 					e.preventDefault();
 					if (!pushed) {comment(id);}

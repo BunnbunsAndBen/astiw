@@ -74,25 +74,25 @@
 		function load() {
 			var sesses = localStorage.getItem('astiw_sesses');
 			if (isSet(sesses) && JSON.parse(sesses).length > 0 && getCurrentUser() != 'Anon') {
-				document.getElementById('name').addEventListener('keydown', function (e) {
+				document.getElementById('name').addEventListener('keydown', function(e) {
 					if (e.keyCode == 13 && e.ctrlKey) {
 						e.preventDefault();
 						save();
 					}
 				});
-				document.getElementById('email').addEventListener('keydown', function (e) {
+				document.getElementById('email').addEventListener('keydown', function(e) {
 					if (e.keyCode == 13 && e.ctrlKey) {
 						e.preventDefault();
 						save();
 					}
 				});
-				document.getElementById('birthday').addEventListener('keydown', function (e) {
+				document.getElementById('birthday').addEventListener('keydown', function(e) {
 					if (e.keyCode == 13 && e.ctrlKey) {
 						e.preventDefault();
 						save();
 					}
 				});
-				document.getElementById('bio').addEventListener('keydown', function (e) {
+				document.getElementById('bio').addEventListener('keydown', function(e) {
 					if (e.keyCode == 13 && e.ctrlKey) {
 						e.preventDefault();
 						save();
