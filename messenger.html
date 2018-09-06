@@ -6,6 +6,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 	<link rel="stylesheet" href="style.css">
 	<link rel="stylesheet" href="themes/dark.css" id="themer">
+	<script src="aes.js"></script>
 	<script src="script.js"></script>
 	<script>
 		var sesses;
@@ -26,11 +27,14 @@
 		var oldDate;
 		var noPreviews;
 		var newChatDialog;
+		var encryptionDialog;
 		var chatOptionsDialog;
 		var sortDialog;
 		var mostRecentTime;
 		var doPinning = true;
 		var doHiding = true;
+		var encryptionKey;
+		var doEncr = false;
 		
 		function load() {
 			sesses = localStorage.getItem('astiw_sesses');
@@ -56,6 +60,7 @@
 			newChatDialog = document.getElementById('newChatDialog');
 			chatOptionsDialog = document.getElementById('chatOptions');
 			sortDialog = document.getElementById('sorter');
+			encryptionDialog = document.getElementById('encryptionDialog');
 			window.addEventListener('click', function(e) {
 				if (e.target == newChatDialog) {
 					closeNCD();
@@ -65,6 +70,9 @@
 				}
 				if (e.target == sortDialog) {
 					closeSD();
+				}
+				if (e.target == encryptionDialog) {
+					closeED();
 				}
 			});
 			document.getElementById('messageBox').addEventListener('keydown', function(e) {
@@ -78,11 +86,17 @@
 					start();
 				}
 			});
+			document.getElementById('encryptionBox').addEventListener('keydown', function(e) {
+				if (e.keyCode == 13) {
+					saveEncryption();
+				}
+			});
 			window.addEventListener('keydown', function(e) {
 				if (e.keyCode == 27) {
 					closeNCD();
 					closeCO();
 					closeSD();
+					closeED();
 				}
 			});
 			noPreviews = localStorage.getItem('astiw_showpreviews') == 'true';
@@ -156,7 +170,7 @@
 				}
 				msgId = chatslist[eg][0];
 				msgDetail = chatslist[eg][1];
-				elInside = '<div id="chatItem' + msgId + '" class="recent nosides' + (msgId == highlightChat ? ' selectedChatItem' : '') + '"><b>' + msgDetail.user.replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b>' + (isSet(msgDetail.lastmessage) && isSet(msgDetail.lastmessage.time) && msgDetail.lastmessage.time != 'unknown' ? '<span style="float:right; margin:3.5px 0 0 0;" class="small">' + generateTS(msgDetail.lastmessage.time, 0) + '</span>' : '') + (isSet(msgDetail.lastmessage) ? '<p class="small" style="margin-bottom:0;">' + (msgDetail.lastmessage.sender == myName ? '&#x2197;&#xFE0E;' : '&#x2199;&#xFE0E;') + ' ' + msgDetail.lastmessage.message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>') + '</p>' : '') + '</div>';
+				elInside = '<div id="chatItem' + msgId + '" class="recent nosides' + (msgId == highlightChat ? ' selectedChatItem' : '') + '"><b>' + msgDetail.user.replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b>' + (isSet(msgDetail.lastmessage) && isSet(msgDetail.lastmessage.time) && msgDetail.lastmessage.time != 'unknown' ? '<span style="float:right; margin:3.5px 0 0 0;" class="small">' + generateTS(msgDetail.lastmessage.time, 0) + '</span>' : '') + (isSet(msgDetail.lastmessage) ? '<p class="small" style="margin-bottom:0;">' + (msgDetail.lastmessage.sender == myName ? '&#x2197;&#xFE0E;' : '&#x2199;&#xFE0E;') + ' ' + (msgDetail.lastmessage.message.indexOf('[Encrypted] ') == 0 && msgDetail.lastmessage.message.length > 12 ? '&#x1f512;&#xfe0e; [Encrypted message]' : msgDetail.lastmessage.message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>') + '</p>') : '') + '</div>';
 				els += '<a href="javascript:openChat(' + msgId + ', \'' + msgDetail.user.replace(/'/g, '\\\'') + '\', false)" class="recentLinks">' + elInside + '</a>';
 			}
 			main.innerHTML = els;
@@ -216,6 +230,7 @@
 				document.getElementById('chatItem' + currentChat).className = 'recent nosides';
 			}
 			currentChat = undefined;
+			encryptionKey = undefined;
 			highlightChat = undefined;
 			mostRecentTime = undefined;
 			document.getElementById('theChat').style.display = 'none';
@@ -253,6 +268,15 @@
 					}
 					if (ok) {
 						oldresp = ri.responseText;
+						encryptionKey = localStorage.getItem('astiw_encryptkey' + chatid);
+						doEncr = isSet(encryptionKey);
+						if (doEncr) {
+							document.getElementById('encryptionMarker').style.display = '';
+							document.getElementById('encryptionMarker').style.color = 'var(--verified)';
+						} else {
+							document.getElementById('encryptionMarker').style.display = 'none';
+							document.getElementById('encryptionMarker').style.color = 'var(--border)';
+						}
 						var msgs = generateMsgs(ri.responseText, 'start');
 						document.getElementById('chatPersonUsername').innerHTML = thePerson.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 						otherPerson = thePerson;
@@ -301,6 +325,8 @@
 				}
 				var msgs = '';
 				var itsMe;
+				var currentMessage;
+				var encryptionStatus = 0;
 				var readyForTime = false;
 				var oldTime = new Date(0);
 				var newTime;
@@ -322,7 +348,24 @@
 					}
 					readyForTime = true;
 					oldTime = newTime;
-					msgs = '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? '<div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + generateTS(tmp[ind].time, 1) + '</div>' : '') + '<div ' + (itsMe ? 'class="specialty" ' : '') + 'style="max-width:calc(100% - 39px); padding:8px 18.5px; border-radius:18.5px; border:1px solid var(--border); display:inline-block; word-wrap:break-word; ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);') + '">' + putLinksInText(tmp[ind].message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>')) + '</div>' + insertImage(tmp[ind].message) + '</div>' + msgs;
+					if (tmp[ind].message.indexOf('[Encrypted] ') == 0 && tmp[ind].message.length > 12) {
+						if (isSet(encryptionKey)) {
+							currentMessage = decryptStr(tmp[ind].message.substring(12), encryptionKey);
+							if (currentMessage == '') {
+								currentMessage = '[Encrypted message]';
+								encryptionStatus = 2;
+							} else {
+								encryptionStatus = 1;
+							}
+						} else {
+							currentMessage = '[Encrypted message]';
+							encryptionStatus = 2;
+						}
+					} else {
+						currentMessage = tmp[ind].message;
+						encryptionStatus = 0;
+					}
+					msgs = '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';"><div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? generateTS(tmp[ind].time, 1) : '') + (encryptionStatus > 0 ? ' <span style="color:var(--verified);">&#x1f512;&#xfe0e;</span>' : '') + '</div><div ' + (itsMe ? 'class="specialty" ' : '') + 'style="max-width:calc(100% - 39px); display:inline-block; word-wrap:break-word; ' + (encryptionStatus == 2 ? 'color:var(--red)' : 'padding:8px 18.5px; border-radius:18.5px; border:1px solid var(--border); ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);')) + '">' + putLinksInText(currentMessage.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>')) + '</div>' + insertImage(currentMessage) + '</div>' + msgs;
 					if (ind == Object.keys(tmp).length - 1 && inputind == 'start') {
 						mostRecentTime = (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? tmp[ind].time : 0);
 					}
@@ -432,7 +475,24 @@
 									msgs += '<p class="small" style="margin:16px 0; text-align:center;">' + generateTS(newTime, 2) + '</p>';
 								}
 								oldTime = newTime;
-								msgs += '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? '<div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + generateTS(tmp[ind].time, 1) + '</div>' : '') + '<div ' + (itsMe ? 'class="specialty" ' : '') + 'style="max-width:calc(100% - 39px); padding:8px 18.5px; border-radius:18.5px; border:1px solid var(--border); display:inline-block; word-wrap:break-word; ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);') + '">' + putLinksInText(tmp[ind].message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>')) + '</div>' + insertImage(tmp[ind].message) + '</div>';
+								if (tmp[ind].message.indexOf('[Encrypted] ') == 0 && tmp[ind].message.length > 12) {
+									if (isSet(encryptionKey)) {
+										currentMessage = decryptStr(tmp[ind].message.substring(12), encryptionKey);
+										if (currentMessage == '') {
+											currentMessage = '[Encrypted message]';
+											encryptionStatus = 2;
+										} else {
+											encryptionStatus = 1;
+										}
+									} else {
+										currentMessage = '[Encrypted message]';
+										encryptionStatus = 2;
+									}
+								} else {
+									currentMessage = tmp[ind].message;
+									encryptionStatus = 0;
+								}
+								msgs += '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';"><div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? generateTS(tmp[ind].time, 1) : '') + (encryptionStatus > 0 ? (encryptionStatus == 2 ? ' <span style="color:var(--red);">&#x1f512;&#xfe0e;</span>' : ' <span style="color:var(--verified);">&#x1f512;&#xfe0e;</span>') : '') + '</div><div ' + (itsMe ? 'class="specialty" ' : '') + 'style="max-width:calc(100% - 39px); padding:8px 18.5px; border-radius:18.5px; border:1px solid var(--border); display:inline-block; word-wrap:break-word; ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);') + '">' + putLinksInText(currentMessage.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>')) + '</div>' + insertImage(currentMessage) + '</div>';
 								mostRecentTime = (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? tmp[ind].time : 0);
 								ind++;
 							}
@@ -485,6 +545,9 @@
 			document.getElementById('messageBox').value = '';
 			if (isSet(message)) {
 				saveMessage();
+				if (isSet(encryptionKey) && doEncr) {
+					message = '[Encrypted] ' + encryptStr(message, encryptionKey);
+				}
 				var jsonurl = 'https://messenger.stibarc.gq/api/postchat.sjs';
 				var r = new XMLHttpRequest();
 				r.addEventListener('load', function() {
@@ -523,6 +586,10 @@
 			if (okToCloseCM) {
 				sortDialog.style.display = 'none';
 			}
+		};
+		
+		function closeED() {
+			encryptionDialog.style.display = 'none';
 		};
 		
 		function chatMenu() {
@@ -627,6 +694,20 @@
 			}
 		};
 		
+		function setupEncryption() {
+			if (okToCloseCM) {
+				closeCO();
+				document.getElementById('encryptionBox').value = encryptionKey;
+				encryptionDialog.style.display = 'initial';
+			}
+		};
+		
+		function saveEncryption() {
+			localStorage.setItem('astiw_encryptkey' + currentChat, document.getElementById('encryptionBox').value);
+			closeED();
+			openChat(currentChat, otherPerson, true);
+		};
+		
 		function start() {
 			var theirs = document.getElementById('newUsername').value;
 			if (isSet(theirs)) {
@@ -692,6 +773,30 @@
 				return '';
 			}
 		};
+		
+		function encryptStr(text, pass) {
+			var encryptedAES = CryptoJS.AES.encrypt(text, pass);
+			return encryptedAES.toString();
+		};
+		
+		function decryptStr(text, pass) {
+			try {
+				var decryptedBytes = CryptoJS.AES.decrypt(text, pass);
+				var plaintext = decryptedBytes.toString(CryptoJS.enc.Utf8);
+			} catch (err) {
+				var plaintext = '';
+			}
+			return plaintext;
+		};
+		
+		function toggleEncrypt() {
+			doEncr = !doEncr;
+			if (doEncr) {
+				document.getElementById('encryptionMarker').style.color = 'var(--verified)';
+			} else {
+				document.getElementById('encryptionMarker').style.color = 'var(--border)';
+			}
+		};
 	</script>
 </head>
 <body style="overflow:hidden;">
@@ -725,6 +830,16 @@
 			<p class="small" style="color:var(--red); display:none; margin:16px 0 0 0;" id="same">Type another user's username</p>
 		</div>
 	</div>
+	<div class="dbg" id="encryptionDialog">
+		<div class="dialog">
+			<a href="javascript:closeED();" class="closeButton">&times;</a>
+			<h3>Set encryption key</h3>
+			<p class="small">(Clear the field to disable encryption)</p>
+			<input type="password" spellcheck="false" id="encryptionBox" class="txf" placeholder="Enter key" style="display:block; width:calc(100% - 34px); margin-bottom:16px;">
+			<div id="contain"><button id="startChat" onclick="saveEncryption();" class="libut" style="display:block;">SAVE</button></div>
+			<p>If the lock icon in the menu bar is green, outgoing messages will be encrypted</p>
+		</div>
+	</div>
 	<div class="dbg" id="chatOptions">
 		<div class="dialog" style="padding:0; border:0; width:30%;">
 			<a class="recentLinks">
@@ -737,6 +852,12 @@
 				<div class="recent" id="hider">
 					<b></b>
 					<p class="small" style="margin-bottom:0;"></p>
+				</div>
+			</a>
+			<a class="recentLinks" href="javascript:setupEncryption();">
+				<div class="recent">
+					<b>Set encryption key</b>
+					<p class="small" style="margin-bottom:0;">Set a key for encryption/decryption of messages in this chat</p>
 				</div>
 			</a>
 			<a class="recentLinks" href="javascript:blockUser();">
@@ -772,7 +893,7 @@
 					<div class="stdc" style="margin: 16px;"><p style="color:var(--border);">Select a chat from the list or <a class="classic" href="javascript:newChat();">start a new chat</a></p></div>
 				</div>
 				<div id="theChat" style="display:none;">
-					<div style="height:22.5px; background-color:var(--content-bg); border-bottom: 1px solid var(--border); padding:8px 16px;"><h3 style="margin:0; display:inline-block;"><a class="classic" target="_blank" id="chatPersonUsername"></a></h3><h3 style="margin:0; display:inline-block; float:right;"><a class="classic" href="javascript:chatMenu();">&#8943;</a></h3></div>
+					<div style="height:22.5px; background-color:var(--content-bg); border-bottom: 1px solid var(--border); padding:8px 16px;"><h3 style="margin:0; display:inline-block;"><a class="classic" target="_blank" id="chatPersonUsername"></a></h3><div style="float:right;"><a class="classic" href="javascript:toggleEncrypt();" id="encryptionMarker" style="margin-right:8px; color:var(--verified);">&#x1f512;&#xfe0e;</a><h3 style="margin:0; display:inline-block;"><a class="classic" href="javascript:chatMenu();">&#8943;</a></h3></div></div>
 					<div style="overflow-y:auto; overflow-x:hidden; height:calc(100vh - 137.5px);" id="messages"></div>
 					<textarea oninput="saveMessage();" autocomplete="off" id="messageBox" class="chattxf" placeholder="Type a message"></textarea>
 					<button id="sendButton" onclick="submitMessage()">&#x25b6;&#xfe0e;</button>
