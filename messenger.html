@@ -607,7 +607,7 @@
 			hider.parentElement.href = (hid ? 'javascript:setHide(false);' : 'javascript:setHide(true);');
 			blocker.getElementsByTagName('b')[0].innerHTML = 'Block ' + otherPerson.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 			pinner.getElementsByTagName('p')[0].innerHTML = (pinned ? 'Stop displaying this chat above other chats in the list' : 'Display this chat above other chats in the list');
-			hider.getElementsByTagName('p')[0].innerHTML = (hid ? 'Show this chat in the list' : 'Temporarily hide this chat from the list (until there is new activity in the chat)');
+			hider.getElementsByTagName('p')[0].innerHTML = (hid ? 'Show this chat in the list' : 'Temporarily hide this chat from the list (until there is new activity)');
 			pinner.style.backgroundColor = '';
 			hider.style.backgroundColor = '';
 			blocker.style.backgroundColor = '';
