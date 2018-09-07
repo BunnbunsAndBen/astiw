@@ -91,6 +91,7 @@
 				rc.send();
 			});
 			rc.addEventListener('load', function() {
+				var menulist = [];
 				if (isSet(rc.responseText) && rc.responseText != 'undefined\n') {
 					var objComments = JSON.parse(rc.responseText);
 					for (key in objComments) {
@@ -102,14 +103,13 @@
 						document.getElementById('flipper').innerHTML = '<a href="javascript:flip(\'new\');" class="classic">OLDEST FIRST &#x25b2;</a>';
 					}
 					if (comments.length == 1) {
-						document.getElementById('postMenu').innerHTML = '1 comment';
+						menulist.push('1 comment');
 					} else {
-						document.getElementById('postMenu').innerHTML = comments.length.toString() + ' comments';
+						menulist.push(comments.length.toString() + ' comments');
 					}
 					commCount = comments.length;
 					placeComments();
 				} else {
-					document.getElementById('postMenu').innerHTML = '0 comments';
 					var noComments = document.createElement('p');
 					noComments.innerHTML = 'No comments';
 					noComments.style.color = 'var(--border)';
@@ -120,13 +120,14 @@
 				if (isSet(localStorage.getItem('astiw_usernames'))) {
 					var myName = JSON.parse(localStorage.getItem('astiw_usernames'))[0];
 					if (stuf.poster == myName && myName != 'Anon') {
-						document.getElementById('postMenu').innerHTML += ' &#xb7; <span id="editLink"><a class="classic" href="javascript:editPost();">&#x270E;&#xFE0E; Edit</a></span>';
+						menulist.push('<span id="editLink"><a class="classic" href="javascript:editPost();">&#x270E;&#xFE0E; Edit</a></span>');
 					}
 				}
 				if (localStorage.getItem('astiw_markread') != 'true') {
-					document.getElementById('postMenu').innerHTML += ' &#xb7; <span id="readLink"><a class="classic" href="javascript:markPostLoc(false);">Mark unread</a></span>';
+					menulist.push('<span id="readLink"><a class="classic" href="javascript:markPostLoc(false);">Mark unread</a></span>');
 					localStorage.setItem('astiw_viewed' + id, 'true');
 				}
+				document.getElementById('postMenu').innerHTML = menulist.join(' &#xb7; ');
 				document.getElementById('rm').removeChild(document.getElementById('loader2'));
 				document.getElementById('main').style.display = 'block';
 				if (doScrollDown) {
