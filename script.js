@@ -158,7 +158,7 @@ function checkSess(sess) {
 		}
 	});
 	xmlHttp.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
-	xmlHttp.open('get', 'https://api.stibarc.gq/checksess.sjs?sess=' + sess, true);
+	xmlHttp.open('get', 'https://api.stibarc.gq/v2/checksess.sjs?sess=' + sess, true);
 	xmlHttp.send();
 };
 
@@ -284,7 +284,7 @@ function expand(numb) {
 		var eliqSpan = eliq.getElementsByTagName('span')[0];
 		var eliqB = eliq.getElementsByClassName('theB')[0];
 		eliqSpan.innerHTML = '<a href="javascript:void(0)" style="text-decoration:none;">&#x25bc;</a>';
-		var jason = 'https://api.stibarc.gq/getpost.sjs?id=' + numb;
+		var jason = 'https://api.stibarc.gq/v2/getpost.sjs?id=' + numb;
 		var expdr = new XMLHttpRequest();
 		var expdrv = new XMLHttpRequest();
 		var expdrc = new XMLHttpRequest();
@@ -305,7 +305,7 @@ function expand(numb) {
 					menulist.push('Image attached');
 				}
 				newtitleiguess = tkos.title.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-				var jasonv = 'https://api.stibarc.gq/checkverify.sjs?id=' + tkos.poster;
+				var jasonv = 'https://api.stibarc.gq/v2/checkverify.sjs?id=' + tkos.poster;
 				expdrv.open('get', jasonv, true);
 				expdrv.send();
 			} else {
@@ -316,7 +316,7 @@ function expand(numb) {
 		});
 		expdrv.addEventListener('load', function() {
 			exans = expdrv.responseText.split('\n')[0];
-			var jasonc = 'https://api.stibarc.gq/getcomments.sjs?id=' + numb;
+			var jasonc = 'https://api.stibarc.gq/v2/getcomments.sjs?id=' + numb;
 			expdrc.open('get', jasonc, true);
 			expdrc.send();
 		});

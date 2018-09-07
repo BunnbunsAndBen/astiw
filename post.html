@@ -55,7 +55,7 @@
 				}
 			});
 			id = getAllUrlParams().id;
-			var jsonurl = 'https://api.stibarc.gq/getpost.sjs?id=' + id;
+			var jsonurl = 'https://api.stibarc.gq/v2/getpost.sjs?id=' + id;
 			var r = new XMLHttpRequest();
 			var rv = new XMLHttpRequest();
 			var rc = new XMLHttpRequest();			
@@ -67,7 +67,7 @@
 					var currentUser = getCurrentUser();
 					document.getElementById('metaThing').innerHTML = 'Posted by <a class="classic" ' + (stuf.poster == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(stuf.poster) + '">' + stuf.poster + '</a><span id="verified"> &#x2611;&#xFE0E;</span> at ' + stuf.postdate + (stuf.edited ? ' (edited)' : '');
 					document.getElementById('postText').innerHTML = putLinksInText(stuf.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'));
-					var jsonurlv = 'https://api.stibarc.gq/checkverify.sjs?id=' + stuf.poster;
+					var jsonurlv = 'https://api.stibarc.gq/v2/checkverify.sjs?id=' + stuf.poster;
 					rv.open('get', jsonurlv, true);
 					rv.send();
 				} else {
@@ -84,7 +84,7 @@
 				if (isSet(stuf.attachment) && stuf.attachment != 'none') {
 					document.getElementById('imgThing').style.display = 'initial';
 				}
-				rc.open('get', 'https://api.stibarc.gq/getcomments.sjs?id=' + id, true);
+				rc.open('get', 'https://api.stibarc.gq/v2/getcomments.sjs?id=' + id, true);
 				rc.send();
 			});
 			rc.addEventListener('load', function() {
@@ -205,7 +205,7 @@
 							var n = new Date().getTime() + 15000;
 							localStorage.setItem('astiw_cancommentagain', n);
 							var sess = JSON.parse(localStorage.getItem('astiw_sesses'))[0];
-							var jsonurl = 'https://api.stibarc.gq/newcomment.sjs';
+							var jsonurl = 'https://api.stibarc.gq/v2/newcomment.sjs';
 							var r = new XMLHttpRequest();
 							r.addEventListener('load', function() {
 								oktoleave = true;
@@ -239,7 +239,7 @@
 				ldr.id = 'loader3';
 				ldr.style.margin = 'auto';
 				document.getElementById('imgThing').appendChild(ldr);
-				var jsonurl = 'https://api.stibarc.gq/getimage.sjs?id=' + imgId;
+				var jsonurl = 'https://api.stibarc.gq/v2/getimage.sjs?id=' + imgId;
 				var r = new XMLHttpRequest();
 				r.addEventListener('load', function() {
 					var img = document.createElement('img');
@@ -286,7 +286,7 @@
 				ldr.id = 'loader4';
 				ldr.style.margin = '0 auto 1em auto';
 				document.getElementById('oof').appendChild(ldr);
-				var jsonurl = 'https://api.stibarc.gq/getpost.sjs?id=' + id;
+				var jsonurl = 'https://api.stibarc.gq/v2/getpost.sjs?id=' + id;
 				var r = new XMLHttpRequest();
 				r.addEventListener('load', function() {
 					var goodContent  = JSON.parse(r.responseText);
@@ -320,7 +320,7 @@
 					ldr.id = 'loader4';
 					ldr.style.margin = '0 auto 1em auto';
 					document.getElementById('oof').appendChild(ldr);
-					var jsonurl = 'https://api.stibarc.gq/getpost.sjs?id=' + id;
+					var jsonurl = 'https://api.stibarc.gq/v2/getpost.sjs?id=' + id;
 					var r = new XMLHttpRequest();
 					r.addEventListener('load', function() {
 						stuf = JSON.parse(r.responseText);
@@ -362,7 +362,7 @@
 						ldr.id = 'loader5';
 						ldr.style.margin = '0 0 16px 0';
 						document.getElementById('contain2').appendChild(ldr);
-						var jsonurl = 'https://api.stibarc.gq/editpost.sjs';
+						var jsonurl = 'https://api.stibarc.gq/v2/editpost.sjs';
 						var r = new XMLHttpRequest();
 						r.addEventListener('load', function() {
 							oktoleave = true;
@@ -382,8 +382,8 @@
 		};
 		
 		function checkNewComms() {
-			var jsonurl = 'https://api.stibarc.gq/getcomments.sjs?id=' + id;
-			var jsonurl4e = 'https://api.stibarc.gq/getpost.sjs?id=' + id;
+			var jsonurl = 'https://api.stibarc.gq/v2/getcomments.sjs?id=' + id;
+			var jsonurl4e = 'https://api.stibarc.gq/v2/getpost.sjs?id=' + id;
 			var r = new XMLHttpRequest();
 			var r4e = new XMLHttpRequest();
 			r.addEventListener('load', function() {

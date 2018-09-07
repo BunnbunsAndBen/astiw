@@ -29,7 +29,7 @@
 		function load() {
 			if (isSet(term)) {
 				document.getElementById('nameThing').innerHTML = 'Search results for "' + term.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '"';
-				var jsonurl = 'https://api.stibarc.gq/postsearch.sjs?q=' + encodeURIComponent(term);
+				var jsonurl = 'https://api.stibarc.gq/v2/postsearch.sjs?q=' + encodeURIComponent(term);
 				var r = new XMLHttpRequest();
 				var ru = new XMLHttpRequest();
 				r.addEventListener('load', function() {

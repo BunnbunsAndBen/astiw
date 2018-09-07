@@ -42,7 +42,7 @@
 				ldr.style.margin = '0 0 16px 0';
 				document.getElementById('contain').appendChild(ldr);
 				var sess = JSON.parse(localStorage.getItem('astiw_sesses'))[0];
-				var jsonurl = 'https://api.stibarc.gq/updateprofile.sjs';
+				var jsonurl = 'https://api.stibarc.gq/v2/updateprofile.sjs';
 				var r = new XMLHttpRequest();
 				r.addEventListener('load', function() {
 					ans = r.responseText;

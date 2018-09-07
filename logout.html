@@ -10,7 +10,7 @@
 	<script>
 		window.onload = function() {colors(); document.getElementById('cssshade').style.display = 'none';};
 		var sesses = JSON.parse(localStorage.getItem('astiw_sesses'));
-		var jsonurl = 'https://api.stibarc.gq/logout.sjs';
+		var jsonurl = 'https://api.stibarc.gq/v2/logout.sjs';
 		var r = new XMLHttpRequest();
 		r.addEventListener('load', function() {
 			var sesses = JSON.parse(localStorage.getItem('astiw_sesses'));

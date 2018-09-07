@@ -32,7 +32,7 @@
 						ldr.id = 'loader';
 						ldr.style.margin = '0 0 16px 0';
 						document.getElementById('contain').appendChild(ldr);
-						var jsonurl = 'https://api.stibarc.gq/createsess.sjs';
+						var jsonurl = 'https://api.stibarc.gq/v2/createsess.sjs';
 						var r = new XMLHttpRequest();
 						r.addEventListener('load', function() {
 							sess = r.responseText;
