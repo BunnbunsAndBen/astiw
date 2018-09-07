@@ -71,7 +71,7 @@
 				if (ans == 'true') {
 					document.getElementById('verified').style.display = 'initial';
 				}
-				rp.open('get', 'https://api.stibarc.gq/v2/getuserposts.sjs?id=' + encodeURIComponent(term), true);
+				rp.open('get', 'https://api.stibarc.gq/getuserposts.sjs?id=' + encodeURIComponent(term), true);
 				rp.send();
 			});
 			rp.addEventListener('load', function() {
