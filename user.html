@@ -24,18 +24,17 @@
 				editproflink.innerHTML = '<b><a class="classic" href="javascript:openEditProfile();">&#x270E;&#xFE0E; Edit</a></b>';
 				document.getElementById('detail').appendChild(editproflink);
 			}
-			var jsonurl = 'https://api.stibarc.gq/getuser.sjs?id=' + encodeURIComponent(term);
+			var jsonurl = 'https://api.stibarc.gq/v2/getuser.sjs?id=' + encodeURIComponent(term);
 			var r = new XMLHttpRequest();
 			var rv = new XMLHttpRequest();
 			var rp = new XMLHttpRequest();
 			r.addEventListener('load', function() {
 				if (isSet(r.responseText)) {
-					var rsp = r.responseText.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-					var tmp = rsp.split('\n');
-					var rank = tmp[4].split(':')[1];
-					var name = tmp[0].split(':')[1];
-					var email = tmp[1].split(':')[1];
-					var birthday = tmp[3].split(':')[1];
+					var rsp = JSON.parse(r.responseText);
+					var rank = rsp.rank.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+					var name = rsp.name.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+					var email = rsp.email.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+					var birthday = rsp.birthday.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 					document.getElementById('rank').innerHTML = 'Rank: ' + rank;
 					if (name != 'Not shown' && name != 'Not set') {
 						document.getElementById('name').innerHTML = 'Name: ' + name;
@@ -52,13 +51,9 @@
 					} else {
 						document.getElementById('detailList').removeChild(document.getElementById('birthday'));
 					}
-					if (isSet(tmp[5])) {
-						var bio = '';
-						for (i = 6; i < tmp.length; i++) {
-							bio = bio + tmp[i] + (i < tmp.length - 1 ? '<br/>' : '');
-						}
+					if (isSet(rsp.bio)) {
+						var bio = rsp.bio.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>');
 						document.getElementById('bio').innerHTML = putLinksInText(bio);
-						
 					} else {
 						document.getElementById('detail').removeChild(document.getElementById('bio'));
 					}
