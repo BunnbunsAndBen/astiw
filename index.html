@@ -13,17 +13,18 @@
 		var youreOnTheHomepage = true;
 		
 		function load() {
-			var jsonurl = 'https://api.stibarc.gq/getposts.sjs';
+			var jsonurl = 'https://api.stibarc.gq/v2/getposts.sjs';
 			var r = new XMLHttpRequest();
 			r.addEventListener('load', function() {
-				var stuf = r.responseText.split("\n");
-				topp = r.responseText.split(':')[0];
-				stuf.splice(stuf.length - 1, 1);
-				document.getElementById('rm').removeChild(document.getElementById('loader'));
-				for (i = 0; i < stuf.length; i++) {
-					addRecent(stuf[i], i == 0);
+				if (isSet(r.responseText)) {
+					var stuf = JSON.parse(r.responseText);
+					topp = stuf.totalposts;
+					for (i = stuf.totalposts; i > stuf.totalposts - 20; i--) {
+						addRecent(i, stuf[i], i == stuf.totalposts);
+					}
+					document.getElementById('rm').removeChild(document.getElementById('loader'));
+					document.getElementById('loadmore').style.display = 'initial';
 				}
-				document.getElementById('loadmore').style.display = 'initial';
 				if (!(localStorage.getItem('astiw_roi') == 'true')) {
 					setTimeout(checkNewPosts, 500);
 				}
@@ -39,15 +40,17 @@
 			ldr.className = 'loader';
 			ldr.id = 'loader';
 			document.getElementById('rm').appendChild(ldr);
-			var jsonurl = 'https://api.stibarc.gq/getposts.sjs?id=' + lastid;
+			var jsonurl = 'https://api.stibarc.gq/v2/getposts.sjs?id=' + lastid;
 			var r = new XMLHttpRequest();
 			r.addEventListener('load', function() {
-				var stuf = r.responseText.split("\n");
-				stuf.splice(stuf.length - 1, 1);
-				document.getElementById('rm').removeChild(document.getElementById('loader'));
-				for (i = 0; i < stuf.length; i++) {
-					addRecent(stuf[i], false);
+				if (isSet(r.responseText)) {
+					var stuf = JSON.parse(r.responseText);
+					var temp = lastid;
+					for (i = temp - 1; i > temp - 21; i--) {
+						addRecent(i, stuf[i], false);
+					}
 				}
+				document.getElementById('rm').removeChild(document.getElementById('loader'));
 				document.getElementById('loadmore').style.display = 'initial';
 			});
 			r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
@@ -56,11 +59,11 @@
 		};
 		
 		function checkNewPosts() {
-			var jsonurl = 'https://api.stibarc.gq/getposts.sjs';
+			var jsonurl = 'https://api.stibarc.gq/v2/getposts.sjs';
 			var r = new XMLHttpRequest();
 			r.addEventListener('load', function() {
-				var thingy = r.responseText.split(':')[0];
-				if (Number(thingy) > Number(topp)) {
+				var thingy = r.responseText.totalposts;
+				if (thingy > topp) {
 					document.getElementById('refreshMarker').style.display = 'block';
 					document.title = '(\u21bb) ASTiW';
 				} else {
