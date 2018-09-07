@@ -18,6 +18,7 @@
 		var commCount;
 		var holdmyverification = false;
 		var ddnc = false;
+		var doScrollDown;
 		
 		window.onbeforeunload = function() {
 			if (!oktoleave && (isSet(document.getElementById('commentBox').value) || document.getElementById('editText').style.display != 'none')) {
@@ -54,7 +55,9 @@
 					if (!pushed) {comment(id);}
 				}
 			});
-			id = getAllUrlParams().id;
+			var paramsObj = getAllUrlParams();
+			id = paramsObj.id;
+			doScrollDown = paramsObj.comments;
 			var jsonurl = 'https://api.stibarc.gq/v2/getpost.sjs?id=' + id;
 			var r = new XMLHttpRequest();
 			var rv = new XMLHttpRequest();
@@ -126,6 +129,9 @@
 				}
 				document.getElementById('rm').removeChild(document.getElementById('loader2'));
 				document.getElementById('main').style.display = 'block';
+				if (doScrollDown) {
+					window.scrollTo(0, document.getElementById('flipper').offsetTop - 58)
+				}
 				if (localStorage.getItem('astiw_roi') != 'true') {
 					setTimeout(checkNewComms, 500);
 				}
