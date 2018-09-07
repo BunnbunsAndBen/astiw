@@ -267,20 +267,34 @@ function addRecent(id, item, b) {
 	var main = document.getElementById('main');
 	var el = document.createElement('a');
 	var menulist = [];
+	var home = typeof youreOnTheHomepage !== 'undefined' && youreOnTheHomepage == true;
+	var card = home && localStorage.getItem('astiw_cardview') == 'true';
 	el.id = 'postItem' + id;
 	el.href = 'post.html?id=' + id;
-	el.className = 'recentLinks'; // 
-	menulist.push('<a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ')">&#x25bc; Expand</a> | <a class="classic" href="post.html?id=' + id + '&comments">&#x1f4ac;&#xfe0e; Comment</a>'); // update this
+	el.className = 'recentLinks';
+	menulist.push((card ? '' : '<a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ')">&#x25bc; Expand</a> | ') + '<a class="classic" href="post.html?id=' + id + '&comment">&#x1f4ac;&#xfe0e; Comment</a>');
 	if (localStorage.getItem('astiw_markread') != 'true') {
 		menulist.push(localStorage.getItem('astiw_viewed' + id) == 'true' ? '<a class="classic" id="prms' + id + '" href="javascript:markPost(' + id + ', false);">Mark unread</a>' : '<a class="classic" id="prms' + id + '" href="javascript:markPost(' + id + ', true);">Mark read</a>');
 	}
 	if (isSet(item.attachment) && item.attachment != 'none') {
 		menulist.push('Image attached');
 	}
-	el.innerHTML = '<div class="recent' + (b ? ' bb' : '') + '"><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b><p class="small">Posted by <a class="classic" ' + (item.poster == getCurrentUser() ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><b><p class="small" style="margin-bottom:0;">' + menulist.join(' &#xb7; ') + '</p></b><p id="expanded' + id + '" style="margin-bottom:0; display:none;">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'))+ '</p></div>';
+	if (card) {
+		el.innerHTML = '<div class="recentCard' + (b ? ' bb' : '') + '"><p class="small" style="margin-top:0;">Posted by <a class="classic" ' + (item.poster == getCurrentUser() ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b><p class="fadeOutText" style="max-height:11em;">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'))+ '</p><b><p class="small" style="margin-bottom:0;">' + menulist.join(' &#xb7; ') + '</p></b></div>';
+	} else {
+		el.innerHTML = '<div class="recent' + (b ? ' bb' : '') + '"><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b><p class="small">Posted by <a class="classic" ' + (item.poster == getCurrentUser() ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><b><p class="small" style="margin-bottom:0;">' + menulist.join(' &#xb7; ') + '</p></b><p id="expanded' + id + '" style="margin-bottom:0; display:none;">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'))+ '</p></div>';
+	}
 	main.appendChild(el);
-	if (typeof youreOnTheHomepage !== 'undefined' && youreOnTheHomepage == true) {
+	if (home) {
 		lastid = id;
+	}
+};
+
+function trimTitle(trimMe) {
+	if (trimMe.length > 300) {
+		return trimMe.substring(0, 300) + '&#x2026;';
+	} else {
+		return trimMe;
 	}
 };
 
@@ -297,10 +311,10 @@ function expand(numb) {
 function markPost(pn, whichOne) {
 	localStorage.setItem('astiw_viewed' + pn, whichOne.toString());
 	if (localStorage.getItem('astiw_viewed' + pn) == 'true') {
-		document.getElementById('postItem' + pn).getElementsByTagName('b')[0].style.opacity = '0.5';
+		document.getElementById('postItem' + pn).getElementsByClassName('theB')[0].style.opacity = '0.5';
 		document.getElementById('prms' + pn).innerHTML = '<a class="classic" id="prms' + pn + '" href="javascript:markPost(' + pn + ', false);">Mark unread</a>';
 	} else {
-		document.getElementById('postItem' + pn).getElementsByTagName('b')[0].style.opacity = '1';
+		document.getElementById('postItem' + pn).getElementsByClassName('theB')[0].style.opacity = '1';
 		document.getElementById('prms' + pn).innerHTML = '<a class="classic" id="prms' + pn + '" href="javascript:markPost(' + pn + ', true);">Mark read</a>';
 	}
 };

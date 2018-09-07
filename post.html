@@ -57,7 +57,7 @@
 			});
 			var paramsObj = getAllUrlParams();
 			id = paramsObj.id;
-			doScrollDown = paramsObj.comments;
+			doScrollDown = paramsObj.comment;
 			var jsonurl = 'https://api.stibarc.gq/v2/getpost.sjs?id=' + id;
 			var r = new XMLHttpRequest();
 			var rv = new XMLHttpRequest();
@@ -103,9 +103,9 @@
 						document.getElementById('flipper').innerHTML = '<a href="javascript:flip(\'new\');" class="classic">OLDEST FIRST &#x25b2;</a>';
 					}
 					if (comments.length == 1) {
-						menulist.push('1 comment');
+						menulist.push('&#x1f4ac;&#xfe0e; 1 comment');
 					} else {
-						menulist.push(comments.length.toString() + ' comments');
+						menulist.push('&#x1f4ac;&#xfe0e; ' + comments.length.toString() + ' comments');
 					}
 					commCount = comments.length;
 					placeComments();
@@ -131,7 +131,7 @@
 				document.getElementById('rm').removeChild(document.getElementById('loader2'));
 				document.getElementById('main').style.display = 'block';
 				if (doScrollDown) {
-					window.scrollTo(0, document.getElementById('flipper').offsetTop - 58)
+					window.scrollTo(0, document.getElementById('commentBox').offsetTop - 58)
 				}
 				if (localStorage.getItem('astiw_roi') != 'true') {
 					setTimeout(checkNewComms, 500);
