@@ -241,6 +241,7 @@ main {
 	left: 0;
 	top: 0;
 	background: linear-gradient(transparent 9em, var(--content-bg));
+	pointer-events: none;
 }
 
 .recentCard:hover .fadeOutText::before, .recentCard:active .fadeOutText::before {
