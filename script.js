@@ -268,19 +268,26 @@ function addRecent(id, item, b) {
 	var el = document.createElement('a');
 	var menulist = [];
 	var home = typeof youreOnTheHomepage !== 'undefined' && youreOnTheHomepage == true;
-	var card = home && localStorage.getItem('astiw_cardview') == 'true';
+	var raw = localStorage.getItem('astiw_view');
+	if (home) {
+		var view = (isSet(raw) ? raw : 'm');
+	} else {
+		var view = 'm';
+	}
 	el.id = 'postItem' + id;
 	el.href = 'post.html?id=' + id;
 	el.className = 'recentLinks';
-	menulist.push((card ? '' : '<a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ')">&#x25bc; Expand</a> | ') + '<a class="classic" href="post.html?id=' + id + '&comment">&#x1f4ac;&#xfe0e; Comment</a>');
+	menulist.push((view != 'm' ? '' : '<a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', true)">&#x25bc; Expand</a> | ') + '<a class="classic" href="post.html?id=' + id + '&comment">&#x1f4ac;&#xfe0e;' + (view != 's' ? ' Comment' : '') + '</a>');
 	if (localStorage.getItem('astiw_markread') != 'true') {
-		menulist.push(localStorage.getItem('astiw_viewed' + id) == 'true' ? '<a class="classic" id="prms' + id + '" href="javascript:markPost(' + id + ', false);">Mark unread</a>' : '<a class="classic" id="prms' + id + '" href="javascript:markPost(' + id + ', true);">Mark read</a>');
+		menulist.push(localStorage.getItem('astiw_viewed' + id) == 'true' ? '<a class="classic" id="prms' + id + '" href="javascript:markPost(' + id + ', false, ' + (view != 's').toString() + ');">' + markText(true, view != 's') + '</a>' : '<a class="classic" id="prms' + id + '" href="javascript:markPost(' + id + ', true, ' + (view != 's').toString() + ');">' + markText(false, view != 's') + '</a>');
 	}
 	if (isSet(item.attachment) && item.attachment != 'none') {
-		menulist.push('Image attached');
+		menulist.push(view == 's' ? 'Image' : 'Image attached');
 	}
-	if (card) {
+	if (view == 'l') {
 		el.innerHTML = '<div class="recentCard' + (b ? ' bb' : '') + '"><p class="small" style="margin-top:0;">Posted by <a class="classic" ' + (item.poster == getCurrentUser() ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b><p class="fadeOutText" style="max-height:11em;">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'))+ '</p><b><p class="small" style="margin-bottom:0;">' + menulist.join(' &#xb7; ') + '</p></b></div>';
+	} else if (view == 's') {
+		el.innerHTML = '<div class="recent' + (b ? ' bb' : '') + '"><b><p class="small" style="margin:0 0 0 8px; float:right;">' + menulist.join(' &#xb7; ') + '</p></b><p class="small" style="margin-top:0; color:var(--content);"><a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', false)">&#x25bc;</a> <b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b></p><p class="small" style="margin-bottom:0;">Posted by <a class="classic" ' + (item.poster == getCurrentUser() ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><p id="expanded' + id + '" style="margin-bottom:0; display:none;">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'))+ '</p></div>';
 	} else {
 		el.innerHTML = '<div class="recent' + (b ? ' bb' : '') + '"><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b><p class="small">Posted by <a class="classic" ' + (item.poster == getCurrentUser() ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><b><p class="small" style="margin-bottom:0;">' + menulist.join(' &#xb7; ') + '</p></b><p id="expanded' + id + '" style="margin-bottom:0; display:none;">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'))+ '</p></div>';
 	}
@@ -298,25 +305,51 @@ function trimTitle(trimMe) {
 	}
 };
 
-function expand(numb) {
+function expand(numb, showtext) {
 	if (document.getElementById('expanded' + numb).style.display == 'none') {
 		document.getElementById('expanded' + numb).style.display = '';
-		document.getElementById('expander' + numb).innerHTML = '&#x25b2; Collapse';
+		document.getElementById('expander' + numb).innerHTML = '&#x25b2;' + (showtext ? ' Collapse' : '');
 	} else {
 		document.getElementById('expanded' + numb).style.display = 'none';
-		document.getElementById('expander' + numb).innerHTML = '&#x25bc; Expand';
+		document.getElementById('expander' + numb).innerHTML = '&#x25bc;' + (showtext ? ' Expand' : '');
 	}
 };
 
-function markPost(pn, whichOne) {
+function markPost(pn, whichOne, fulltext) {
 	localStorage.setItem('astiw_viewed' + pn, whichOne.toString());
 	if (localStorage.getItem('astiw_viewed' + pn) == 'true') {
 		document.getElementById('postItem' + pn).getElementsByClassName('theB')[0].style.opacity = '0.5';
-		document.getElementById('prms' + pn).innerHTML = '<a class="classic" id="prms' + pn + '" href="javascript:markPost(' + pn + ', false);">Mark unread</a>';
+		document.getElementById('prms' + pn).innerHTML = '<a class="classic" id="prms' + pn + '" href="javascript:markPost(' + pn + ', false, ' + fulltext.toString() + ');">' + markText(true, fulltext) + '</a>';
 	} else {
 		document.getElementById('postItem' + pn).getElementsByClassName('theB')[0].style.opacity = '1';
-		document.getElementById('prms' + pn).innerHTML = '<a class="classic" id="prms' + pn + '" href="javascript:markPost(' + pn + ', true);">Mark read</a>';
+		document.getElementById('prms' + pn).innerHTML = '<a class="classic" id="prms' + pn + '" href="javascript:markPost(' + pn + ', true, ' + fulltext.toString() + ');">' + markText(false, fulltext) + '</a>';
 	}
+};
+
+function markText(dir, full) {
+	if (full) {
+		return (dir ? 'Mark unread' : 'Mark read');
+	} else {
+		return (dir ? 'Unread' : 'Read');
+	}
+};
+
+function switchView(value) {
+	localStorage.setItem('astiw_view', value);
+	window.location.reload();
+};
+
+function setupViewBar() {
+	var raw = localStorage.getItem('astiw_view');
+	if (isSet(raw)) {
+		var view = raw;
+	} else {
+		var view = 'm';
+	}
+	document.getElementById('view-s').innerHTML = (view == 's' ? '<b>Small</b>' : '<a class="classic" href="javascript:switchView(\'s\');">Small</a>');
+	document.getElementById('view-m').innerHTML = (view == 'm' ? '<b>Medium</b>' : '<a class="classic" href="javascript:switchView(\'m\');">Medium</a>');
+	document.getElementById('view-l').innerHTML = (view == 'l' ? '<b>Large</b>' : '<a class="classic" href="javascript:switchView(\'l\');">Large</a>');
+	document.getElementById('viewBar').style.display = 'block';
 };
 
 function sayToReload() {

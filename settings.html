@@ -113,7 +113,6 @@
 			var messagesound = localStorage.getItem('astiw_messagesound') == 'true';
 			var sendsound = localStorage.getItem('astiw_sendsound') == 'true';
 			var showpreviews = localStorage.getItem('astiw_showpreviews') == 'true';
-			var cardview = localStorage.getItem('astiw_cardview') == 'true';
 			var theme = localStorage.getItem('astiw_theme');
 			if (!isSet(theme)) {
 				theme = 'dark.css';
@@ -133,8 +132,6 @@
 			document.getElementById('replacesl').style.backgroundColor = (replacesl ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('showsess').innerHTML = (showsess ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('showsess').style.backgroundColor = (showsess ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
-			document.getElementById('cardview').innerHTML = (cardview ? '&#x2714;&#xFE0E;' : '');
-			document.getElementById('cardview').style.backgroundColor = (cardview ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('messagesound').innerHTML = (!messagesound ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('messagesound').style.backgroundColor = (!messagesound ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('sendsound').innerHTML = (!sendsound ? '&#x2714;&#xFE0E;' : '');
@@ -232,10 +229,6 @@
 				<p class="small">Learn how to create a custom theme</p>
 			</div>
 			<h4>Behavior</h4>
-			<div>
-				<button class="cb" id="cardview" onclick="toggleSetting('cardview');"></button><p style="margin-bottom:9px;">Use card layout on home page</p>
-				<p class="small">Display posts on the home page in "cards" with text previews</p>
-			</div>
 			<div>
 				<select id="dir" onchange="applySetting('dir');">
 					<option value="false">Newest first</option>
