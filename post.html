@@ -267,7 +267,7 @@
 					document.getElementById('imgThing').removeChild(document.getElementById('loader3'));
 					document.getElementById('imgThing').appendChild(img);
 					if (cachefail) {
-						alert('Image could not be cached because local storage is full');
+						alert('Image could not be cached because local storage is full; go to settings to clear cache');
 					}
 				});
 				r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
