@@ -11,8 +11,15 @@
 		var lastid = 1;
 		var topp;
 		var youreOnTheHomepage = true;
+		var loading = true;
+		var exceeded = false;
 		
 		function load() {
+			window.onscroll = function(e) {
+				if (!loading && window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 783 && !exceeded) {
+					loadMore();
+				}
+			}
 			var jsonurl = 'https://api.stibarc.gq/v2/getposts.sjs';
 			var r = new XMLHttpRequest();
 			r.addEventListener('load', function() {
@@ -23,7 +30,7 @@
 						addRecent(i, stuf[i], i == stuf.totalposts);
 					}
 					document.getElementById('rm').removeChild(document.getElementById('loader'));
-					document.getElementById('loadmore').style.display = 'initial';
+					loading = false;
 				}
 				if (!(localStorage.getItem('astiw_roi') == 'true')) {
 					setTimeout(checkNewPosts, 500);
@@ -35,7 +42,7 @@
 		};
 		
 		function loadMore() {
-			document.getElementById('loadmore').style.display = 'none';
+			loading = true;
 			var ldr = document.createElement('div');
 			ldr.className = 'loader';
 			ldr.id = 'loader';
@@ -47,11 +54,16 @@
 					var stuf = JSON.parse(r.responseText);
 					var temp = lastid;
 					for (i = temp - 1; i > temp - 21; i--) {
-						addRecent(i, stuf[i], false);
+						if (isSet(stuf[i])) {
+							addRecent(i, stuf[i], false);
+						} else {
+							exceeded = true;
+							break;
+						}
 					}
 				}
 				document.getElementById('rm').removeChild(document.getElementById('loader'));
-				document.getElementById('loadmore').style.display = 'initial';
+				loading = false;
 			});
 			r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 			r.open('get', jsonurl, true);
@@ -100,7 +112,6 @@
 	</div>
 	<main id="rm">
 		<div id="main"></div>
-		<button id="loadmore" class="othbut widebut specialSpecifics" onclick="loadMore();">LOAD MORE</button>
 		<div class="loader" id="loader"></div>
 	</main>
 </body>
