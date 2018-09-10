@@ -19,6 +19,7 @@
 		var holdmyverification = false;
 		var ddnc = false;
 		var doScrollDown;
+		var raw;
 		
 		window.onbeforeunload = function() {
 			if (!oktoleave && (isSet(document.getElementById('commentBox').value) || document.getElementById('editText').style.display != 'none')) {
@@ -33,8 +34,9 @@
 				document.getElementById('comment').style.display = 'block';
 				document.getElementById('youArentLoggedIn').style.display = 'none';
 			}
+			raw = localStorage.getItem('astiw_view');
 			window.onscroll = function(e) {
-				if (window.pageYOffset >= 41) {
+				if (window.pageYOffset >= 105.5) {
 					document.getElementById('scrollerContain').style.display = '';
 				} else {
 					document.getElementById('scrollerContain').style.display = 'none';

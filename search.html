@@ -10,6 +10,7 @@
 	<script>
 		var nores = false;
 		var term;
+		var raw;
 		
 		function importantLoad() {
 			var temp = getAllUrlParams().q;
@@ -27,6 +28,7 @@
 		};
 		
 		function load() {
+			raw = localStorage.getItem('astiw_view');
 			if (isSet(term)) {
 				window.onscroll = function(e) {
 					if (window.pageYOffset >= 41) {

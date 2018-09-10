@@ -268,7 +268,6 @@ function addRecent(id, item, b) {
 	var el = document.createElement('a');
 	var menulist = [];
 	var home = typeof youreOnTheHomepage !== 'undefined' && youreOnTheHomepage == true;
-	var raw = localStorage.getItem('astiw_view');
 	if (home) {
 		var view = (isSet(raw) ? raw : 'm');
 	} else {
@@ -340,7 +339,6 @@ function switchView(value) {
 };
 
 function setupViewBar() {
-	var raw = localStorage.getItem('astiw_view');
 	if (isSet(raw)) {
 		var view = raw;
 	} else {

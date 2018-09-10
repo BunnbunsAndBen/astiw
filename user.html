@@ -9,6 +9,7 @@
 	<script src="script.js"></script>
 	<script>
 		var term;
+		var raw;
 		
 		function importantLoad() {
 			term = decodeURIComponent(getAllUrlParams().id);
@@ -16,6 +17,7 @@
 		};
 		
 		function load() {
+			raw = localStorage.getItem('astiw_view');
 			window.onscroll = function(e) {
 				if (window.pageYOffset >= 41) {
 					document.getElementById('scrollerContain').style.display = '';
