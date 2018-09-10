@@ -14,9 +14,13 @@
 		var loading = true;
 		var exceeded = false;
 		
+		function scrollCond() {
+			return window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 783 && !exceeded;
+		};
+		
 		function load() {
 			window.onscroll = function(e) {
-				if (!loading && window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 783 && !exceeded) {
+				if (!loading && scrollCond()) {
 					loadMore();
 				}
 			}
@@ -31,7 +35,11 @@
 					}
 					setupViewBar();
 					document.getElementById('rm').removeChild(document.getElementById('loader'));
-					loading = false;
+					if (scrollCond()) {
+						loadMore();
+					} else {
+						loading = false;
+					}
 				}
 				if (!(localStorage.getItem('astiw_roi') == 'true')) {
 					setTimeout(checkNewPosts, 500);
@@ -64,7 +72,11 @@
 					}
 				}
 				document.getElementById('rm').removeChild(document.getElementById('loader'));
-				loading = false;
+				if (scrollCond()) {
+					loadMore();
+				} else {
+					loading = false;
+				}
 			});
 			r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 			r.open('get', jsonurl, true);
