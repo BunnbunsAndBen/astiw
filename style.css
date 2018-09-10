@@ -231,6 +231,7 @@ main {
 .fadeOutText {
 	position: relative;
 	overflow: hidden;
+	max-height: 11em;
 }
 
 .fadeOutText::before {

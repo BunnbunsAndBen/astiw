@@ -276,7 +276,13 @@ function addRecent(id, item, b) {
 	el.id = 'postItem' + id;
 	el.href = 'post.html?id=' + id;
 	el.className = 'recentLinks';
-	menulist.push((view != 'm' ? '' : '<a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', true)">&#x25bc; Expand</a> | ') + '<a class="classic" href="post.html?id=' + id + '&comment">&#x1f4ac;&#xfe0e;' + (view != 's' ? ' Comment' : '') + '</a>');
+	if (view == 's') {
+		menulist.push('<a class="classic" href="post.html?id=' + id + '&comment">&#x1f4ac;&#xfe0e;' + (view != 's' ? ' Comment' : '') + '</a>');
+	} else if (view == 'm') {
+		menulist.push('<a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', true)">&#x25bc; Expand</a> | <a class="classic" href="post.html?id=' + id + '&comment">&#x1f4ac;&#xfe0e;' + (view != 's' ? ' Comment' : '') + '</a>');
+	} else if (view == 'l') {
+		menulist.push('<span style="display:none;" id="expanderContain' + id + '"><a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', true)">&#x25bc; Expand</a> | </span><a class="classic" href="post.html?id=' + id + '&comment">&#x1f4ac;&#xfe0e;' + (view != 's' ? ' Comment' : '') + '</a>');
+	}
 	if (localStorage.getItem('astiw_markread') != 'true') {
 		menulist.push(localStorage.getItem('astiw_viewed' + id) == 'true' ? '<a class="classic" id="prms' + id + '" href="javascript:markPost(' + id + ', false, ' + (view != 's').toString() + ');">' + markText(true, view != 's') + '</a>' : '<a class="classic" id="prms' + id + '" href="javascript:markPost(' + id + ', true, ' + (view != 's').toString() + ');">' + markText(false, view != 's') + '</a>');
 	}
@@ -284,13 +290,19 @@ function addRecent(id, item, b) {
 		menulist.push(view == 's' ? 'Image' : 'Image attached');
 	}
 	if (view == 'l') {
-		el.innerHTML = '<div class="recentCard' + (b ? ' bb' : '') + '"><p class="small" style="margin-top:0;">Posted by <a class="classic" ' + (item.poster == getCurrentUser() ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b><p class="fadeOutText" style="max-height:11em;">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'))+ '</p><b><p class="small" style="margin-bottom:0;">' + menulist.join(' &#xb7; ') + '</p></b></div>';
+		el.innerHTML = '<div class="recentCard' + (b ? ' bb' : '') + '"><p class="small" style="margin-top:0;">Posted by <a class="classic" ' + (item.poster == getCurrentUser() ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b><p id="cardText' + id + '" class="fadeOutText">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'))+ '</p><b><p class="small" style="margin-bottom:0;">' + menulist.join(' &#xb7; ') + '</p></b></div>';
 	} else if (view == 's') {
 		el.innerHTML = '<div class="recent' + (b ? ' bb' : '') + '"><b><p class="small" style="margin:0 0 0 8px; float:right;">' + menulist.join(' &#xb7; ') + '</p></b><p class="small" style="margin-top:0; color:var(--content);"><a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', false)">&#x25bc;</a> <b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b></p><p class="small" style="margin-bottom:0;">Posted by <a class="classic" ' + (item.poster == getCurrentUser() ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><p id="expanded' + id + '" style="margin-bottom:0; display:none;">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'))+ '</p></div>';
 	} else {
 		el.innerHTML = '<div class="recent' + (b ? ' bb' : '') + '"><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b><p class="small">Posted by <a class="classic" ' + (item.poster == getCurrentUser() ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><b><p class="small" style="margin-bottom:0;">' + menulist.join(' &#xb7; ') + '</p></b><p id="expanded' + id + '" style="margin-bottom:0; display:none;">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'))+ '</p></div>';
 	}
 	main.appendChild(el);
+	if (view == 'l') {
+		var cardText = document.getElementById('cardText' + id);
+		if (cardText.scrollHeight > cardText.offsetHeight) {
+			document.getElementById('expanderContain' + id).style.display = '';
+		}
+	}
 	if (home) {
 		lastid = id;
 	}
@@ -305,12 +317,22 @@ function trimTitle(trimMe) {
 };
 
 function expand(numb, showtext) {
-	if (document.getElementById('expanded' + numb).style.display == 'none') {
-		document.getElementById('expanded' + numb).style.display = '';
-		document.getElementById('expander' + numb).innerHTML = '&#x25b2;' + (showtext ? ' Collapse' : '');
+	if (raw == 'l') {
+		if (document.getElementById('cardText' + numb).className == 'fadeOutText') {
+			document.getElementById('cardText' + numb).className = '';
+			document.getElementById('expander' + numb).innerHTML = '&#x25b2;' + (showtext ? ' Collapse' : '');
+		} else {
+			document.getElementById('cardText' + numb).className = 'fadeOutText';
+			document.getElementById('expander' + numb).innerHTML = '&#x25bc;' + (showtext ? ' Expand' : '');
+		}
 	} else {
-		document.getElementById('expanded' + numb).style.display = 'none';
-		document.getElementById('expander' + numb).innerHTML = '&#x25bc;' + (showtext ? ' Expand' : '');
+		if (document.getElementById('expanded' + numb).style.display == 'none') {
+			document.getElementById('expanded' + numb).style.display = '';
+			document.getElementById('expander' + numb).innerHTML = '&#x25b2;' + (showtext ? ' Collapse' : '');
+		} else {
+			document.getElementById('expanded' + numb).style.display = 'none';
+			document.getElementById('expander' + numb).innerHTML = '&#x25bc;' + (showtext ? ' Expand' : '');
+		}
 	}
 };
 
