@@ -20,6 +20,11 @@
 		
 		function load() {
 			window.onscroll = function(e) {
+				if (window.pageYOffset >= 41) {
+					document.getElementById('scrollerContain').style.display = '';
+				} else {
+					document.getElementById('scrollerContain').style.display = 'none';
+				}
 				if (!loading && scrollCond()) {
 					loadMore();
 				}
@@ -128,6 +133,7 @@
 		<div id="main"></div>
 		<div class="loader" id="loader"></div>
 	</main>
+	<div id="scrollerContain" style="display:none;"><button id="toTop" onclick="scrollToTop();">&#x2912;</button></div>
 </body>
 </html>
 <style>

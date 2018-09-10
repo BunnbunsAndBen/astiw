@@ -377,3 +377,30 @@ hr {
 	background-color: var(--content-bg);
 	border-bottom: 1px solid var(--border);
 }
+
+#toTop {
+	height: 48px;
+	width: 48px;
+	border: 1px solid var(--content);
+	background-color: var(--content);
+	z-index: 1;
+	bottom: 65px;
+	border-radius: 100%;
+	color: var(--probably-same-as-content-bg);
+	font-size: 2em;
+	outline: none;
+	cursor: pointer;
+	left: 16px;
+	padding: 0px;
+}
+
+#toTop:hover, #toTop:active {
+	background-color: var(--other-rollover);
+}
+
+#scrollerContain {
+	padding-bottom: 16px;
+	text-align: center;
+	position: sticky;
+	bottom: 0;
+}

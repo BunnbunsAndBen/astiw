@@ -33,6 +33,13 @@
 				document.getElementById('comment').style.display = 'block';
 				document.getElementById('youArentLoggedIn').style.display = 'none';
 			}
+			window.onscroll = function(e) {
+				if (window.pageYOffset >= 41) {
+					document.getElementById('scrollerContain').style.display = '';
+				} else {
+					document.getElementById('scrollerContain').style.display = 'none';
+				}
+			}
 			document.getElementById('editTitle').addEventListener('keydown', function(e) {
 				if (e.keyCode == 13) {
 					e.preventDefault();
@@ -480,5 +487,6 @@
 		</div>
 		<div class="loader" id="loader2"></div>
 	</main>
+	<div id="scrollerContain" style="display:none;"><button id="toTop" onclick="scrollToTop();">&#x2912;</button></div>
 </body>
 </html>

@@ -355,3 +355,7 @@ function setupViewBar() {
 function sayToReload() {
 	alert('The selected account has changed, please reload the page');
 };
+
+function scrollToTop() {
+	window.scrollTo(0, 0);
+};
