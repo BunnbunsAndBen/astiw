@@ -287,6 +287,11 @@
 						document.getElementById('theChat').style.display = '';
 						msgBox.scrollTop = msgBox.scrollHeight;
 						currentChat = chatid;
+						while (msgBox.scrollTop == 0 && hfb > 0) {
+							var msgs2 = generateMsgs(oldresp, hfb);
+							msgBox.innerHTML = msgs2 + msgBox.innerHTML;
+							msgBox.scrollTop = msgBox.scrollHeight;
+						}
 						var te = document.getElementById('messageBox');
 						var saved = localStorage.getItem('astiw_savedmsg' + chatid);
 						if (isSet(saved)) {
