@@ -14,7 +14,7 @@
 		function load() {
 			var myName = getCurrentUser();
 			if (isSet(myName) && myName != 'Anon') {
-				document.getElementById('messengerSettings').style.display = '';
+				document.getElementById('blockItem').style.display = '';
 			}
 			checkSettings();
 			blocksDialog = document.getElementById('blocksDialog');
@@ -264,20 +264,20 @@
 				<button class="cb" id="docache" onclick="toggleSetting('docache');"></button><p style="margin-bottom:9px;">Cache images</p>
 				<p class="small">Save images to your browser to not have to load them again (turning this off does not delete already cached images)</p>
 			</div>
-			<div id="messengerSettings" style="display:none;">
-				<h4>Messenger</h4>
-				<div>
-					<button class="cb" id="messagesound" onclick="toggleSetting('messagesound');"></button><p style="margin-bottom:9px;">Play sound for new messages</p>
-					<p class="small">Play a <a class="classic" href="javascript:testSound('res/new_message.wav')">sound</a> when a message is received in the current chat</p>
-				</div>
-				<div>
-					<button class="cb" id="sendsound" onclick="toggleSetting('sendsound');"></button><p style="margin-bottom:9px;">Play sound for sent messages</p>
-					<p class="small">Play a <a class="classic" href="javascript:testSound('res/send_message.wav')">sound</a> when your message is sent</p>
-				</div>
-				<div>
-					<button class="cb" id="showpreviews" onclick="toggleSetting('showpreviews');"></button><p style="margin-bottom:9px;">Show previews</p>
-					<p class="small">Show images, thumbnails of YouTube videos, and audio players where the content is linked to</p>
-				</div>
+			<h4>Messenger</h4>
+			<div>
+				<button class="cb" id="messagesound" onclick="toggleSetting('messagesound');"></button><p style="margin-bottom:9px;">Play sound for new messages</p>
+				<p class="small">Play a <a class="classic" href="javascript:testSound('res/new_message.wav')">sound</a> when a message is received in the current chat</p>
+			</div>
+			<div>
+				<button class="cb" id="sendsound" onclick="toggleSetting('sendsound');"></button><p style="margin-bottom:9px;">Play sound for sent messages</p>
+				<p class="small">Play a <a class="classic" href="javascript:testSound('res/send_message.wav')">sound</a> when your message is sent</p>
+			</div>
+			<div>
+				<button class="cb" id="showpreviews" onclick="toggleSetting('showpreviews');"></button><p style="margin-bottom:9px;">Show previews</p>
+				<p class="small">Show images, thumbnails of YouTube videos, and audio players where the content is linked to</p>
+			</div>
+			<div id="blockItem" style="display:none;">
 				<p style="margin-bottom:9px;"><a href="javascript:showBlocks();" class="classic">Manage blocks</a></p>
 				<p class="small">View and unblock the users you have blocked</p>
 			</div>
