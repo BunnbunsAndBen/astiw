@@ -263,6 +263,20 @@ function getAllUrlParams(url) {
 	return obj;
 };
 
+function addRecentBasic(item, b) {
+	var i = item.indexOf(':');
+	var splits = [item.slice(0, i), item.slice(i + 1)];
+	var id = splits[0];
+	var title = splits[1];
+	var main = document.getElementById('main');
+	var el = document.createElement('a');
+	el.id = 'postItem' + id;
+	el.href = 'post.html?id=' + id;
+	el.className = 'recentLinks';
+	el.innerHTML = '<div class="recent' + (b ? ' bb' : '') + '"><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b></div>';
+	main.appendChild(el);
+}
+
 function addRecent(id, item, b) {
 	var main = document.getElementById('main');
 	var el = document.createElement('a');

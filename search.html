@@ -31,7 +31,7 @@
 			raw = localStorage.getItem('astiw_view');
 			if (isSet(term)) {
 				window.onscroll = function(e) {
-					if (window.pageYOffset >= 41) {
+					if (window.pageYOffset >= 62.5) { // change here
 						document.getElementById('scrollerContain').style.display = '';
 					} else {
 						document.getElementById('scrollerContain').style.display = 'none';
@@ -47,7 +47,7 @@
 						stuf.splice(stuf.length - 1, 1);
 						stuf.reverse();
 						for (i = 0; i < stuf.length; i++) {
-							addRecent(stuf[i], i == 0);
+							addRecentBasic(stuf[i], i == 0);
 						}
 					} else {
 						nores = true;
@@ -67,7 +67,7 @@
 						messenge.style.textAlign = 'center';
 						document.getElementById('info').style.display = '';
 					}
-					setupViewBar();
+					// setupViewBar();
 					document.getElementById('rm').removeChild(document.getElementById('loader'));
 					document.getElementById('nameThing').style.display = '';
 					document.getElementById('main').style.display = '';
