@@ -142,12 +142,12 @@
 				document.getElementById('sortLink').style.color = '';
 			}
 			var hidValue;
-			var blocksValue = localStorage.getItem('astiw_blocks');
+			var blocksValue = localStorage.getItem('astiw_blocks_' + myName);
 			var blocksArr = (isSet(blocksValue) ? JSON.parse(blocksValue) : [])
 			for (key in tmp) {
-				hidValue = localStorage.getItem('astiw_hidechat' + key);
+				hidValue = localStorage.getItem('astiw_hidechat' + key + '_' + myName);
 				if (tmp[key].user != myName && tmp[key].user != 'Anon' && blocksArr.indexOf(tmp[key].user) == -1 && (!doHide || (isSet(tmp[key].lastmessage) && isSet(tmp[key].lastmessage.time) && tmp[key].lastmessage.time != 'unknown' ? tmp[key].lastmessage.time : 0) >= (isSet(hidValue) ? Number(hidValue) : 0))) {
-					if (doFavs && localStorage.getItem('astiw_pinchat' + key) == 'true') {
+					if (doFavs && localStorage.getItem('astiw_pinchat' + key + '_' + myName) == 'true') {
 						favslist.push([key, tmp[key], true]);
 					} else {
 						chatslist.push([key, tmp[key], false]);
@@ -268,7 +268,7 @@
 					}
 					if (ok) {
 						oldresp = ri.responseText;
-						encryptionKey = localStorage.getItem('astiw_encryptkey' + chatid);
+						encryptionKey = localStorage.getItem('astiw_encryptkey' + chatid + '_' + myName);
 						doEncr = isSet(encryptionKey);
 						if (doEncr) {
 							document.getElementById('encryptionMarker').style.display = '';
@@ -288,7 +288,7 @@
 						msgBox.scrollTop = msgBox.scrollHeight;
 						currentChat = chatid;
 						var te = document.getElementById('messageBox');
-						var saved = localStorage.getItem('astiw_savedmsg' + chatid);
+						var saved = localStorage.getItem('astiw_savedmsg' + chatid + '_' + myName);
 						if (isSet(saved)) {
 							te.value = saved;
 						} else {
@@ -593,10 +593,10 @@
 		};
 		
 		function chatMenu() {
-			var pinned = localStorage.getItem('astiw_pinchat' + currentChat) == 'true';
-			var hidValue = localStorage.getItem('astiw_hidechat' + currentChat);
+			var pinned = localStorage.getItem('astiw_pinchat' + currentChat + '_' + myName) == 'true';
+			var hidValue = localStorage.getItem('astiw_hidechat' + currentChat + '_' + myName);
 			var hid = mostRecentTime < (isSet(hidValue) ? Number(hidValue) : 0);
-			var blocksValue = localStorage.getItem('astiw_blocks');
+			var blocksValue = localStorage.getItem('astiw_blocks_' + myName);
 			var blocked = isSet(blocksValue) && JSON.parse(blocksValue).indexOf(otherPerson) >= 0;
 			var pinner = document.getElementById('pinner');
 			var hider = document.getElementById('hider');
@@ -658,9 +658,9 @@
 		
 		function setPin(bool) {
 			if (okToCloseCM) {
-				localStorage.setItem('astiw_pinchat' + currentChat, bool);
-				if (isSet(localStorage.getItem('astiw_hidechat' + currentChat))) {
-					localStorage.setItem('astiw_hidechat' + currentChat, '0');
+				localStorage.setItem('astiw_pinchat' + currentChat + '_' + myName, bool);
+				if (isSet(localStorage.getItem('astiw_hidechat' + currentChat + '_' + myName))) {
+					localStorage.setItem('astiw_hidechat' + currentChat + '_' + myName, '0');
 				}
 				okToCloseCM = false;
 				freezeColor('pinner');
@@ -669,9 +669,9 @@
 		
 		function setHide(bool) {
 			if (okToCloseCM) {
-				localStorage.setItem('astiw_hidechat' + currentChat, (bool ? new Date().getTime().toString() : '0'));
-				if (localStorage.getItem('astiw_pinchat' + currentChat) == 'true') {
-					localStorage.setItem('astiw_pinchat' + currentChat, 'false');
+				localStorage.setItem('astiw_hidechat' + currentChat + '_' + myName, (bool ? new Date().getTime().toString() : '0'));
+				if (localStorage.getItem('astiw_pinchat' + currentChat + '_' + myName) == 'true') {
+					localStorage.setItem('astiw_pinchat' + currentChat + '_' + myName, 'false');
 				}
 				okToCloseCM = false;
 				freezeColor('hider');
@@ -681,13 +681,13 @@
 		function blockUser() {
 			if (okToCloseCM) {
 				if (confirm('Block this user? (go to settings to unblock users)')) {
-					var blocksValue = localStorage.getItem('astiw_blocks');
+					var blocksValue = localStorage.getItem('astiw_blocks_' + myName);
 					if (!isSet(blocksValue)) {
 						blocksValue = '[]';
 					}
 					var blocksArr = JSON.parse(blocksValue);
 					blocksArr.push(otherPerson);
-					localStorage.setItem('astiw_blocks', JSON.stringify(blocksArr));
+					localStorage.setItem('astiw_blocks_' + myName, JSON.stringify(blocksArr));
 					okToCloseCM = false;
 					freezeColor('blocker');
 				}
@@ -704,7 +704,7 @@
 		};
 		
 		function saveEncryption() {
-			localStorage.setItem('astiw_encryptkey' + currentChat, document.getElementById('encryptionBox').value);
+			localStorage.setItem('astiw_encryptkey' + currentChat + '_' + myName, document.getElementById('encryptionBox').value);
 			closeED();
 			openChat(currentChat, otherPerson, true);
 		};
@@ -751,7 +751,7 @@
 		};
 		
 		function saveMessage() {
-			localStorage.setItem('astiw_savedmsg' + currentChat, document.getElementById('messageBox').value);
+			localStorage.setItem('astiw_savedmsg' + currentChat + '_' + myName, document.getElementById('messageBox').value);
 		};
 		
 		function insertImage(text) {
