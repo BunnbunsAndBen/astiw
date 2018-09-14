@@ -198,18 +198,18 @@
 		
 		function comment() {
 			if (!sessHasChanged()) {
-				var ysure = true;
-				if (document.getElementById('editText').style.display != 'none') {
-					ysure = confirm('Posting this comment will discard the edit to the post, continue?');
-				}
-				if (ysure) {
+				var text = document.getElementById('commentBox').value;
+				if (isSet(text)) {
 					var again = localStorage.getItem('astiw_cancommentagain');
 					if (!isSet(again)) {
 						again = 0;
 					}
-					var text = document.getElementById('commentBox').value;
-					if (isSet(text)) {
-						if (new Date().getTime() >= again) {
+					if (new Date().getTime() >= again) {
+						var ysure = true;
+						if (document.getElementById('editText').style.display != 'none') {
+							ysure = confirm('Posting this comment will discard the edit to the post, continue?');
+						}
+						if (ysure) {
 							pushed = true;
 							document.getElementById('comment').style.display = 'none';
 							document.getElementById('commentBox').disabled = true;
@@ -231,15 +231,15 @@
 							r.open('post', jsonurl, true);
 							ddnc = true;
 							r.send('sess=' + sess + '&postid=' + id + '&content=' + encodeURIComponent(text).replace(/%0A/g, '%0D%0A'));
-						} else {
-							var left = again - new Date().getTime();
-							left = Math.round(left / 1000);
-							document.getElementById('wait').innerHTML = 'You can comment again in ' + left.toString() + (left.toString() == '1' ? ' second' : ' seconds');
-							document.getElementById('wait').style.display = '';
 						}
 					} else {
-						document.getElementById('empty').style.display = '';
+						var left = again - new Date().getTime();
+						left = Math.round(left / 1000);
+						document.getElementById('wait').innerHTML = 'You can comment again in ' + left.toString() + (left.toString() == '1' ? ' second' : ' seconds');
+						document.getElementById('wait').style.display = '';
 					}
+				} else {
+					document.getElementById('empty').style.display = '';
 				}
 			} else {
 				sayToReload();
@@ -474,7 +474,7 @@
 			<div id="oof"></div>
 			<input type="text" autocomplete="off" id="editTitle" class="txf" placeholder="Title" style="width:calc(100% - 34px); display:none; margin-top:16px; margin-bottom:16px;">
 			<textarea class="txf" id="editText" style="height:108px; width:calc(100% - 34px); margin-bottom:16px; display:none;" placeholder="Text"></textarea>
-			<div id="contain2" style="display:none;"><button id="save" onclick="saveEdit();" class="libut" style="margin-bottom:16px; margin-right:16px;">SAVE</button><button id="cancel" onclick="cancelEdit();" class="othbut" style="margin-bottom:16px;">CANCEL</button></div>
+			<div id="contain2" style="display:none;"><button id="save" onclick="saveEdit();" class="libut" style="margin-bottom:7px; margin-right:16px;">SAVE</button><button id="cancel" onclick="cancelEdit();" class="othbut" style="margin-bottom:7px;">CANCEL</button></div>
 			<p class="small" style="color:var(--red); display:none; margin-top:0;" id="editEmpty">A title and text are required</p>
 			<div id="imgThing" style="display:none; text-align:center;"><button id="viewImg" onclick="loadImg();" class="othbut widebut" style="margin:0; display:initial;">SHOW IMAGE</button></div>
 			<b><p class="small" id="postMenu"></p></b>

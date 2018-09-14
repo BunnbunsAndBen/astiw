@@ -243,6 +243,7 @@
 				<p class="small">Paste a URL of a custom theme (you must also choose "Custom" from the "Set theme" dropdown)</p>
 				<input type="text" autocomplete="off" spellcheck="false" id="customtheme" class="txf" onchange="applySetting('customtheme'); colors();" placeholder="Custom theme URL" style="display:block; margin-bottom:16px;">
 			</div>
+			<hr>
 			<h4>Behavior</h4>
 			<div>
 				<select id="dir" onchange="applySetting('dir');">
@@ -271,6 +272,7 @@
 				<button class="cb" id="docache" onclick="toggleSetting('docache');"></button><p style="margin-bottom:9px;">Cache images</p>
 				<p class="small">Save images to your browser to not have to load them again (turning this off does not delete already cached images)</p>
 			</div>
+			<hr>
 			<h4>Messenger</h4>
 			<div>
 				<button class="cb" id="messagesound" onclick="toggleSetting('messagesound');"></button><p style="margin-bottom:9px;">Play sound for new messages</p>
@@ -288,9 +290,11 @@
 				<p style="margin-bottom:9px;"><a href="javascript:showBlocks();" class="classic">Manage blocks</a></p>
 				<p class="small">View and unblock the users you have blocked</p>
 			</div>
+			<hr>
 			<h4>Extras</h4>
 			<p style="margin-bottom:9px;">Bookmarklet: <a class="classic" href="javascript:(function()%7Bvar%20cpURL%20%3D%20window.location.href%3Bvar%20rptn%20%3D%20'bad'%3Bif%20(cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2F'%20%7C%7C%20cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2Findex.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2F'%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fstibarc.gq%2Fpost.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fpost.html'%20%2B%20cpURL.substring(28)%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2Fnewpost.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fnewpost.html'%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fstibarc.gq%2Feditprofile.sjs')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Feditprofile.html'%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2Fsearch.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fsearch.html%3Fq%3D'%20%2B%20encodeURIComponent(document.getElementById('q').value)%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fstibarc.gq%2Fuser.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fuser.html'%20%2B%20cpURL.substring(28)%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2Flogin.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Flogin.html'%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2Fregister.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fregister.html'%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fstibarc.gq%2Fpasswd.sjs')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fchangepassword.html'%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2F'%20%7C%7C%20cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Findex.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2F'%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fpost.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Fpost.html'%20%2B%20cpURL.substring(41)%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fnewpost.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Fnewpost.html'%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Feditprofile.html')%20%7Bif%20(confirm('Cannot%20switch%20in%20this%20direction%2C%20go%20to%20STiBaRC%20home%20page%3F'))%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2F'%3B%7D%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fsearch.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Fsearch.html'%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fuser.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Fuser.html'%20%2B%20cpURL.substring(41)%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Flogin.html')%20%7Bif%20(confirm('Target%20page%20may%20not%20be%20relevant%2C%20continue%20anyway%3F'))%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Flogin.html'%3B%7D%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fregister.html')%20%7Bif%20(confirm('Target%20page%20may%20not%20be%20relevant%2C%20continue%20anyway%3F'))%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Fregister.html'%3B%7D%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fchangepassword.html')%20%7Bif%20(confirm('Cannot%20switch%20in%20this%20direction%2C%20go%20to%20STiBaRC%20home%20page%3F'))%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2F'%3B%7D%7Dif%20(rptn%20!%3D%20'bad')%20%7Bwindow.location.href%20%3D%20rptn%3B%7D%7D)()">STiBaRC &#x21c4; ASTiW</a></p>
 			<p class="small">Drag the link to your bookmarks bar to create a button to switch between the official STiBaRC website and ASTiW<br/>(Bookmarklets do not work on all browsers, but they do work on Chrome and Firefox)</p>
+			<hr>
 			<h4>Troubleshooting</h4>
 			<p style="margin-bottom:9px;"><a href="javascript:clearCache();" class="classic">Clear cache</a></p>
 			<p class="small">Delete all cached images</p>
@@ -298,10 +302,12 @@
 			<p class="small">Use this to reset ASTiW if something isn't working (This will not log out your sess(es))</p>
 			<p style="margin-bottom:9px;"><a href="https://github.com/savaka2/astiw/issues/new" class="classic" target="_blank">Submit issue</a></p>
 			<p class="small">Report a bug (or suggest a feature) as an issue on GitHub</p>
+			<hr>
 			<h4>About</h4>
 			<p>Created by savaka<br/>
 			Based on the <a href="https://stibarc.gq/" target="_blank" class="classic">STiBaRC website</a></p>
 			<p>ASTiW connects to the STiBaRC service; by using it you accept the STiBaRC <a href="https://stibarc.gq/privacy.html" target="_blank" class="classic">Privacy Policy</a></p>
+			<hr>
 			<h4>Developer</h4>
 			<p style="margin-bottom:9px;"><a href="https://github.com/savaka2/astiw/wiki/Theme-Documentation" target="_blank" class="classic">Theme documentation</a></p>
 			<p class="small">Learn how to create a custom theme</p>
