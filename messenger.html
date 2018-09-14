@@ -170,7 +170,7 @@
 				}
 				msgId = chatslist[eg][0];
 				msgDetail = chatslist[eg][1];
-				elInside = '<div id="chatItem' + msgId + '" class="recent nosides' + (msgId == highlightChat ? ' selectedChatItem' : '') + '"><b>' + msgDetail.user.replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b>' + (isSet(msgDetail.lastmessage) && isSet(msgDetail.lastmessage.time) && msgDetail.lastmessage.time != 'unknown' ? '<span style="float:right; margin:3.5px 0 0 0;" class="small">' + generateTS(msgDetail.lastmessage.time, 0) + '</span>' : '') + (isSet(msgDetail.lastmessage) ? '<p class="small" style="margin-bottom:0;">' + (msgDetail.lastmessage.sender == myName ? '&#x2197;&#xFE0E;' : '&#x2199;&#xFE0E;') + ' ' + (msgDetail.lastmessage.message.indexOf('[Encrypted] ') == 0 && msgDetail.lastmessage.message.length > 12 ? '[Encrypted message]' : msgDetail.lastmessage.message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>') + '</p>') : '') + '</div>';
+				elInside = '<div id="chatItem' + msgId + '" class="recent nosides' + (msgId == highlightChat ? ' selectedChatItem' : '') + '"><div style="display:flex;"><b style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex-grow:1;">' + msgDetail.user.replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b>' + (isSet(msgDetail.lastmessage) && isSet(msgDetail.lastmessage.time) && msgDetail.lastmessage.time != 'unknown' ? '<div style="margin:3.5px 0 0 8px; text-align:right; white-space:nowrap;" class="small">' + generateTS(msgDetail.lastmessage.time, 0) + '</div>' : '') + '</div>' + (isSet(msgDetail.lastmessage) ? '<p class="small" style="margin-bottom:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + (msgDetail.lastmessage.sender == myName ? '&#x2197;&#xFE0E;' : '&#x2199;&#xFE0E;') + ' ' + (msgDetail.lastmessage.message.indexOf('[Encrypted] ') == 0 && msgDetail.lastmessage.message.length > 12 ? '[Encrypted message]' : msgDetail.lastmessage.message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>') + '</p>') : '') + '</div>';
 				els += '<a href="javascript:openChat(' + msgId + ', \'' + msgDetail.user.replace(/'/g, '\\\'') + '\', false)" class="recentLinks">' + elInside + '</a>';
 			}
 			main.innerHTML = els;
@@ -287,6 +287,11 @@
 						document.getElementById('theChat').style.display = '';
 						msgBox.scrollTop = msgBox.scrollHeight;
 						currentChat = chatid;
+						while (msgBox.scrollTop == 0 && hfb > 0) {
+							var msgs2 = generateMsgs(oldresp, hfb);
+							msgBox.innerHTML = msgs2 + msgBox.innerHTML;
+							msgBox.scrollTop = msgBox.scrollHeight;
+						}
 						var te = document.getElementById('messageBox');
 						var saved = localStorage.getItem('astiw_savedmsg' + chatid + '_' + myName);
 						if (isSet(saved)) {
@@ -834,11 +839,15 @@
 	<div class="dbg" id="encryptionDialog">
 		<div class="dialog">
 			<a href="javascript:closeED();" class="closeButton">&times;</a>
+			<h3>How to use encryption</h3>
+			<p>Both users must be using ASTiW for encrypted conversation</p>
+			<p>A key must be arranged between you and the other user over a different secure communication service or in person</p>
+			<p>If the lock icon in the menu bar is green, outgoing messages will be encrypted</p>
+			<hr>
 			<h3>Set encryption key</h3>
 			<p class="small">(Clear the field to disable encryption)</p>
 			<input type="password" spellcheck="false" id="encryptionBox" class="txf" placeholder="Enter key" style="display:block; width:calc(100% - 34px); margin-bottom:16px;">
 			<div id="contain"><button id="startChat" onclick="saveEncryption();" class="libut" style="display:block;">SAVE</button></div>
-			<p>If the lock icon in the menu bar is green, outgoing messages will be encrypted</p>
 		</div>
 	</div>
 	<div class="dbg" id="chatOptions">
@@ -969,12 +978,12 @@
 		position: absolute;
 		height: 48px;
 		width: 48px;
-		border: 1px solid var(--link);
-		background-color: var(--content-bg);
+		border: 1px solid var(--content);
+		background-color: var(--content);
 		z-index: 1;
 		bottom: 65px;
 		border-radius: 100%;
-		color: var(--link);
+		color: var(--probably-same-as-content-bg);
 		font-size: 2em;
 		outline: none;
 		cursor: pointer;
@@ -983,6 +992,6 @@
 	}
 	
 	#toBottom:hover, #toBottom:active {
-		background-color: var(--rollover);
+		background-color: var(--other-rollover);
 	}
 </style>

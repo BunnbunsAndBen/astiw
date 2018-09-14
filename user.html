@@ -9,6 +9,7 @@
 	<script src="script.js"></script>
 	<script>
 		var term;
+		var raw;
 		
 		function importantLoad() {
 			term = decodeURIComponent(getAllUrlParams().id);
@@ -16,6 +17,14 @@
 		};
 		
 		function load() {
+			raw = localStorage.getItem('astiw_view');
+			window.onscroll = function(e) {
+				if (window.pageYOffset >= 62.5) {
+					document.getElementById('scrollerContain').style.display = '';
+				} else {
+					document.getElementById('scrollerContain').style.display = 'none';
+				}
+			}
 			document.getElementById('username').innerHTML = term.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '<span id="verified"> &#x2611;&#xFE0E;</span>';
 			var myname = getCurrentUser();
 			if (term == myname && myname != 'Anon') {
@@ -81,10 +90,13 @@
 				document.getElementById('username').style.display = '';
 				document.getElementById('detail').style.display = 'block';
 				for (i = 1; i < ans.length; i++) {
-					addRecent(ans[i], i == 1);
+					addRecentBasic(ans[i], i == 1);
 				}
 				if (ans.length <= 1) {
 					document.getElementById('noposts').style.display = '';
+					document.getElementById('rm').style.paddingTop = '0';
+				} else {
+					// setupViewBar();
 				}
 			});
 			r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
@@ -127,7 +139,7 @@
 	<main id="rm">
 		<h3 id="username" style="display:none;"></h3>
 		<div id="notauser" class="stdc" style="display:none;"><p style="color:var(--border); text-align:center;">This user does not exist</p></div>
-		<div id="detail" style="display:none; margin-bottom:24px;" class="stdc">
+		<div id="detail" style="display:none;" class="stdc">
 			<ul id="detailList" style="padding-left:20px;">
 				<li id="name">Name: </li>
 				<li id="rank">Rank: </li>
@@ -136,9 +148,13 @@
 			</ul>
 			<p id="bio"></p>
 		</div>
-		<div id="noposts" class="stdc" style="display:none;"><p style="color:var(--border); text-align:center;">This user has no posts</p></div>
-		<div id="main"></div>
 		<div class="loader" id="loader"></div>
 	</main>
+	<div id="viewBar" style="border-top:1px solid var(--border);">View: <span id="view-s"></span> &#xb7; <span id="view-m"></span> &#xb7; <span id="view-l"></span></div>
+	<div style="padding:24px; padding-top:0;"> <!-- change here -->
+		<div id="noposts" class="stdc" style="display:none;"><p style="color:var(--border); text-align:center;">This user has no posts</p></div>
+		<div id="main"></div>
+	</div>
+	<div id="scrollerContain" style="display:none;"><button id="toTop" onclick="scrollToTop();">&#x2912;</button></div>
 </body>
 </html>

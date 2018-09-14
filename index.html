@@ -11,19 +11,43 @@
 		var lastid = 1;
 		var topp;
 		var youreOnTheHomepage = true;
+		var loading = true;
+		var exceeded = false;
+		var raw;
+		
+		function scrollCond() {
+			return window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 783 && !exceeded;
+		};
 		
 		function load() {
-			var jsonurl = 'https://api.stibarc.gq/getposts.sjs';
+			raw = localStorage.getItem('astiw_view');
+			window.onscroll = function(e) {
+				if (window.pageYOffset >= 41) {
+					document.getElementById('scrollerContain').style.display = '';
+				} else {
+					document.getElementById('scrollerContain').style.display = 'none';
+				}
+				if (!loading && scrollCond()) {
+					loadMore();
+				}
+			}
+			var jsonurl = 'https://api.stibarc.gq/v2/getposts.sjs';
 			var r = new XMLHttpRequest();
 			r.addEventListener('load', function() {
-				var stuf = r.responseText.split("\n");
-				topp = r.responseText.split(':')[0];
-				stuf.splice(stuf.length - 1, 1);
-				document.getElementById('rm').removeChild(document.getElementById('loader'));
-				for (i = 0; i < stuf.length; i++) {
-					addRecent(stuf[i], i == 0);
+				if (isSet(r.responseText)) {
+					var stuf = JSON.parse(r.responseText);
+					topp = stuf.totalposts;
+					for (i = stuf.totalposts; i > stuf.totalposts - 20; i--) {
+						addRecent(i, stuf[i], i == stuf.totalposts);
+					}
+					setupViewBar();
+					document.getElementById('rm').removeChild(document.getElementById('loader'));
+					if (scrollCond()) {
+						loadMore();
+					} else {
+						loading = false;
+					}
 				}
-				document.getElementById('loadmore').style.display = 'initial';
 				if (!(localStorage.getItem('astiw_roi') == 'true')) {
 					setTimeout(checkNewPosts, 500);
 				}
@@ -34,21 +58,32 @@
 		};
 		
 		function loadMore() {
-			document.getElementById('loadmore').style.display = 'none';
+			loading = true;
 			var ldr = document.createElement('div');
 			ldr.className = 'loader';
 			ldr.id = 'loader';
 			document.getElementById('rm').appendChild(ldr);
-			var jsonurl = 'https://api.stibarc.gq/getposts.sjs?id=' + lastid;
+			var jsonurl = 'https://api.stibarc.gq/v2/getposts.sjs?id=' + lastid;
 			var r = new XMLHttpRequest();
 			r.addEventListener('load', function() {
-				var stuf = r.responseText.split("\n");
-				stuf.splice(stuf.length - 1, 1);
-				document.getElementById('rm').removeChild(document.getElementById('loader'));
-				for (i = 0; i < stuf.length; i++) {
-					addRecent(stuf[i], false);
+				if (isSet(r.responseText)) {
+					var stuf = JSON.parse(r.responseText);
+					var temp = lastid;
+					for (i = temp - 1; i > temp - 21; i--) {
+						if (isSet(stuf[i])) {
+							addRecent(i, stuf[i], false);
+						} else {
+							exceeded = true;
+							break;
+						}
+					}
 				}
-				document.getElementById('loadmore').style.display = 'initial';
+				document.getElementById('rm').removeChild(document.getElementById('loader'));
+				if (scrollCond()) {
+					loadMore();
+				} else {
+					loading = false;
+				}
 			});
 			r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 			r.open('get', jsonurl, true);
@@ -56,11 +91,11 @@
 		};
 		
 		function checkNewPosts() {
-			var jsonurl = 'https://api.stibarc.gq/getposts.sjs';
+			var jsonurl = 'https://api.stibarc.gq/v2/getposts.sjs';
 			var r = new XMLHttpRequest();
 			r.addEventListener('load', function() {
-				var thingy = r.responseText.split(':')[0];
-				if (Number(thingy) > Number(topp)) {
+				var thingy = r.responseText.totalposts;
+				if (thingy > topp) {
 					document.getElementById('refreshMarker').style.display = 'block';
 					document.title = '(\u21bb) ASTiW';
 				} else {
@@ -95,20 +130,11 @@
 			<p style="margin:8px 0;"><a class="classic" href="register.html">Register a new account</a></p>
 		</div>
 	</div>
+	<div id="viewBar">View: <span id="view-s"></span> &#xb7; <span id="view-m"></span> &#xb7; <span id="view-l"></span></div>
 	<main id="rm">
 		<div id="main"></div>
-		<button id="loadmore" class="othbut widebut specialSpecifics" onclick="loadMore();">LOAD MORE</button>
 		<div class="loader" id="loader"></div>
 	</main>
+	<div id="scrollerContain" style="display:none;"><button id="toTop" onclick="scrollToTop();">&#x2912;</button></div>
 </body>
 </html>
-<style>
-	.specialSpecifics {
-		display: none;
-		background-color: var(--content-bg);
-	}
-	
-	.specialSpecifics:hover, .specialSpecifics:active {
-		background-color: var(--rollover);
-	}
-</style>

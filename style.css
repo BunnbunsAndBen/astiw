@@ -172,6 +172,10 @@ button.libut {
 	font-size: 16px;
 	width: auto;
 	padding: 0px 16px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	max-width: 208px;
 }
 
 .dbg {
@@ -215,12 +219,43 @@ main {
 	overflow: hidden;
 }
 
-.recent:hover, .recent:active {
+.recentCard {
+	background-color: var(--content-bg);
+	border: 1px solid var(--border);
+	padding: 8px;
+	overflow: hidden;
+	border-radius: 4px;
+	margin-top: 10px;
+}
+
+.recent:hover, .recent:active, .recentCard:hover, .recentCard:active {
 	background-color: var(--rollover);
+}
+
+.fadeOutText {
+	position: relative;
+	overflow: hidden;
+	max-height: 11em;
+}
+
+.fadeOutText::before {
+	content: '';
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+	background: linear-gradient(transparent 9em, var(--content-bg));
+	pointer-events: none;
+}
+
+.recentCard:hover .fadeOutText::before, .recentCard:active .fadeOutText::before {
+	background: linear-gradient(transparent 9em, var(--rollover));
 }
 
 .bb {
 	border-top: 1px solid var(--border) !important;
+	margin-top: 0 !important;
 }
 
 @keyframes spin {
@@ -338,4 +373,40 @@ hr {
 .widebut {
 	width: 100%;
 	margin-top: 24px;
+}
+
+#viewBar {
+	display: none;
+	padding: 0 24px;
+	height: 40px;
+	line-height: 40px;
+	background-color: var(--content-bg);
+	border-bottom: 1px solid var(--border);
+}
+
+#toTop {
+	height: 48px;
+	width: 48px;
+	border: 1px solid var(--content);
+	background-color: var(--content);
+	z-index: 1;
+	bottom: 65px;
+	border-radius: 100%;
+	color: var(--probably-same-as-content-bg);
+	font-size: 2em;
+	outline: none;
+	cursor: pointer;
+	left: 16px;
+	padding: 0px;
+}
+
+#toTop:hover, #toTop:active {
+	background-color: var(--other-rollover);
+}
+
+#scrollerContain {
+	padding-bottom: 16px;
+	text-align: center;
+	position: sticky;
+	bottom: 0;
 }

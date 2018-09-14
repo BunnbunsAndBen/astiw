@@ -10,6 +10,7 @@
 	<script>
 		var nores = false;
 		var term;
+		var raw;
 		
 		function importantLoad() {
 			var temp = getAllUrlParams().q;
@@ -27,7 +28,15 @@
 		};
 		
 		function load() {
+			raw = localStorage.getItem('astiw_view');
 			if (isSet(term)) {
+				window.onscroll = function(e) {
+					if (window.pageYOffset >= 62.5) { // change here
+						document.getElementById('scrollerContain').style.display = '';
+					} else {
+						document.getElementById('scrollerContain').style.display = 'none';
+					}
+				}
 				document.getElementById('nameThing').innerHTML = 'Search results for "' + term.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '"';
 				var jsonurl = 'https://api.stibarc.gq/postsearch.sjs?q=' + encodeURIComponent(term);
 				var r = new XMLHttpRequest();
@@ -38,7 +47,7 @@
 						stuf.splice(stuf.length - 1, 1);
 						stuf.reverse();
 						for (i = 0; i < stuf.length; i++) {
-							addRecent(stuf[i], i == 0);
+							addRecentBasic(stuf[i], i == 0);
 						}
 					} else {
 						nores = true;
@@ -58,6 +67,7 @@
 						messenge.style.textAlign = 'center';
 						document.getElementById('info').style.display = '';
 					}
+					// setupViewBar();
 					document.getElementById('rm').removeChild(document.getElementById('loader'));
 					document.getElementById('nameThing').style.display = '';
 					document.getElementById('main').style.display = '';
@@ -101,11 +111,13 @@
 			<p style="margin:8px 0;"><a class="classic" href="register.html">Register a new account</a></p>
 		</div>
 	</div>
+	<div id="viewBar">View: <span id="view-s"></span> &#xb7; <span id="view-m"></span> &#xb7; <span id="view-l"></span></div>
 	<main id="rm">
 		<h3 id="nameThing" style="display:none;">Search results</h3>
 		<div id="info" class="stdc" style="display:none; margin-bottom:24px;"><p id="messenge"></p></div>
 		<div id="main" style="display:none;"></div>
 		<div class="loader" id="loader"></div>
 	</main>
+	<div id="scrollerContain" style="display:none;"><button id="toTop" onclick="scrollToTop();">&#x2912;</button></div>
 </body>
 </html>
