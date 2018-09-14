@@ -298,6 +298,7 @@ a:hover, a:active {
 	line-height: 24px;
 	cursor: pointer;
 	color: var(--opposing);
+	z-index: 1;
 }
 
 .small {

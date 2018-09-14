@@ -12,6 +12,10 @@
 		var blocksArr;
 		
 		function load() {
+			var myName = getCurrentUser();
+			if (isSet(myName) && myName != 'Anon') {
+				document.getElementById('blockItem').style.display = '';
+			}
 			checkSettings();
 			blocksDialog = document.getElementById('blocksDialog');
 			window.addEventListener('click', function(e) {
@@ -34,26 +38,30 @@
 		};
 		
 		function showBlocks() {
-			var blocks = document.getElementById('blockedUsers');
-			var blocksValue = localStorage.getItem('astiw_blocks');
-			if (!isSet(blocksValue)) {
-				blocksValue = '[]';
+			if (!sessHasChanged()) {
+				var blocks = document.getElementById('blockedUsers');
+				var blocksValue = localStorage.getItem('astiw_blocks_' + getCurrentUser());
+				if (!isSet(blocksValue)) {
+					blocksValue = '[]';
+				}
+				blocksArr = JSON.parse(blocksValue);
+				blocks.innerHTML = '';
+				var thign;
+				var noone = true;
+				for (i = 0; i < blocksArr.length; i++) {
+					noone = false;
+					thign = document.createElement('li');
+					thign.innerHTML = '<a class="classic" href="javascript:unblock(' + i + ');">' + blocksArr[i].replace(/</g, '&lt;').replace(/>/g, '&gt;'); + '</a>';
+					thign.style.marginTop = '0.5em';
+					blocks.appendChild(thign);
+				}
+				if (noone) {
+					blocks.innerHTML = '<p style="color:var(--border)">No blocked users</p>';
+				}
+				blocksDialog.style.display = 'initial';
+			} else {
+				sayToReload();
 			}
-			blocksArr = JSON.parse(blocksValue);
-			blocks.innerHTML = '';
-			var thign;
-			var noone = true;
-			for (i = 0; i < blocksArr.length; i++) {
-				noone = false;
-				thign = document.createElement('li');
-				thign.innerHTML = '<a class="classic" href="javascript:unblock(' + i + ');">' + blocksArr[i].replace(/</g, '&lt;').replace(/>/g, '&gt;'); + '</a>';
-				thign.style.marginTop = '0.5em';
-				blocks.appendChild(thign);
-			}
-			if (noone) {
-				blocks.innerHTML = '<p style="color:var(--border)">No blocked users</p>';
-			}
-			blocksDialog.style.display = 'initial';
 		};
 		
 		function unblock(index) {
@@ -276,8 +284,10 @@
 				<button class="cb" id="showpreviews" onclick="toggleSetting('showpreviews');"></button><p style="margin-bottom:9px;">Show previews</p>
 				<p class="small">Show images, thumbnails of YouTube videos, and audio players where the content is linked to</p>
 			</div>
-			<p style="margin-bottom:9px;"><a href="javascript:showBlocks();" class="classic">Manage blocks</a></p>
-			<p class="small">View and unblock the users you have blocked</p>
+			<div id="blockItem" style="display:none;">
+				<p style="margin-bottom:9px;"><a href="javascript:showBlocks();" class="classic">Manage blocks</a></p>
+				<p class="small">View and unblock the users you have blocked</p>
+			</div>
 			<h4>Extras</h4>
 			<p style="margin-bottom:9px;">Bookmarklet: <a class="classic" href="javascript:(function()%7Bvar%20cpURL%20%3D%20window.location.href%3Bvar%20rptn%20%3D%20'bad'%3Bif%20(cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2F'%20%7C%7C%20cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2Findex.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2F'%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fstibarc.gq%2Fpost.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fpost.html'%20%2B%20cpURL.substring(28)%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2Fnewpost.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fnewpost.html'%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fstibarc.gq%2Feditprofile.sjs')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Feditprofile.html'%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2Fsearch.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fsearch.html%3Fq%3D'%20%2B%20encodeURIComponent(document.getElementById('q').value)%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fstibarc.gq%2Fuser.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fuser.html'%20%2B%20cpURL.substring(28)%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2Flogin.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Flogin.html'%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2Fregister.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fregister.html'%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fstibarc.gq%2Fpasswd.sjs')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fchangepassword.html'%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2F'%20%7C%7C%20cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Findex.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2F'%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fpost.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Fpost.html'%20%2B%20cpURL.substring(41)%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fnewpost.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Fnewpost.html'%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Feditprofile.html')%20%7Bif%20(confirm('Cannot%20switch%20in%20this%20direction%2C%20go%20to%20STiBaRC%20home%20page%3F'))%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2F'%3B%7D%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fsearch.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Fsearch.html'%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fuser.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Fuser.html'%20%2B%20cpURL.substring(41)%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Flogin.html')%20%7Bif%20(confirm('Target%20page%20may%20not%20be%20relevant%2C%20continue%20anyway%3F'))%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Flogin.html'%3B%7D%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fregister.html')%20%7Bif%20(confirm('Target%20page%20may%20not%20be%20relevant%2C%20continue%20anyway%3F'))%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Fregister.html'%3B%7D%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fchangepassword.html')%20%7Bif%20(confirm('Cannot%20switch%20in%20this%20direction%2C%20go%20to%20STiBaRC%20home%20page%3F'))%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2F'%3B%7D%7Dif%20(rptn%20!%3D%20'bad')%20%7Bwindow.location.href%20%3D%20rptn%3B%7D%7D)()">STiBaRC &#x21c4; ASTiW</a></p>
 			<p class="small">Drag the link to your bookmarks bar to create a button to switch between the official STiBaRC website and ASTiW<br/>(Bookmarklets do not work on all browsers, but they do work on Chrome and Firefox)</p>
