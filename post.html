@@ -140,7 +140,8 @@
 				document.getElementById('rm').removeChild(document.getElementById('loader2'));
 				document.getElementById('main').style.display = 'block';
 				if (doScrollDown) {
-					window.scrollTo(0, document.getElementById('commentBox').offsetTop - 58)
+					window.scrollTo(0, document.getElementById('commentBox').offsetTop - 58);
+					document.getElementById('commentBox').focus();
 				}
 				if (localStorage.getItem('astiw_roi') != 'true') {
 					setTimeout(checkNewComms, 500);
