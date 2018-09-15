@@ -11,6 +11,7 @@
 		var nores = false;
 		var term;
 		var raw;
+		var myName;
 		
 		function importantLoad() {
 			var temp = getAllUrlParams().q;
@@ -28,6 +29,7 @@
 		};
 		
 		function load() {
+			myName = getCurrentUser();
 			raw = localStorage.getItem('astiw_view');
 			if (isSet(term)) {
 				window.onscroll = function(e) {

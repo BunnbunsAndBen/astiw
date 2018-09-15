@@ -291,11 +291,14 @@ function addRecent(id, item, b) {
 	el.href = 'post.html?id=' + id;
 	el.className = 'recentLinks';
 	if (view == 's') {
-		menulist.push('<a class="classic" href="post.html?id=' + id + '&comment">&#x1f4ac;&#xfe0e;' + (view != 's' ? ' Comment' : '') + '</a>');
+		menulist.push('<a class="classic" href="post.html?id=' + id + '&comment">&#x1f4ac;&#xfe0e;</a>');
 	} else if (view == 'm') {
-		menulist.push('<a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', true)">&#x25bc; Expand</a> | <a class="classic" href="post.html?id=' + id + '&comment">&#x1f4ac;&#xfe0e;' + (view != 's' ? ' Comment' : '') + '</a>');
+		menulist.push('<a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', true)">&#x25bc; Expand</a> | <a class="classic" href="post.html?id=' + id + '&comment">&#x1f4ac;&#xfe0e; Comment</a>');
 	} else if (view == 'l') {
-		menulist.push('<span style="display:none;" id="expanderContain' + id + '"><a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', true)">&#x25bc; Expand</a> | </span><a class="classic" href="post.html?id=' + id + '&comment">&#x1f4ac;&#xfe0e;' + (view != 's' ? ' Comment' : '') + '</a>');
+		menulist.push('<span style="display:none;" id="expanderContain' + id + '"><a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', true)">&#x25bc; Expand</a> | </span><a class="classic" href="post.html?id=' + id + '&comment">&#x1f4ac;&#xfe0e; Comment</a>');
+	}
+	if (myName != 'Anon' && item.poster == myName)	 {
+		menulist.push('<a class="classic" href="javascript:openEdit(' + id + ');">&#x270E;&#xFE0E;' + (view != 's' ? ' Edit' : '') + '</a>');
 	}
 	if (localStorage.getItem('astiw_markread') != 'true') {
 		menulist.push(localStorage.getItem('astiw_viewed' + id) == 'true' ? '<a class="classic" id="prms' + id + '" href="javascript:markPost(' + id + ', false, ' + (view != 's').toString() + ');">' + markText(true, view != 's') + '</a>' : '<a class="classic" id="prms' + id + '" href="javascript:markPost(' + id + ', true, ' + (view != 's').toString() + ');">' + markText(false, view != 's') + '</a>');
@@ -304,11 +307,11 @@ function addRecent(id, item, b) {
 		menulist.push(view == 's' ? 'Image' : 'Image attached');
 	}
 	if (view == 'l') {
-		el.innerHTML = '<div class="recentCard' + (b ? ' bb' : '') + '"><p class="small" style="margin-top:0;">Posted by <a class="classic" ' + (item.poster == getCurrentUser() ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b><p id="cardText' + id + '" class="fadeOutText">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'))+ '</p><b><p class="small" style="margin-bottom:0;">' + menulist.join(' &#xb7; ') + '</p></b></div>';
+		el.innerHTML = '<div class="recentCard' + (b ? ' bb' : '') + '"><p class="small" style="margin-top:0;">Posted by <a class="classic" ' + (item.poster == myName ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b><p id="cardText' + id + '" class="fadeOutText">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'))+ '</p><b><p class="small" style="margin-bottom:0;">' + menulist.join(' &#xb7; ') + '</p></b></div>';
 	} else if (view == 's') {
-		el.innerHTML = '<div class="recent' + (b ? ' bb' : '') + '"><b><p class="small" style="margin:0 0 0 8px; float:right;">' + menulist.join(' &#xb7; ') + '</p></b><p class="small" style="margin-top:0; color:var(--content);"><a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', false)">&#x25bc;</a> <b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b></p><p class="small" style="margin-bottom:0;">Posted by <a class="classic" ' + (item.poster == getCurrentUser() ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><p id="expanded' + id + '" style="margin-bottom:0; display:none;">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'))+ '</p></div>';
+		el.innerHTML = '<div class="recent' + (b ? ' bb' : '') + '"><b><p class="small" style="margin:0 0 0 8px; float:right;">' + menulist.join(' &#xb7; ') + '</p></b><p class="small" style="margin-top:0; color:var(--content);"><a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', false)">&#x25bc;</a> <b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b></p><p class="small" style="margin-bottom:0;">Posted by <a class="classic" ' + (item.poster == myName ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><p id="expanded' + id + '" style="margin-bottom:0; display:none;">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'))+ '</p></div>';
 	} else {
-		el.innerHTML = '<div class="recent' + (b ? ' bb' : '') + '"><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b><p class="small">Posted by <a class="classic" ' + (item.poster == getCurrentUser() ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><b><p class="small" style="margin-bottom:0;">' + menulist.join(' &#xb7; ') + '</p></b><p id="expanded' + id + '" style="margin-bottom:0; display:none;">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'))+ '</p></div>';
+		el.innerHTML = '<div class="recent' + (b ? ' bb' : '') + '"><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b><p class="small">Posted by <a class="classic" ' + (item.poster == myName ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><b><p class="small" style="margin-bottom:0;">' + menulist.join(' &#xb7; ') + '</p></b><p id="expanded' + id + '" style="margin-bottom:0; display:none;">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'))+ '</p></div>';
 	}
 	main.appendChild(el);
 	if (view == 'l') {
@@ -319,6 +322,14 @@ function addRecent(id, item, b) {
 	}
 	if (home) {
 		lastid = id;
+	}
+};
+
+function openEdit(id) {
+	if (!sessHasChanged()) {
+		window.location.href = 'post.html?id=' + id + '&edit';
+	} else {
+		sayToReload();
 	}
 };
 

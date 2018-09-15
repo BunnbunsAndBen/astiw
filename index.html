@@ -14,6 +14,7 @@
 		var loading = true;
 		var exceeded = false;
 		var raw;
+		var myName;
 		
 		function scrollCond() {
 			return window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 783 && !exceeded;
@@ -21,6 +22,7 @@
 		
 		function load() {
 			raw = localStorage.getItem('astiw_view');
+			myName = getCurrentUser();
 			window.onscroll = function(e) {
 				if (window.pageYOffset >= 41) {
 					document.getElementById('scrollerContain').style.display = '';

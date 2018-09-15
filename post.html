@@ -67,6 +67,7 @@
 			var paramsObj = getAllUrlParams();
 			id = paramsObj.id;
 			doScrollDown = paramsObj.comment;
+			doEdit = paramsObj.edit;
 			var jsonurl = 'https://api.stibarc.gq/v2/getpost.sjs?id=' + id;
 			var r = new XMLHttpRequest();
 			var rv = new XMLHttpRequest();
@@ -142,6 +143,9 @@
 				if (doScrollDown) {
 					window.scrollTo(0, document.getElementById('commentBox').offsetTop - 58);
 					document.getElementById('commentBox').focus();
+				}
+				if (doEdit) {
+					editPost();
 				}
 				if (localStorage.getItem('astiw_roi') != 'true') {
 					setTimeout(checkNewComms, 500);
@@ -377,7 +381,7 @@
 						var ldr = document.createElement('div');
 						ldr.className = 'loader';
 						ldr.id = 'loader5';
-						ldr.style.margin = '0 0 16px 0';
+						ldr.style.margin = '0 0 25px 0';
 						document.getElementById('contain2').appendChild(ldr);
 						var jsonurl = 'https://api.stibarc.gq/v2/editpost.sjs';
 						var r = new XMLHttpRequest();
@@ -475,7 +479,7 @@
 			<div id="oof"></div>
 			<input type="text" autocomplete="off" id="editTitle" class="txf" placeholder="Title" style="width:calc(100% - 34px); display:none; margin-top:16px; margin-bottom:16px;">
 			<textarea class="txf" id="editText" style="height:108px; width:calc(100% - 34px); margin-bottom:16px; display:none;" placeholder="Text"></textarea>
-			<div id="contain2" style="display:none;"><button id="save" onclick="saveEdit();" class="libut" style="margin-bottom:7px; margin-right:16px;">SAVE</button><button id="cancel" onclick="cancelEdit();" class="othbut" style="margin-bottom:7px;">CANCEL</button></div>
+			<div id="contain2" style="display:none;"><button id="save" onclick="saveEdit();" class="libut" style="margin-bottom:16px; margin-right:16px;">SAVE</button><button id="cancel" onclick="cancelEdit();" class="othbut" style="margin-bottom:16px;">CANCEL</button></div>
 			<p class="small" style="color:var(--red); display:none; margin-top:0;" id="editEmpty">A title and text are required</p>
 			<div id="imgThing" style="display:none; text-align:center;"><button id="viewImg" onclick="loadImg();" class="othbut widebut" style="margin:0; display:initial;">SHOW IMAGE</button></div>
 			<b><p class="small" id="postMenu"></p></b>

@@ -10,6 +10,7 @@
 	<script>
 		var term;
 		var raw;
+		var myName;
 		
 		function importantLoad() {
 			term = decodeURIComponent(getAllUrlParams().id);
@@ -26,8 +27,8 @@
 				}
 			}
 			document.getElementById('username').innerHTML = term.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '<span id="verified"> &#x2611;&#xFE0E;</span>';
-			var myname = getCurrentUser();
-			if (term == myname && myname != 'Anon') {
+			myName = getCurrentUser();
+			if (term == myName && myName != 'Anon') {
 				var editproflink = document.createElement('p');
 				editproflink.className = 'small';
 				editproflink.innerHTML = '<b><a class="classic" href="javascript:openEditProfile();">&#x270E;&#xFE0E; Edit</a></b>';
