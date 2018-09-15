@@ -18,6 +18,8 @@ if (cpURL == 'https://stibarc.gq/' || cpURL == 'https://stibarc.gq/index.html') 
 	rptn = 'https://savaka2.github.io/astiw/register.html';
 } else if (cpURL.indexOf('https://stibarc.gq/passwd.sjs') == 0) {
 	rptn = 'https://savaka2.github.io/astiw/changepassword.html';
+} else if (cpURL == 'https://messenger.stibarc.gq/' || cpURL == 'https://messenger.stibarc.gq/index.html') {
+	rptn = 'https://savaka2.github.io/astiw/messenger.html';
 } else if (cpURL == 'https://savaka2.github.io/astiw/' || cpURL == 'https://savaka2.github.io/astiw/index.html') {
 	rptn = 'https://stibarc.gq/';
 } else if (cpURL.indexOf('https://savaka2.github.io/astiw/post.html') == 0) {
