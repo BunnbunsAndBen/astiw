@@ -134,11 +134,10 @@
 					document.getElementById('comments').appendChild(noComments);
 					commCount = 0;
 				}
-				if (isSet(localStorage.getItem('astiw_usernames'))) {
-					var myName = JSON.parse(localStorage.getItem('astiw_usernames'))[0];
-					if (stuf.poster == myName && myName != 'Anon' && myRank != 'User') {
-						menulist.push('<span id="editLink"><a class="classic" href="javascript:editPost();">&#x270E;&#xFE0E; Edit</a></span>');
-					}
+				var myName = getCurrentUser();
+				var okToEdit = stuf.poster == myName && myName != 'Anon' && myRank != 'User';
+				if (okToEdit) {
+					menulist.push('<span id="editLink"><a class="classic" href="javascript:editPost();">&#x270E;&#xFE0E; Edit</a></span>');
 				}
 				if (localStorage.getItem('astiw_markread') != 'true') {
 					menulist.push('<span id="readLink"><a class="classic" href="javascript:markPostLoc(false);">Mark unread</a></span>');
@@ -151,7 +150,7 @@
 					window.scrollTo(0, document.getElementById('commentBox').offsetTop - 58);
 					document.getElementById('commentBox').focus();
 				}
-				if (doEdit) {
+				if (doEdit && okToEdit) {
 					editPost();
 				}
 				if (localStorage.getItem('astiw_roi') != 'true') {
