@@ -300,7 +300,7 @@ function addRecent(id, item, b) {
 	} else if (view == 'l') {
 		menulist.push('<span style="display:none;" id="expanderContain' + id + '"><a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', true)">&#x25bc; Expand</a> | </span><a class="classic" href="post.html?id=' + id + '&comment">' + (localStorage.getItem('astiw_mac') == 'true' ? '' : '&#x1f4ac;&#xfe0e; ') + 'Comment</a>');
 	}
-	if (myName != 'Anon' && item.poster == myName)	 {
+	if (myName != 'Anon' && item.poster == myName && myRank != 'User')	 {
 		menulist.push('<a class="classic" href="javascript:openEdit(' + id + ');">&#x270E;&#xFE0E;' + (view != 's' ? ' Edit' : '') + '</a>');
 	}
 	if (localStorage.getItem('astiw_markread') != 'true') {

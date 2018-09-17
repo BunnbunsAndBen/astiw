@@ -12,6 +12,7 @@
 		var term;
 		var raw;
 		var myName;
+		var myRank;
 		
 		function importantLoad() {
 			var temp = getAllUrlParams().q;
@@ -43,6 +44,7 @@
 				var jsonurl = 'https://api.stibarc.gq/postsearch.sjs?q=' + encodeURIComponent(term);
 				var r = new XMLHttpRequest();
 				var ru = new XMLHttpRequest();
+				// get rank
 				r.addEventListener('load', function() {
 					var stuf = r.responseText.split('\n');
 					if (isSet(r.responseText) && stuf[0] != 'No results') {

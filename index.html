@@ -15,6 +15,7 @@
 		var exceeded = false;
 		var raw;
 		var myName;
+		var myRank;
 		
 		function scrollCond() {
 			return window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 783 && !exceeded;
@@ -33,8 +34,15 @@
 					loadMore();
 				}
 			}
+			var jsonurlu = 'https://api.stibarc.gq/v2/getuser.sjs?id=' + encodeURIComponent(myName);
 			var jsonurl = 'https://api.stibarc.gq/v2/getposts.sjs';
+			var ru = new XMLHttpRequest();
 			var r = new XMLHttpRequest();
+			ru.addEventListener('load', function() {
+				myRank = JSON.parse(ru.responseText).rank;
+				r.open('get', jsonurl, true);
+				r.send();
+			});
 			r.addEventListener('load', function() {
 				if (isSet(r.responseText)) {
 					var stuf = JSON.parse(r.responseText);
@@ -55,8 +63,9 @@
 				}
 			});
 			r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
-			r.open('get', jsonurl, true);
-			r.send();
+			ru.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
+			ru.open('get', jsonurlu, true);
+			ru.send();
 		};
 		
 		function loadMore() {

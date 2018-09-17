@@ -11,6 +11,7 @@
 		var term;
 		var raw;
 		var myName;
+		var myRank;
 		
 		function importantLoad() {
 			term = decodeURIComponent(getAllUrlParams().id);
@@ -38,6 +39,7 @@
 			var r = new XMLHttpRequest();
 			var rv = new XMLHttpRequest();
 			var rp = new XMLHttpRequest();
+			// get rank
 			r.addEventListener('load', function() {
 				if (isSet(r.responseText)) {
 					var rsp = JSON.parse(r.responseText);

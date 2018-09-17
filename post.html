@@ -20,6 +20,7 @@
 		var ddnc = false;
 		var doScrollDown;
 		var raw;
+		var myRank;
 		
 		window.onbeforeunload = function() {
 			if (!oktoleave && (isSet(document.getElementById('commentBox').value) || document.getElementById('editText').style.display != 'none')) {
@@ -71,7 +72,8 @@
 			var jsonurl = 'https://api.stibarc.gq/v2/getpost.sjs?id=' + id;
 			var r = new XMLHttpRequest();
 			var rv = new XMLHttpRequest();
-			var rc = new XMLHttpRequest();			
+			var ru = new XMLHttpRequest();
+			var rc = new XMLHttpRequest();
 			r.addEventListener('load', function() {
 				if (isSet(r.responseText)) {
 					stuf = JSON.parse(r.responseText);
@@ -97,7 +99,12 @@
 				if (isSet(stuf.attachment) && stuf.attachment != 'none') {
 					document.getElementById('imgThing').style.display = 'initial';
 				}
-				rc.open('get', 'https://api.stibarc.gq/getcomments.sjs?id=' + id, true);
+				ru.open('get', 'https://api.stibarc.gq/v2/getuser.sjs?id=' + encodeURIComponent(getCurrentUser()), true);
+				ru.send();
+			});
+			ru.addEventListener('load', function() {
+				myRank = JSON.parse(ru.responseText).rank;
+				rc.open('get', 'https://api.stibarc.gq/v2/getcomments.sjs?id=' + id, true);
 				rc.send();
 			});
 			rc.addEventListener('load', function() {
@@ -129,7 +136,7 @@
 				}
 				if (isSet(localStorage.getItem('astiw_usernames'))) {
 					var myName = JSON.parse(localStorage.getItem('astiw_usernames'))[0];
-					if (stuf.poster == myName && myName != 'Anon') {
+					if (stuf.poster == myName && myName != 'Anon' && myRank != 'User') {
 						menulist.push('<span id="editLink"><a class="classic" href="javascript:editPost();">&#x270E;&#xFE0E; Edit</a></span>');
 					}
 				}
@@ -154,6 +161,7 @@
 			r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 			rv.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 			rc.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
+			ru.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 			r.open('get', jsonurl, true);
 			r.send();
 		};
@@ -403,7 +411,7 @@
 		};
 		
 		function checkNewComms() {
-			var jsonurl = 'https://api.stibarc.gq/getcomments.sjs?id=' + id;
+			var jsonurl = 'https://api.stibarc.gq/v2/getcomments.sjs?id=' + id;
 			var jsonurl4e = 'https://api.stibarc.gq/v2/getpost.sjs?id=' + id;
 			var r = new XMLHttpRequest();
 			var r4e = new XMLHttpRequest();
