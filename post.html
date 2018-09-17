@@ -97,7 +97,7 @@
 				if (isSet(stuf.attachment) && stuf.attachment != 'none') {
 					document.getElementById('imgThing').style.display = 'initial';
 				}
-				rc.open('get', 'https://api.stibarc.gq/v2/getcomments.sjs?id=' + id, true);
+				rc.open('get', 'https://api.stibarc.gq/getcomments.sjs?id=' + id, true);
 				rc.send();
 			});
 			rc.addEventListener('load', function() {
@@ -403,7 +403,7 @@
 		};
 		
 		function checkNewComms() {
-			var jsonurl = 'https://api.stibarc.gq/v2/getcomments.sjs?id=' + id;
+			var jsonurl = 'https://api.stibarc.gq/getcomments.sjs?id=' + id;
 			var jsonurl4e = 'https://api.stibarc.gq/v2/getpost.sjs?id=' + id;
 			var r = new XMLHttpRequest();
 			var r4e = new XMLHttpRequest();
