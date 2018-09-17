@@ -35,6 +35,7 @@
 		var doHiding = true;
 		var encryptionKey;
 		var doEncr = false;
+		var mac;
 		
 		function load() {
 			sesses = localStorage.getItem('astiw_sesses');
@@ -61,6 +62,10 @@
 			chatOptionsDialog = document.getElementById('chatOptions');
 			sortDialog = document.getElementById('sorter');
 			encryptionDialog = document.getElementById('encryptionDialog');
+			mac = localStorage.getItem('astiw_mac') == 'true';
+			if (mac) {
+				document.getElementById('encryptionMarker').innerHTML = 'S';
+			}
 			window.addEventListener('click', function(e) {
 				if (e.target == newChatDialog) {
 					closeNCD();
@@ -370,7 +375,7 @@
 						currentMessage = tmp[ind].message;
 						encryptionStatus = 0;
 					}
-					msgs = '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';"><div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? generateTS(tmp[ind].time, 1) : '') + (encryptionStatus > 0 ? ' <span style="color:var(--verified);">&#x1f512;&#xfe0e;</span>' : '') + '</div><div ' + (itsMe ? 'class="specialty" ' : '') + 'style="max-width:calc(100% - 39px); display:inline-block; word-wrap:break-word; ' + (encryptionStatus == 2 ? 'color:var(--red)' : 'padding:8px 18.5px; border-radius:18.5px; border:1px solid var(--border); ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);')) + '">' + putLinksInText(currentMessage.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>')) + '</div>' + insertImage(currentMessage) + '</div>' + msgs;
+					msgs = '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';"><div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? generateTS(tmp[ind].time, 1) : '') + (encryptionStatus > 0 ? ' <span style="color:var(--verified);">' + (mac ? 'S' : '&#x1f512;&#xfe0e;') + '</span>' : '') + '</div><div ' + (itsMe ? 'class="specialty" ' : '') + 'style="max-width:calc(100% - 39px); display:inline-block; word-wrap:break-word; ' + (encryptionStatus == 2 ? 'color:var(--red)' : 'padding:8px 18.5px; border-radius:18.5px; border:1px solid var(--border); ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);')) + '">' + putLinksInText(currentMessage.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>')) + '</div>' + insertImage(currentMessage) + '</div>' + msgs;
 					if (ind == Object.keys(tmp).length - 1 && inputind == 'start') {
 						mostRecentTime = (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? tmp[ind].time : 0);
 					}
@@ -497,7 +502,7 @@
 									currentMessage = tmp[ind].message;
 									encryptionStatus = 0;
 								}
-								msgs += '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';"><div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? generateTS(tmp[ind].time, 1) : '') + (encryptionStatus > 0 ? ' <span style="color:var(--verified);">&#x1f512;&#xfe0e;</span>' : '') + '</div><div ' + (itsMe ? 'class="specialty" ' : '') + 'style="max-width:calc(100% - 39px); display:inline-block; word-wrap:break-word; ' + (encryptionStatus == 2 ? 'color:var(--red)' : 'padding:8px 18.5px; border-radius:18.5px; border:1px solid var(--border); ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);')) + '">' + putLinksInText(currentMessage.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>')) + '</div>' + insertImage(currentMessage) + '</div>';
+								msgs += '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';"><div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? generateTS(tmp[ind].time, 1) : '') + (encryptionStatus > 0 ? ' <span style="color:var(--verified);">' + (mac ? 'S' : '&#x1f512;&#xfe0e;') + '</span>' : '') + '</div><div ' + (itsMe ? 'class="specialty" ' : '') + 'style="max-width:calc(100% - 39px); display:inline-block; word-wrap:break-word; ' + (encryptionStatus == 2 ? 'color:var(--red)' : 'padding:8px 18.5px; border-radius:18.5px; border:1px solid var(--border); ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);')) + '">' + putLinksInText(currentMessage.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>')) + '</div>' + insertImage(currentMessage) + '</div>';
 								mostRecentTime = (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? tmp[ind].time : 0);
 								ind++;
 							}
@@ -842,7 +847,7 @@
 			<h3>How to use encryption</h3>
 			<p>Both users must be using ASTiW for encrypted conversation</p>
 			<p>A key must be arranged between you and the other user over a different secure communication service or in person</p>
-			<p>If the lock icon in the menu bar is green, outgoing messages will be encrypted</p>
+			<p>If the lock icon (or "S" in symbol compatibility mode) in the menu bar is green, outgoing messages will be encrypted</p>
 			<hr>
 			<h3>Set encryption key</h3>
 			<p class="small">(Clear the field to disable encryption)</p>

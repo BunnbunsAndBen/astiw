@@ -113,9 +113,9 @@
 						document.getElementById('flipper').innerHTML = '<a href="javascript:flip(\'new\');" class="classic">OLDEST FIRST &#x25b2;</a>';
 					}
 					if (comments.length == 1) {
-						menulist.push('&#x1f4ac;&#xfe0e; 1 comment');
+						menulist.push((localStorage.getItem('astiw_mac') == 'true' ? '' : '&#x1f4ac;&#xfe0e; ') + '1 comment');
 					} else {
-						menulist.push('&#x1f4ac;&#xfe0e; ' + comments.length.toString() + ' comments');
+						menulist.push((localStorage.getItem('astiw_mac') == 'true' ? '' : '&#x1f4ac;&#xfe0e; ') + comments.length.toString() + ' comments');
 					}
 					commCount = comments.length;
 					placeComments();
