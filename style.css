@@ -398,6 +398,7 @@ hr {
 	cursor: pointer;
 	left: 16px;
 	padding: 0px;
+	pointer-events: initial;
 }
 
 #toTop:hover, #toTop:active {
@@ -409,4 +410,5 @@ hr {
 	text-align: center;
 	position: sticky;
 	bottom: 0;
+	pointer-events: none;
 }
