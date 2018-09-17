@@ -26,6 +26,9 @@ window.onload = function() {
 			modal.style.display = 'none';
 		}
 	});
+	if (localStorage.getItem('astiw_mac') == 'true') {
+		document.getElementById('messengerButton').innerHTML = 'M';
+	}
 	var sesses = localStorage.getItem('astiw_sesses');
 	var usernames = localStorage.getItem('astiw_usernames');
 	if (isSet(sesses)) {
@@ -291,11 +294,11 @@ function addRecent(id, item, b) {
 	el.href = 'post.html?id=' + id;
 	el.className = 'recentLinks';
 	if (view == 's') {
-		menulist.push('<a class="classic" href="post.html?id=' + id + '&comment">&#x1f4ac;&#xfe0e;</a>');
+		menulist.push('<a class="classic" href="post.html?id=' + id + '&comment">' + (localStorage.getItem('astiw_mac') == 'true' ? 'Comment' : '&#x1f4ac;&#xfe0e;') + '</a>');
 	} else if (view == 'm') {
-		menulist.push('<a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', true)">&#x25bc; Expand</a> | <a class="classic" href="post.html?id=' + id + '&comment">&#x1f4ac;&#xfe0e; Comment</a>');
+		menulist.push('<a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', true)">&#x25bc; Expand</a> | <a class="classic" href="post.html?id=' + id + '&comment">' + (localStorage.getItem('astiw_mac') == 'true' ? '' : '&#x1f4ac;&#xfe0e; ') + 'Comment</a>');
 	} else if (view == 'l') {
-		menulist.push('<span style="display:none;" id="expanderContain' + id + '"><a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', true)">&#x25bc; Expand</a> | </span><a class="classic" href="post.html?id=' + id + '&comment">&#x1f4ac;&#xfe0e; Comment</a>');
+		menulist.push('<span style="display:none;" id="expanderContain' + id + '"><a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', true)">&#x25bc; Expand</a> | </span><a class="classic" href="post.html?id=' + id + '&comment">' + (localStorage.getItem('astiw_mac') == 'true' ? '' : '&#x1f4ac;&#xfe0e; ') + 'Comment</a>');
 	}
 	if (myName != 'Anon' && item.poster == myName)	 {
 		menulist.push('<a class="classic" href="javascript:openEdit(' + id + ');">&#x270E;&#xFE0E;' + (view != 's' ? ' Edit' : '') + '</a>');

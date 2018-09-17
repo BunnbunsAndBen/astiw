@@ -122,6 +122,7 @@
 			var sendsound = localStorage.getItem('astiw_sendsound') == 'true';
 			var showpreviews = localStorage.getItem('astiw_showpreviews') == 'true';
 			var theme = localStorage.getItem('astiw_theme');
+			var mac = localStorage.getItem('astiw_mac') == 'true';
 			if (!isSet(theme)) {
 				theme = 'dark.css';
 			}
@@ -146,6 +147,8 @@
 			document.getElementById('sendsound').style.backgroundColor = (!sendsound ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('showpreviews').innerHTML = (!showpreviews ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('showpreviews').style.backgroundColor = (!showpreviews ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('mac').innerHTML = (mac ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('mac').style.backgroundColor = (mac ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('theme').value = theme;
 			document.getElementById('customtheme').value = customtheme;
 			var mar = document.getElementById('markallread')
@@ -297,6 +300,10 @@
 			<p class="small">Drag the link to your bookmarks bar to create a button to switch between the official STiBaRC website and ASTiW<br/>(Bookmarklets do not work on all browsers, but they do work on Chrome and Firefox)</p>
 			<hr>
 			<h4>Troubleshooting</h4>
+			<div>
+				<button class="cb" id="mac" onclick="toggleSetting('mac');"></button><p style="margin-bottom:9px;">Symbol compatibilty mode</p>
+				<p class="small">Use alphabetical alternatives to symbols from fonts that are only available on Windows (reload page to see changes)</p>
+			</div>
 			<p style="margin-bottom:9px;"><a href="javascript:clearCache();" class="classic">Clear cache</a></p>
 			<p class="small">Delete all cached images</p>
 			<p style="margin-bottom:9px;"><a href="javascript:clearData();" class="classic">Clear data</a></p>
