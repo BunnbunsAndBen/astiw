@@ -15,7 +15,7 @@
 		var exceeded = false;
 		var raw;
 		var myName;
-		var myRank;
+		var myRank = 'User';
 		
 		function scrollCond() {
 			return window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 783 && !exceeded;
@@ -64,8 +64,13 @@
 			});
 			r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 			ru.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
-			ru.open('get', jsonurlu, true);
-			ru.send();
+			if (isSet(myName)) {
+				ru.open('get', jsonurlu, true);
+				ru.send();
+			} else {
+				r.open('get', jsonurl, true);
+				r.send();
+			}
 		};
 		
 		function loadMore() {
