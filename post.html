@@ -159,9 +159,11 @@
 				if (doEdit && okToEdit) {
 					editPost();
 				}
+				/*
 				if (localStorage.getItem('astiw_roi') != 'true') {
 					setTimeout(checkNewComms, 500);
 				}
+				*/
 			});
 			r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 			rv.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
