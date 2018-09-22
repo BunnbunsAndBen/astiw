@@ -473,7 +473,7 @@ function vote(postid, dir) {
 			sayToReload();
 		}
 	} else {
-		if (confirm('You must be logged in to edit posts, login?')) {
+		if (confirm('You must be logged in to do that, login?')) {
 			window.location.href = 'login.html';
 		}
 	}
