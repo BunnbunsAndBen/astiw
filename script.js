@@ -284,6 +284,7 @@ function addRecent(id, item, b) {
 	var main = document.getElementById('main');
 	var el = document.createElement('a');
 	var menulist = [];
+	var expandLink = '';
 	var home = typeof youreOnTheHomepage !== 'undefined' && youreOnTheHomepage == true;
 	if (home) {
 		var view = (isSet(raw) ? raw : 'm');
@@ -293,12 +294,26 @@ function addRecent(id, item, b) {
 	el.id = 'postItem' + id;
 	el.href = 'post.html?id=' + id;
 	el.className = 'recentLinks';
+	var upStyle = '';
+	var downStyle = '';
+	if (isSet(item.vote)) {
+		if (item.vote == 'up') {
+			upStyle = 'color:var(--verified)';
+		} else {
+			downStyle = 'color:var(--red)';
+		}
+	}
+	if (view == 'l') {
+		expandLink = '<span style="display:none;" id="expanderContain' + id + '"><a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', true)">&#x25bc; Expand</a> | </span>';
+	} else if (view == 'm') {
+		expandLink = '<a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', true)">&#x25bc; Expand</a> | ';
+	}
+	menulist.push('<span id="upvote' + id + '"><a class="classic" style="' + upStyle + '" href="javascript:vote(' + id + ', true)">&#x21e7;&#xfe0e; ' + item.upvotes.toString() + '</a></span>');
+	menulist.push('<span id="downvote' + id + '"><a class="classic" style="' + downStyle + '" href="javascript:vote(' + id + ', false)">&#x21e9;&#xfe0e; ' + item.downvotes.toString() + '</a></span>');
 	if (view == 's') {
 		menulist.push('<a class="classic" href="post.html?id=' + id + '&comment">' + (localStorage.getItem('astiw_mac') == 'true' ? 'Comment' : '&#x1f4ac;&#xfe0e;') + '</a>');
-	} else if (view == 'm') {
-		menulist.push('<a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', true)">&#x25bc; Expand</a> | <a class="classic" href="post.html?id=' + id + '&comment">' + (localStorage.getItem('astiw_mac') == 'true' ? '' : '&#x1f4ac;&#xfe0e; ') + 'Comment</a>');
-	} else if (view == 'l') {
-		menulist.push('<span style="display:none;" id="expanderContain' + id + '"><a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', true)">&#x25bc; Expand</a> | </span><a class="classic" href="post.html?id=' + id + '&comment">' + (localStorage.getItem('astiw_mac') == 'true' ? '' : '&#x1f4ac;&#xfe0e; ') + 'Comment</a>');
+	} else {
+		menulist.push('<a class="classic" href="post.html?id=' + id + '&comment">' + (localStorage.getItem('astiw_mac') == 'true' ? '' : '&#x1f4ac;&#xfe0e; ') + 'Comment</a>');
 	}
 	if (myName != 'Anon' && item.poster == myName && myRank != 'User')	 {
 		menulist.push('<a class="classic" href="javascript:openEdit(' + id + ');">&#x270E;&#xFE0E;' + (view != 's' ? ' Edit' : '') + '</a>');
@@ -310,11 +325,11 @@ function addRecent(id, item, b) {
 		menulist.push(view == 's' ? 'Image' : 'Image attached');
 	}
 	if (view == 'l') {
-		el.innerHTML = '<div class="recentCard' + (b ? ' bb' : '') + '"><p class="small" style="margin-top:0;">Posted by <a class="classic" ' + (item.poster == myName ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b><p id="cardText' + id + '" class="fadeOutText">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'))+ '</p><b><p class="small" style="margin-bottom:0;">' + menulist.join(' &#xb7; ') + '</p></b></div>';
+		el.innerHTML = '<div class="recentCard' + (b ? ' bb' : '') + '"><p class="small" style="margin-top:0;">Posted by <a class="classic" ' + (item.poster == myName ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b><p id="cardText' + id + '" class="fadeOutText">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'))+ '</p><b><p class="small" style="margin-bottom:0;">' + expandLink + menulist.join(' &#xb7; ') + '</p></b></div>';
 	} else if (view == 's') {
-		el.innerHTML = '<div class="recent' + (b ? ' bb' : '') + '"><b><p class="small" style="margin:0 0 0 8px; float:right;">' + menulist.join(' &#xb7; ') + '</p></b><p class="small" style="margin-top:0; color:var(--content);"><a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', false)">&#x25bc;</a> <b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b></p><p class="small" style="margin-bottom:0;">Posted by <a class="classic" ' + (item.poster == myName ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><p id="expanded' + id + '" style="margin-bottom:0; display:none;">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'))+ '</p></div>';
+		el.innerHTML = '<div class="recent' + (b ? ' bb' : '') + '"><b><p class="small" style="margin:0 0 0 8px; float:right;">' + expandLink + menulist.join(' &#xb7; ') + '</p></b><p class="small" style="margin-top:0; color:var(--content);"><a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', false)">&#x25bc;</a> <b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b></p><p class="small" style="margin-bottom:0;">Posted by <a class="classic" ' + (item.poster == myName ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><p id="expanded' + id + '" style="margin-bottom:0; display:none;">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'))+ '</p></div>';
 	} else {
-		el.innerHTML = '<div class="recent' + (b ? ' bb' : '') + '"><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b><p class="small">Posted by <a class="classic" ' + (item.poster == myName ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><b><p class="small" style="margin-bottom:0;">' + menulist.join(' &#xb7; ') + '</p></b><p id="expanded' + id + '" style="margin-bottom:0; display:none;">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'))+ '</p></div>';
+		el.innerHTML = '<div class="recent' + (b ? ' bb' : '') + '"><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b><p class="small">Posted by <a class="classic" ' + (item.poster == myName ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><b><p class="small" style="margin-bottom:0;">' + expandLink + menulist.join(' &#xb7; ') + '</p></b><p id="expanded' + id + '" style="margin-bottom:0; display:none;">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'))+ '</p></div>';
 	}
 	main.appendChild(el);
 	if (view == 'l') {
@@ -406,4 +421,60 @@ function sayToReload() {
 
 function scrollToTop() {
 	window.scrollTo(0, 0);
+};
+
+function vote(postid, dir) {
+	if (isSet(getCurrentUser())) {
+		if (!sessHasChanged()) {
+			var upvote = document.getElementById('upvote' + postid);
+			var downvote = document.getElementById('downvote' + postid);
+			var upvoteLink = upvote.getElementsByTagName('a')[0];
+			var downvoteLink = downvote.getElementsByTagName('a')[0];
+			upvoteLink.href = 'javascript:void(0)';
+			downvoteLink.href = 'javascript:void(0)';
+			upvoteLink.className = 'loadingVotes';
+			downvoteLink.className = 'loadingVotes';
+			upvoteLink.style = '';
+			downvoteLink.style = '';
+			var qsp = 'id=' + postid + '&sess=' + JSON.parse(localStorage.getItem('astiw_sesses'))[0];
+			var jsonurlvote = 'https://api.stibarc.gq/' + (dir ? 'up' : 'down') + 'vote.sjs';
+			var jsonurlp = 'https://api.stibarc.gq/v2/getpost.sjs?' + qsp;
+			var rvote = new XMLHttpRequest();
+			var rp = new XMLHttpRequest();
+			rvote.addEventListener('load', function() {
+				rp.open('get', jsonurlp, true);
+				rp.send();
+			});
+			rp.addEventListener('load', function() {
+				var res = JSON.parse(rp.responseText);
+				var upStyle = '';
+				var downStyle = '';
+				if (isSet(res.vote)) {
+					if (res.vote == 'up') {
+						upStyle = 'color:var(--verified)';
+					} else {
+						downStyle = 'color:var(--red)';
+					}
+				}
+				upvoteLink.className = 'classic';
+				downvoteLink.className = 'classic';
+				upvoteLink.style = upStyle;
+				downvoteLink.style = downStyle;
+				upvoteLink.innerHTML = '&#x21e7;&#xfe0e; ' + res.upvotes.toString();
+				downvoteLink.innerHTML = '&#x21e9;&#xfe0e; ' + res.downvotes.toString();
+				upvoteLink.href = 'javascript:vote(' + postid + ', true)';
+				downvoteLink.href = 'javascript:vote(' + postid + ', false)';
+			});
+			rvote.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
+			rp.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
+			rvote.open('post', jsonurlvote, true);
+			rvote.send(qsp);
+		} else {
+			sayToReload();
+		}
+	} else {
+		if (confirm('You must be logged in to edit posts, login?')) {
+			window.location.href = 'login.html';
+		}
+	}
 };

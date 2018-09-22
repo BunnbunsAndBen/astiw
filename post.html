@@ -21,6 +21,7 @@
 		var doScrollDown;
 		var raw;
 		var myRank = 'User';
+		var sessPart = '';
 		
 		window.onbeforeunload = function() {
 			if (!oktoleave && (isSet(document.getElementById('commentBox').value) || document.getElementById('editText').style.display != 'none')) {
@@ -34,6 +35,7 @@
 				document.getElementById('commentBox').style.display = 'initial';
 				document.getElementById('comment').style.display = 'block';
 				document.getElementById('youArentLoggedIn').style.display = 'none';
+				sessPart = '&sess=' + JSON.parse(localStorage.getItem('astiw_sesses'))[0];
 			}
 			raw = localStorage.getItem('astiw_view');
 			window.onscroll = function(e) {
@@ -69,7 +71,7 @@
 			id = paramsObj.id;
 			doScrollDown = paramsObj.comment;
 			doEdit = paramsObj.edit;
-			var jsonurl = 'https://api.stibarc.gq/v2/getpost.sjs?id=' + id;
+			var jsonurl = 'https://api.stibarc.gq/v2/getpost.sjs?id=' + id + sessPart;
 			var r = new XMLHttpRequest();
 			var rv = new XMLHttpRequest();
 			var ru = new XMLHttpRequest();
@@ -115,6 +117,17 @@
 			});
 			rc.addEventListener('load', function() {
 				var menulist = [];
+				var upStyle = '';
+				var downStyle = '';
+				if (isSet(stuf.vote)) {
+					if (stuf.vote == 'up') {
+						upStyle = 'color:var(--verified)';
+					} else {
+						downStyle = 'color:var(--red)';
+					}
+				}
+				menulist.push('<span id="upvote' + id + '"><a class="classic" style="' + upStyle + '" href="javascript:vote(' + id + ', true)">&#x21e7;&#xfe0e; ' + stuf.upvotes.toString() + '</a></span>');
+				menulist.push('<span id="downvote' + id + '"><a class="classic" style="' + downStyle + '" href="javascript:vote(' + id + ', false)">&#x21e9;&#xfe0e; ' + stuf.downvotes.toString() + '</a></span>');
 				if (isSet(rc.responseText) && rc.responseText != 'undefined\n') {
 					var objComments = JSON.parse(rc.responseText);
 					for (key in objComments) {

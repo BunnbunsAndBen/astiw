@@ -259,8 +259,13 @@ main {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {transform: rotate(0deg);}
+    100% {transform: rotate(360deg);}
+}
+
+@keyframes pulseColor {
+    0% {color: var(--border);}
+    100% {color: var(--content);}
 }
 
 .loader {
@@ -272,6 +277,12 @@ main {
 	margin: auto;
 	margin-top: 24px;
     animation: spin 1s linear infinite;
+}
+
+.loadingVotes, .loadingVotes:hover, .loadingVotes:active {
+	animation: pulseColor 0.5s alternate infinite;
+	text-decoration: none;
+	cursor: default;
 }
 
 a {
@@ -392,7 +403,7 @@ hr {
 	z-index: 1;
 	bottom: 65px;
 	border-radius: 100%;
-	color: var(--probably-same-as-content-bg);
+	color: var(--content-bg);
 	font-size: 2em;
 	outline: none;
 	cursor: pointer;
@@ -403,6 +414,7 @@ hr {
 
 #toTop:hover, #toTop:active {
 	background-color: var(--other-rollover);
+	color: var(--probably-same-as-content-bg);
 }
 
 #scrollerContain {
