@@ -296,7 +296,7 @@ function addRecent(id, item, b) {
 	el.className = 'recentLinks';
 	var upStyle = '';
 	var downStyle = '';
-	if (isSet(item.vote)) {
+	if (isSet(item.vote) && myName != 'Anon') {
 		if (item.vote == 'up') {
 			upStyle = 'color:var(--verified)';
 		} else {
@@ -424,7 +424,8 @@ function scrollToTop() {
 };
 
 function vote(postid, dir) {
-	if (isSet(getCurrentUser())) {
+	var currentUsername = getCurrentUser();
+	if (isSet(currentUsername) && currentUsername != 'Anon') {
 		if (!sessHasChanged()) {
 			var upvote = document.getElementById('upvote' + postid);
 			var downvote = document.getElementById('downvote' + postid);
@@ -473,7 +474,7 @@ function vote(postid, dir) {
 			sayToReload();
 		}
 	} else {
-		if (confirm('You must be logged in to do that, login?')) {
+		if (confirm('You must be logged in to do that; login?')) {
 			window.location.href = 'login.html';
 		}
 	}

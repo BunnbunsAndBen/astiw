@@ -119,7 +119,7 @@
 				var menulist = [];
 				var upStyle = '';
 				var downStyle = '';
-				if (isSet(stuf.vote)) {
+				if (isSet(stuf.vote) && getCurrentUser() != 'Anon') {
 					if (stuf.vote == 'up') {
 						upStyle = 'color:var(--verified)';
 					} else {

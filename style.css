@@ -264,8 +264,8 @@ main {
 }
 
 @keyframes pulseColor {
-    0% {color: var(--border);}
-    100% {color: var(--content);}
+    0% {opacity: 1;}
+    100% {color: 0.5;}
 }
 
 .loader {
