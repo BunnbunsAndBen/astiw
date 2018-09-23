@@ -265,7 +265,7 @@ main {
 
 @keyframes pulseColor {
     0% {opacity: 1;}
-    100% {color: 0.5;}
+    100% {opacity: 0.5;}
 }
 
 .loader {
