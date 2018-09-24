@@ -308,12 +308,13 @@ function addRecent(id, item, b) {
 	} else if (view == 'm') {
 		expandLink = '<a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', true)">&#x25bc; Expand</a> | ';
 	}
-	menulist.push('<span id="upvote' + id + '"><a class="classic" style="' + upStyle + '" href="javascript:vote(' + id + ', true)">&#x21e7;&#xfe0e; ' + item.upvotes.toString() + '</a></span>');
-	menulist.push('<span id="downvote' + id + '"><a class="classic" style="' + downStyle + '" href="javascript:vote(' + id + ', false)">&#x21e9;&#xfe0e; ' + item.downvotes.toString() + '</a></span>');
+	var mac = localStorage.getItem('astiw_mac') == 'true';
+	menulist.push('<span id="upvote' + id + '"><a class="classic" style="' + upStyle + '" href="javascript:vote(' + id + ', true)">' + (mac ? '&uarr;' : '&#x21e7;&#xfe0e;') + ' ' + item.upvotes.toString() + '</a></span>');
+	menulist.push('<span id="downvote' + id + '"><a class="classic" style="' + downStyle + '" href="javascript:vote(' + id + ', false)">' + (mac ? '&darr;' : '&#x21e9;&#xfe0e;') + ' ' + item.downvotes.toString() + '</a></span>');
 	if (view == 's') {
-		menulist.push('<a class="classic" href="post.html?id=' + id + '&comment">' + (localStorage.getItem('astiw_mac') == 'true' ? 'Comment' : '&#x1f4ac;&#xfe0e;') + '</a>');
+		menulist.push('<a class="classic" href="post.html?id=' + id + '&comment">' + (mac ? 'Comment' : '&#x1f4ac;&#xfe0e;') + '</a>');
 	} else {
-		menulist.push('<a class="classic" href="post.html?id=' + id + '&comment">' + (localStorage.getItem('astiw_mac') == 'true' ? '' : '&#x1f4ac;&#xfe0e; ') + 'Comment</a>');
+		menulist.push('<a class="classic" href="post.html?id=' + id + '&comment">' + (mac ? '' : '&#x1f4ac;&#xfe0e; ') + 'Comment</a>');
 	}
 	if (myName != 'Anon' && item.poster == myName && myRank != 'User')	 {
 		menulist.push('<a class="classic" href="javascript:openEdit(' + id + ');">&#x270E;&#xFE0E;' + (view != 's' ? ' Edit' : '') + '</a>');
@@ -461,8 +462,9 @@ function vote(postid, dir) {
 				downvoteLink.className = 'classic';
 				upvoteLink.style = upStyle;
 				downvoteLink.style = downStyle;
-				upvoteLink.innerHTML = '&#x21e7;&#xfe0e; ' + res.upvotes.toString();
-				downvoteLink.innerHTML = '&#x21e9;&#xfe0e; ' + res.downvotes.toString();
+				var mac = localStorage.getItem('astiw_mac') == 'true';
+				upvoteLink.innerHTML = (mac ? '&uarr;' : '&#x21e7;&#xfe0e;') + ' ' + res.upvotes.toString();
+				downvoteLink.innerHTML = (mac ? '&darr;' : '&#x21e9;&#xfe0e;') + ' ' + res.downvotes.toString();
 				upvoteLink.href = 'javascript:vote(' + postid + ', true)';
 				downvoteLink.href = 'javascript:vote(' + postid + ', false)';
 			});

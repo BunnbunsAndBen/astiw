@@ -126,8 +126,8 @@
 						downStyle = 'color:var(--red)';
 					}
 				}
-				menulist.push('<span id="upvote' + id + '"><a class="classic" style="' + upStyle + '" href="javascript:vote(' + id + ', true)">&#x21e7;&#xfe0e; ' + stuf.upvotes.toString() + '</a></span>');
-				menulist.push('<span id="downvote' + id + '"><a class="classic" style="' + downStyle + '" href="javascript:vote(' + id + ', false)">&#x21e9;&#xfe0e; ' + stuf.downvotes.toString() + '</a></span>');
+				menulist.push('<span id="upvote' + id + '"><a class="classic" style="' + upStyle + '" href="javascript:vote(' + id + ', true)">' + (localStorage.getItem('astiw_mac') == 'true' ? '&uarr;' : '&#x21e7;&#xfe0e;') + ' ' + stuf.upvotes.toString() + '</a></span>');
+				menulist.push('<span id="downvote' + id + '"><a class="classic" style="' + downStyle + '" href="javascript:vote(' + id + ', false)">' + (localStorage.getItem('astiw_mac') == 'true' ? '&darr;' : '&#x21e9;&#xfe0e;') + ' ' + stuf.downvotes.toString() + '</a></span>');
 				if (isSet(rc.responseText) && rc.responseText != 'undefined\n') {
 					var objComments = JSON.parse(rc.responseText);
 					for (key in objComments) {
