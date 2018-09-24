@@ -82,35 +82,39 @@
 		
 		function loadMore() {
 			loading = true;
-			var ldr = document.createElement('div');
-			ldr.className = 'loader';
-			ldr.id = 'loader';
-			document.getElementById('rm').appendChild(ldr);
-			var jsonurl = 'https://api.stibarc.gq/v2/getposts.sjs?id=' + lastid + sessPart2;
-			var r = new XMLHttpRequest();
-			r.addEventListener('load', function() {
-				if (isSet(r.responseText)) {
-					var stuf = JSON.parse(r.responseText);
-					var temp = lastid;
-					for (i = temp - 1; i > temp - 21; i--) {
-						if (isSet(stuf[i])) {
-							addRecent(i, stuf[i], false);
-						} else {
-							exceeded = true;
-							break;
+			if (!sessHasChanged()) {
+				var ldr = document.createElement('div');
+				ldr.className = 'loader';
+				ldr.id = 'loader';
+				document.getElementById('rm').appendChild(ldr);
+				var jsonurl = 'https://api.stibarc.gq/v2/getposts.sjs?id=' + lastid + sessPart2;
+				var r = new XMLHttpRequest();
+				r.addEventListener('load', function() {
+					if (isSet(r.responseText)) {
+						var stuf = JSON.parse(r.responseText);
+						var temp = lastid;
+						for (i = temp - 1; i > temp - 21; i--) {
+							if (isSet(stuf[i])) {
+								addRecent(i, stuf[i], false);
+							} else {
+								exceeded = true;
+								break;
+							}
 						}
 					}
-				}
-				document.getElementById('rm').removeChild(document.getElementById('loader'));
-				if (scrollCond()) {
-					loadMore();
-				} else {
-					loading = false;
-				}
-			});
-			r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
-			r.open('get', jsonurl, true);
-			r.send();
+					document.getElementById('rm').removeChild(document.getElementById('loader'));
+					if (scrollCond()) {
+						loadMore();
+					} else {
+						loading = false;
+					}
+				});
+				r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
+				r.open('get', jsonurl, true);
+				r.send();
+			} else {
+				sayToReload();
+			}
 		};
 		
 		function checkNewPosts() {
