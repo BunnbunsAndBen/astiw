@@ -387,15 +387,6 @@ hr {
 	margin-top: 24px;
 }
 
-#viewBar {
-	display: none;
-	padding: 0 24px;
-	height: 40px;
-	line-height: 40px;
-	background-color: var(--content-bg);
-	border-bottom: 1px solid var(--border);
-}
-
 #toTop {
 	height: 48px;
 	width: 48px;

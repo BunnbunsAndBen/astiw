@@ -404,18 +404,6 @@ function switchView(value) {
 	window.location.reload();
 };
 
-function setupViewBar() {
-	if (isSet(raw)) {
-		var view = raw;
-	} else {
-		var view = 'm';
-	}
-	document.getElementById('view-s').innerHTML = (view == 's' ? 'Small' : '<a class="classic" href="javascript:switchView(\'s\');">Small</a>');
-	document.getElementById('view-m').innerHTML = (view == 'm' ? 'Medium' : '<a class="classic" href="javascript:switchView(\'m\');">Medium</a>');
-	document.getElementById('view-l').innerHTML = (view == 'l' ? 'Large' : '<a class="classic" href="javascript:switchView(\'l\');">Large</a>');
-	document.getElementById('viewBar').style.display = 'block';
-};
-
 function sayToReload() {
 	alert('The selected account has changed, please reload the page');
 };

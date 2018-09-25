@@ -122,8 +122,12 @@
 			var showpreviews = localStorage.getItem('astiw_showpreviews') == 'true';
 			var theme = localStorage.getItem('astiw_theme');
 			var mac = localStorage.getItem('astiw_mac') == 'true';
+			var view = localStorage.getItem('astiw_view');
 			if (!isSet(theme)) {
 				theme = 'dark.css';
+			}
+			if (!isSet(view)) {
+				view = 'm';
 			}
 			var customtheme = localStorage.getItem('astiw_customtheme');
 			if (!isSet(customtheme)) {
@@ -148,6 +152,7 @@
 			document.getElementById('mac').innerHTML = (mac ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('mac').style.backgroundColor = (mac ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('theme').value = theme;
+			document.getElementById('view').value = view;
 			document.getElementById('customtheme').value = customtheme;
 			var mar = document.getElementById('markallread')
 			if (markread) {
@@ -215,7 +220,16 @@
 		<div class="stdc" id="main" style="display:none;">
 			<p>Settings are stored locally and only apply to this browser</p>
 			<hr>
-			<h4>Theme</h4>
+			<h4>Appearance</h4>
+			<div>
+				<select id="view" onchange="applySetting('view');">
+					<option value="s">Small</option>
+					<option value="m">Medium</option>
+					<option value="l">Large</option>
+				</select>
+				<p style="margin-bottom:9px;">Set view</p>
+				<p class="small">Change the layout of the post list on the home page</p>
+			</div>
 			<div>
 				<select id="theme" onchange="applySetting('theme'); colors();">
 					<optgroup label="Standard">
@@ -241,10 +255,10 @@
 				</select>
 				<p style="margin-bottom:9px;">Set theme</p>
 				<p class="small">Change the colors of ASTiW</p>
-				<p style="margin-bottom:9px;">Custom theme</p>
-				<p class="small">Paste a URL of a custom theme (you must also choose "Custom" from the "Set theme" dropdown)</p>
-				<input type="text" autocomplete="off" spellcheck="false" id="customtheme" class="txf" onchange="applySetting('customtheme'); colors();" placeholder="Custom theme URL" style="display:block; margin-bottom:16px;">
 			</div>
+			<p style="margin-bottom:9px;">Custom theme</p>
+			<p class="small">Paste a URL of a custom theme (you must also choose "Custom" from the "Set theme" dropdown)</p>
+			<input type="text" autocomplete="off" spellcheck="false" id="customtheme" class="txf" onchange="applySetting('customtheme'); colors();" placeholder="Custom theme URL" style="display:block; margin-bottom:16px;">
 			<hr>
 			<h4>Behavior</h4>
 			<div>

@@ -98,8 +98,6 @@
 				if (ans.length <= 1) {
 					document.getElementById('noposts').style.display = '';
 					document.getElementById('rm').style.paddingTop = '0';
-				} else {
-					// setupViewBar();
 				}
 			});
 			r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
@@ -153,7 +151,6 @@
 		</div>
 		<div class="loader" id="loader"></div>
 	</main>
-	<div id="viewBar" style="border-top:1px solid var(--border);"><b>View: <span id="view-s"></span> &#xb7; <span id="view-m"></span> &#xb7; <span id="view-l"></span></b></div>
 	<div style="padding:24px; padding-top:0;"> <!-- change here -->
 		<div id="noposts" class="stdc" style="display:none;"><p style="color:var(--border); text-align:center;">This user has no posts</p></div>
 		<div id="main"></div>

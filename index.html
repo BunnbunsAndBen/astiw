@@ -57,7 +57,6 @@
 					for (i = stuf.totalposts; i > stuf.totalposts - 20; i--) {
 						addRecent(i, stuf[i], i == stuf.totalposts);
 					}
-					setupViewBar();
 					document.getElementById('rm').removeChild(document.getElementById('loader'));
 					if (scrollCond()) {
 						loadMore();
@@ -157,7 +156,6 @@
 			<p style="margin:8px 0;"><a class="classic" href="register.html">Register a new account</a></p>
 		</div>
 	</div>
-	<div id="viewBar"><b>View: <span id="view-s"></span> &#xb7; <span id="view-m"></span> &#xb7; <span id="view-l"></span></b></div>
 	<main id="rm">
 		<div id="main"></div>
 		<div class="loader" id="loader"></div>
