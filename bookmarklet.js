@@ -41,7 +41,9 @@ if (cpURL == 'https://stibarc.gq/' || cpURL == 'https://stibarc.gq/index.html') 
 		rptn = 'https://stibarc.gq/register.html';
 	}
 } else if (cpURL == 'https://savaka2.github.io/astiw/changepassword.html') {
-	rptn = 'https://stibarc.gq/passwd.html';
+	if (confirm('Target page may not be relevant, continue anyway?')) {
+		rptn = 'https://stibarc.gq/passwd.html';
+	}
 } else if (cpURL == 'https://savaka2.github.io/astiw/messenger.html') {
 	rptn = 'https://messenger.stibarc.gq/';
 }
