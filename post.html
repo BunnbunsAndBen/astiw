@@ -161,8 +161,12 @@
 				document.getElementById('rm').removeChild(document.getElementById('loader2'));
 				document.getElementById('main').style.display = 'block';
 				if (doScrollDown) {
-					window.scrollTo(0, document.getElementById('commentBox').offsetTop - 58);
-					document.getElementById('commentBox').focus();
+					if (loggedIn) {
+						window.scrollTo(0, document.getElementById('commentBox').offsetTop - 58);
+						document.getElementById('commentBox').focus();
+					} else {
+						window.scrollTo(0, document.getElementById('youArentLoggedIn').offsetTop - 58);
+					}
 				}
 				if (doEdit && okToEdit) {
 					editPost();
