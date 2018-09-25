@@ -6,7 +6,7 @@ if (cpURL == 'https://stibarc.gq/' || cpURL == 'https://stibarc.gq/index.html') 
 	rptn = 'https://savaka2.github.io/astiw/post.html' + cpURL.substring(28);
 } else if (cpURL == 'https://stibarc.gq/newpost.html') {
 	rptn = 'https://savaka2.github.io/astiw/newpost.html';
-} else if (cpURL.indexOf('https://stibarc.gq/editprofile.sjs') == 0) {
+} else if (cpURL.indexOf('https://stibarc.gq/editprofile.html') == 0) {
 	rptn = 'https://savaka2.github.io/astiw/editprofile.html';
 } else if (cpURL == 'https://stibarc.gq/search.html') {
 	rptn = 'https://savaka2.github.io/astiw/search.html?q=' + encodeURIComponent(document.getElementById('q').value);
@@ -16,7 +16,7 @@ if (cpURL == 'https://stibarc.gq/' || cpURL == 'https://stibarc.gq/index.html') 
 	rptn = 'https://savaka2.github.io/astiw/login.html';
 } else if (cpURL == 'https://stibarc.gq/register.html') {
 	rptn = 'https://savaka2.github.io/astiw/register.html';
-} else if (cpURL.indexOf('https://stibarc.gq/passwd.sjs') == 0) {
+} else if (cpURL.indexOf('https://stibarc.gq/passwd.html') == 0) {
 	rptn = 'https://savaka2.github.io/astiw/changepassword.html';
 } else if (cpURL == 'https://messenger.stibarc.gq/' || cpURL == 'https://messenger.stibarc.gq/index.html') {
 	rptn = 'https://savaka2.github.io/astiw/messenger.html';
@@ -27,9 +27,7 @@ if (cpURL == 'https://stibarc.gq/' || cpURL == 'https://stibarc.gq/index.html') 
 } else if (cpURL == 'https://savaka2.github.io/astiw/newpost.html') {
 	rptn = 'https://stibarc.gq/newpost.html';
 } else if (cpURL == 'https://savaka2.github.io/astiw/editprofile.html') {
-	if (confirm('Cannot switch in this direction, go to STiBaRC home page?')) {
-		rptn = 'https://stibarc.gq/';
-	}
+	rptn = 'https://stibarc.gq/editprofile.html';
 } else if (cpURL.indexOf('https://savaka2.github.io/astiw/search.html') == 0) {
 	rptn = 'https://stibarc.gq/search.html';
 } else if (cpURL.indexOf('https://savaka2.github.io/astiw/user.html') == 0) {
@@ -43,9 +41,9 @@ if (cpURL == 'https://stibarc.gq/' || cpURL == 'https://stibarc.gq/index.html') 
 		rptn = 'https://stibarc.gq/register.html';
 	}
 } else if (cpURL == 'https://savaka2.github.io/astiw/changepassword.html') {
-	if (confirm('Cannot switch in this direction, go to STiBaRC home page?')) {
-		rptn = 'https://stibarc.gq/';
-	}
+	rptn = 'https://stibarc.gq/passwd.html';
+} else if (cpURL == 'https://savaka2.github.io/astiw/messenger.html') {
+	rptn = 'https://messenger.stibarc.gq/';
 }
 if (rptn != 'bad') {
 	window.location.href = rptn;
