@@ -128,6 +128,10 @@
 				}
 				menulist.push('<span id="upvote' + id + '"><a class="classic" style="' + upStyle + '" href="javascript:vote(' + id + ', true)">' + (localStorage.getItem('astiw_mac') == 'true' ? '&uarr;' : '&#x21e7;&#xfe0e;') + ' ' + stuf.upvotes.toString() + '</a></span>');
 				menulist.push('<span id="downvote' + id + '"><a class="classic" style="' + downStyle + '" href="javascript:vote(' + id + ', false)">' + (localStorage.getItem('astiw_mac') == 'true' ? '&darr;' : '&#x21e9;&#xfe0e;') + ' ' + stuf.downvotes.toString() + '</a></span>');
+				var totalVotes = stuf.upvotes + stuf.downvotes;
+				if (totalVotes > 0) {
+					document.getElementById('percentUpvoted').innerHTML = Math.round((stuf.upvotes / (totalVotes)) * 100).toString() + '% upvoted';
+				}
 				if (isSet(rc.responseText) && rc.responseText != 'undefined\n') {
 					var objComments = JSON.parse(rc.responseText);
 					for (key in objComments) {
@@ -493,7 +497,7 @@
 			<div id="contain2" style="display:none;"><button id="save" onclick="saveEdit();" class="libut" style="margin-bottom:7px; margin-right:16px;">SAVE</button><button id="cancel" onclick="cancelEdit();" class="othbut" style="margin-bottom:7px;">CANCEL</button></div>
 			<p class="small" style="color:var(--red); display:none; margin-top:0;" id="editEmpty">A title and text are required</p>
 			<div id="imgThing" style="display:none; text-align:center;"><button id="viewImg" onclick="loadImg();" class="othbut widebut" style="margin:0; display:initial;">SHOW IMAGE</button></div>
-			<b><p class="small" id="postMenu"></p></b>
+			<b><p class="small" id="postMenu" style="display:inline-block;"></p></b><p style="float:right; margin-left:1em;" class="small" id="percentUpvoted"></p>
 			<p id="youArentLoggedIn" style="margin-top:0;"><a href="register.html" class="classic">Register</a> or <a href="login.html" class="classic">log in</a> to leave a comment!</p>
 			<textarea class="txf" id="commentBox" style="display:none; height:108px; min-height:calc(1em + 3px); width:calc(100% - 34px); margin-bottom:16px;" placeholder="Comment"></textarea>
 			<div id="contain"><button id="comment" onclick="if (!pushed) {comment(id);}" class="libut" style="display:none; margin-bottom:16px;">COMMENT</button></div>
