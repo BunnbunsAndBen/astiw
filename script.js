@@ -453,6 +453,14 @@ function vote(postid, dir) {
 				var mac = localStorage.getItem('astiw_mac') == 'true';
 				upvoteLink.innerHTML = (mac ? '&uarr;' : '&#x21e7;&#xfe0e;') + ' ' + res.upvotes.toString();
 				downvoteLink.innerHTML = (mac ? '&darr;' : '&#x21e9;&#xfe0e;') + ' ' + res.downvotes.toString();
+				if (isSet(document.getElementById('percentUpvoted'))) {
+					var totalVotes = res.upvotes + res.downvotes;
+					if (totalVotes > 0) {
+						document.getElementById('percentUpvoted').innerHTML = Math.round((res.upvotes / (totalVotes)) * 100).toString() + '% upvoted';
+					} else {
+						document.getElementById('percentUpvoted').innerHTML = '';
+					}
+				}
 				upvoteLink.href = 'javascript:vote(' + postid + ', true)';
 				downvoteLink.href = 'javascript:vote(' + postid + ', false)';
 			});
