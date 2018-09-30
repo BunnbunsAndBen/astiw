@@ -65,7 +65,7 @@
 					}
 					if (isSet(rsp.bio)) {
 						var bio = rsp.bio.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>');
-						document.getElementById('bio').innerHTML = putLinksInText(bio);
+						document.getElementById('bio').innerHTML = putLinksInText(bio, false);
 					} else {
 						document.getElementById('detail').removeChild(document.getElementById('bio'));
 					}

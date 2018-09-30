@@ -77,7 +77,7 @@ function getCurrentUser() {
 	}
 };
 
-function putLinksInText(inp) {
+function putLinksInText(inp, noot) {
 	var list = inp.split(/( |<br\/>)/g);
 	var temp;
 	var temptwo;
@@ -92,7 +92,7 @@ function putLinksInText(inp) {
 					temp = temptwo;
 				}
 			}
-			list[j] = '<a class="classic" target="_blank" href="' + encodeURI(temp) + '">' + temp + '</a>';
+			list[j] = '<a class="classic" ' + (noot || localStorage.getItem('astiw_newtab') != 'true' ? 'target="_blank" ' : '') + 'href="' + encodeURI(temp) + '">' + temp + '</a>';
 		} else if (list[j][0] == '@' && list[j].length >= 2) {
 			temp = list[j];
 			tempName = list[j].substring(1);
@@ -326,11 +326,11 @@ function addRecent(id, item, b) {
 		menulist.push(view == 's' ? 'Image' : 'Image attached');
 	}
 	if (view == 'l') {
-		el.innerHTML = '<div class="recentCard' + (b ? ' bb' : '') + '"><p class="small" style="margin-top:0;">Posted by <a class="classic" ' + (item.poster == myName ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b><p id="cardText' + id + '" class="fadeOutText">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'))+ '</p><b><p class="small" style="margin-bottom:0;">' + expandLink + menulist.join(' &#xb7; ') + '</p></b></div>';
+		el.innerHTML = '<div class="recentCard' + (b ? ' bb' : '') + '"><p class="small" style="margin-top:0;">Posted by <a class="classic" ' + (item.poster == myName ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b><p id="cardText' + id + '" class="fadeOutText">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'), false) + '</p><b><p class="small" style="margin-bottom:0;">' + expandLink + menulist.join(' &#xb7; ') + '</p></b></div>';
 	} else if (view == 's') {
-		el.innerHTML = '<div class="recent' + (b ? ' bb' : '') + '"><b><p class="small" style="margin:0 0 0 8px; float:right;">' + expandLink + menulist.join(' &#xb7; ') + '</p></b><p class="small" style="margin-top:0; color:var(--content);"><a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', false)">&#x25bc;</a> <b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b></p><p class="small" style="margin-bottom:0;">Posted by <a class="classic" ' + (item.poster == myName ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><p id="expanded' + id + '" style="margin-bottom:0; display:none;">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'))+ '</p></div>';
+		el.innerHTML = '<div class="recent' + (b ? ' bb' : '') + '"><b><p class="small" style="margin:0 0 0 8px; float:right;">' + expandLink + menulist.join(' &#xb7; ') + '</p></b><p class="small" style="margin-top:0; color:var(--content);"><a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', false)">&#x25bc;</a> <b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b></p><p class="small" style="margin-bottom:0;">Posted by <a class="classic" ' + (item.poster == myName ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><p id="expanded' + id + '" style="margin-bottom:0; display:none;">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'), false) + '</p></div>';
 	} else {
-		el.innerHTML = '<div class="recent' + (b ? ' bb' : '') + '"><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b><p class="small">Posted by <a class="classic" ' + (item.poster == myName ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><b><p class="small" style="margin-bottom:0;">' + expandLink + menulist.join(' &#xb7; ') + '</p></b><p id="expanded' + id + '" style="margin-bottom:0; display:none;">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'))+ '</p></div>';
+		el.innerHTML = '<div class="recent' + (b ? ' bb' : '') + '"><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b><p class="small">Posted by <a class="classic" ' + (item.poster == myName ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><b><p class="small" style="margin-bottom:0;">' + expandLink + menulist.join(' &#xb7; ') + '</p></b><p id="expanded' + id + '" style="margin-bottom:0; display:none;">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'), false) + '</p></div>';
 	}
 	main.appendChild(el);
 	if (view == 'l') {

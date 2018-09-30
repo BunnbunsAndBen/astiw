@@ -122,6 +122,7 @@
 			var showpreviews = localStorage.getItem('astiw_showpreviews') == 'true';
 			var theme = localStorage.getItem('astiw_theme');
 			var mac = localStorage.getItem('astiw_mac') == 'true';
+			var newtab = localStorage.getItem('astiw_newtab') == 'true';
 			var view = localStorage.getItem('astiw_view');
 			if (!isSet(theme)) {
 				theme = 'dark.css';
@@ -149,6 +150,8 @@
 			document.getElementById('sendsound').style.backgroundColor = (!sendsound ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('showpreviews').innerHTML = (!showpreviews ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('showpreviews').style.backgroundColor = (!showpreviews ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('newtab').innerHTML = (!newtab ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('newtab').style.backgroundColor = (!newtab ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('mac').innerHTML = (mac ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('mac').style.backgroundColor = (mac ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('theme').value = theme;
@@ -271,6 +274,10 @@
 			</div>
 			<div id="marContain" style="margin-top:16px;">
 				<button class="othbut" id="markallread" onclick="markAllRead();">Mark all posts read</button>
+			</div>
+			<div>
+				<button class="cb" id="newtab" onclick="toggleSetting('newtab');"></button><p style="margin-bottom:9px;">Open links in new tabs</p>
+				<p class="small">Always open links in user created content in a new tab</p>
 			</div>
 			<div>
 				<button class="cb" id="roi" onclick="toggleSetting('roi');"></button><p style="margin-bottom:9px;">Repeating requests</p>
