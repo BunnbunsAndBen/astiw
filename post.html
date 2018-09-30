@@ -341,7 +341,7 @@
 					document.getElementById('oof').removeChild(document.getElementById('loader4'));
 					document.getElementById('editTitle').style.display = 'block';
 					document.getElementById('editText').style.display = 'initial';
-					document.getElementById('contain2').style.display = 'initial';
+					document.getElementById('contain2').style.display = 'block';
 				});
 				r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 				r.open('get', jsonurl, true);
@@ -519,7 +519,7 @@
 			<div id="oof"></div>
 			<input type="text" autocomplete="off" id="editTitle" class="txf" placeholder="Title" style="width:calc(100% - 34px); display:none; margin-top:16px; margin-bottom:16px;">
 			<textarea class="txf" id="editText" style="height:108px; min-height:calc(1em + 3px); width:calc(100% - 34px); margin-bottom:16px; display:none;" placeholder="Text"></textarea>
-			<div id="contain2" style="display:none;"><button id="save" onclick="saveEdit();" class="libut" style="margin-bottom:7px; margin-right:16px;">SAVE</button><button id="cancel" onclick="cancelEdit();" class="othbut" style="margin-bottom:7px;">CANCEL</button></div>
+			<div id="contain2" style="display:none;"><button id="save" onclick="saveEdit();" class="libut" style="margin-bottom:16px; margin-right:16px;">SAVE</button><button id="cancel" onclick="cancelEdit();" class="othbut" style="margin-bottom:16px;">CANCEL</button></div>
 			<p class="small" style="color:var(--red); display:none; margin-top:0;" id="editEmpty">A title and text are required</p>
 			<div id="imgThing" style="display:none; text-align:center;"><button id="viewImg" onclick="loadImg();" class="othbut widebut" style="margin:0; display:initial;">SHOW IMAGE</button></div>
 			<b><p class="small" id="postMenu" style="display:inline-block;"></p></b><p style="float:right; margin-left:1em;" class="small" id="percentUpvoted"></p>
