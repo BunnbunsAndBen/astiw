@@ -18,7 +18,8 @@
 		var commCount;
 		var holdmyverification = false;
 		var ddnc = false;
-		var doScrollDown;
+		var commentProperty;
+		var newCommentProperty;
 		var raw;
 		var myRank = 'User';
 		var sessPart = '';
@@ -69,7 +70,8 @@
 			});
 			var paramsObj = getAllUrlParams();
 			id = paramsObj.id;
-			doScrollDown = paramsObj.comment;
+			commentProperty = paramsObj.comment;
+			newCommentProperty = paramsObj.newComment;
 			doEdit = paramsObj.edit;
 			var jsonurl = 'https://api.stibarc.gq/v2/getpost.sjs?id=' + id + sessPart;
 			var r = new XMLHttpRequest();
@@ -164,13 +166,16 @@
 				document.getElementById('postMenu').innerHTML = menulist.join(' &#xb7; ');
 				document.getElementById('rm').removeChild(document.getElementById('loader2'));
 				document.getElementById('main').style.display = 'block';
-				if (doScrollDown) {
+				if (commentProperty) {
 					if (loggedIn) {
 						window.scrollTo(0, document.getElementById('commentBox').offsetTop - 58);
 						document.getElementById('commentBox').focus();
 					} else {
 						window.scrollTo(0, document.getElementById('youArentLoggedIn').offsetTop - 58);
 					}
+				}
+				if (newCommentProperty) {
+					document.getElementById('commentItem' + (commCount - 1)).scrollIntoView();
 				}
 				if (doEdit && okToEdit) {
 					editPost();
@@ -207,6 +212,7 @@
 				placable = document.createElement('div');
 				placable.style.marginTop = '16px';
 				placable.innerHTML = '<p class="small">' + '<a class="classic" ' + (comments[i][1] == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(comments[i][1]) + '">' + comments[i][1] + '</a>' + (comments[i][1] == stuf.poster ? ' (OP)' : '') + '</p><p style="margin:9px 0px;">' + putLinksInText(comments[i][0].replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>')) + '</p>' + (loggedIn ? ('<p class="small"><a class="classic" href="javascript:reply(\'' + comments[i][1] + '\')"><b>&larr; Reply</b></a></p>') : '');
+				placable.id = 'commentItem' + i;
 				commentsDiv.appendChild(placable);
 			}
 		};
@@ -245,7 +251,7 @@
 							var r = new XMLHttpRequest();
 							r.addEventListener('load', function() {
 								oktoleave = true;
-								window.location.reload();
+								window.location.replace('post.html?id=' + id + '&newComment');
 							});
 							r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 							r.open('post', jsonurl, true);
