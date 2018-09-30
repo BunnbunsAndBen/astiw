@@ -180,6 +180,9 @@
 				if (doEdit && okToEdit) {
 					editPost();
 				}
+				if (localStorage.getItem('astiw_autoloadimg') == 'true') {
+					loadImg();
+				}
 				/*
 				if (localStorage.getItem('astiw_roi') != 'true') {
 					setTimeout(checkNewComms, 500);

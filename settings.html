@@ -123,6 +123,7 @@
 			var theme = localStorage.getItem('astiw_theme');
 			var mac = localStorage.getItem('astiw_mac') == 'true';
 			var newtab = localStorage.getItem('astiw_newtab') == 'true';
+			var autoloadimg = localStorage.getItem('astiw_autoloadimg') == 'true';
 			var view = localStorage.getItem('astiw_view');
 			if (!isSet(theme)) {
 				theme = 'dark.css';
@@ -142,6 +143,8 @@
 			document.getElementById('markread').style.backgroundColor = (!markread ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('replacesl').innerHTML = (replacesl ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('replacesl').style.backgroundColor = (replacesl ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('autoloadimg').innerHTML = (autoloadimg ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('autoloadimg').style.backgroundColor = (autoloadimg ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('showsess').innerHTML = (showsess ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('showsess').style.backgroundColor = (showsess ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('messagesound').innerHTML = (!messagesound ? '&#x2714;&#xFE0E;' : '');
@@ -267,6 +270,10 @@
 			<div>
 				<button class="cb" id="replacesl" onclick="toggleSetting('replacesl');"></button><p style="margin-bottom:9px;">Replace STiBaRC links with ASTiW links</p>
 				<p class="small">Replace user-created links to STiBaRC content on the STiBaRC website with links to the same content on ASTiW</p>
+			</div>
+			<div>
+				<button class="cb" id="autoloadimg" onclick="toggleSetting('autoloadimg');"></button><p style="margin-bottom:9px;">Show images on load</p>
+				<p class="small">Load images automatically on post pages</p>
 			</div>
 			<div>
 				<button class="cb" id="markread" onclick="toggleSetting('markread');"></button><p style="margin-bottom:9px;">Mark posts read</p>
