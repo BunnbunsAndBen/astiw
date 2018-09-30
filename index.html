@@ -120,7 +120,7 @@
 			var jsonurl = 'https://api.stibarc.gq/v2/getposts.sjs' + sessPart;
 			var r = new XMLHttpRequest();
 			r.addEventListener('load', function() {
-				var thingy = r.responseText.totalposts;
+				var thingy = JSON.parse(r.responseText).totalposts;
 				if (thingy > topp) {
 					document.getElementById('refreshMarker').style.display = 'block';
 					document.title = '(\u21bb) ASTiW';
