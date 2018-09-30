@@ -467,6 +467,22 @@
 			r4e.open('get', jsonurl4e, true);
 			r.send();
 		};
+		
+		function flip(dir) {
+			if (!sessHasChanged()) {
+				if (dir == 'old') {
+					document.getElementById('flipper').innerHTML = '<b><a href="javascript:flip(\'new\');" class="classic">OLDEST FIRST &#x25b2;</a></b>';
+				} else if (dir == 'new') {
+					document.getElementById('flipper').innerHTML = '<b><a href="javascript:flip(\'old\');" class="classic">NEWEST FIRST &#x25bc;</a></b>';
+				}
+				if (comments.length > 0) {
+					comments.reverse();
+					placeComments();
+				}
+			} else {
+				sayToReload();
+			}
+		};
 	</script>
 </head>
 <body>
@@ -509,6 +525,7 @@
 			<div id="contain"><button id="comment" onclick="if (!pushed) {comment(id);}" class="libut" style="display:none; margin-bottom:16px;">COMMENT</button></div>
 			<p class="small" style="color:var(--red); display:none;" id="wait">You can comment again in [seconds] seconds</p>
 			<p class="small" style="color:var(--red); display:none;" id="empty">Comment text is required</p>
+			<p class="small" id="flipper" style="margin-top:16px;"><b><a href="javascript:flip('new');" class="classic">OLDEST FIRST &#x25b2;</a></b></p>
 			<hr>
 			<div id="comments"></div>
 		</div>
