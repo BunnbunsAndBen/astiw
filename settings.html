@@ -124,6 +124,7 @@
 			var mac = localStorage.getItem('astiw_mac') == 'true';
 			var newtab = localStorage.getItem('astiw_newtab') == 'true';
 			var autoloadimg = localStorage.getItem('astiw_autoloadimg') == 'true';
+			var splitcomments = localStorage.getItem('astiw_splitcomments') == 'true';
 			var hidedownvoted = localStorage.getItem('astiw_hidedownvoted') == 'true';
 			var view = localStorage.getItem('astiw_view');
 			if (!isSet(theme)) {
@@ -146,6 +147,8 @@
 			document.getElementById('replacesl').style.backgroundColor = (replacesl ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('autoloadimg').innerHTML = (autoloadimg ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('autoloadimg').style.backgroundColor = (autoloadimg ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('splitcomments').innerHTML = (splitcomments ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('splitcomments').style.backgroundColor = (splitcomments ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('hidedownvoted').innerHTML = (hidedownvoted ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('hidedownvoted').style.backgroundColor = (hidedownvoted ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('showsess').innerHTML = (showsess ? '&#x2714;&#xFE0E;' : '');
@@ -277,6 +280,10 @@
 			<div>
 				<button class="cb" id="autoloadimg" onclick="toggleSetting('autoloadimg');"></button><p style="margin-bottom:9px;">Show images on load</p>
 				<p class="small">Load images automatically on post pages</p>
+			</div>
+			<div>
+				<button class="cb" id="splitcomments" onclick="toggleSetting('splitcomments');"></button><p style="margin-bottom:9px;">Divide comments with horizontal lines</p>
+				<p class="small">Use horizontal lines to mark the divisions between comments more clearly</p>
 			</div>
 			<div>
 				<button class="cb" id="markread" onclick="toggleSetting('markread');"></button><p style="margin-bottom:9px;">Mark posts read</p>
