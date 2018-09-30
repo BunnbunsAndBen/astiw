@@ -303,6 +303,9 @@ function addRecent(id, item, b) {
 			downStyle = 'color:var(--red)';
 		}
 	}
+	if (localStorage.getItem('astiw_hidedownvoted') == 'true' && home && item.vote == 'down' && item.poster != myName) {
+		el.style.display = 'none';
+	}
 	if (view == 'l') {
 		expandLink = '<span style="display:none;" id="expanderContain' + id + '"><a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', true)">&#x25bc; Expand</a> | </span>';
 	} else if (view == 'm') {
