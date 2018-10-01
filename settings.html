@@ -127,6 +127,7 @@
 			var splitcomments = localStorage.getItem('astiw_splitcomments') == 'true';
 			var hidedownvoted = localStorage.getItem('astiw_hidedownvoted') == 'true';
 			var topbuttons = localStorage.getItem('astiw_topbuttons') == 'true';
+			var autoload = localStorage.getItem('astiw_autoload') == 'true';
 			var view = localStorage.getItem('astiw_view');
 			if (!isSet(theme)) {
 				theme = 'dark.css';
@@ -152,6 +153,8 @@
 			document.getElementById('splitcomments').style.backgroundColor = (splitcomments ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('hidedownvoted').innerHTML = (hidedownvoted ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('hidedownvoted').style.backgroundColor = (hidedownvoted ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('autoload').innerHTML = (!autoload ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('autoload').style.backgroundColor = (!autoload ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('topbuttons').innerHTML = (!topbuttons ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('topbuttons').style.backgroundColor = (!topbuttons ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('showsess').innerHTML = (showsess ? '&#x2714;&#xFE0E;' : '');
@@ -294,6 +297,10 @@
 			</div>
 			<div id="marContain" style="margin-top:16px;">
 				<button class="othbut" id="markallread" onclick="markAllRead();">Mark all posts read</button>
+			</div>
+			<div>
+				<button class="cb" id="autoload" onclick="toggleSetting('autoload');"></button><p style="margin-bottom:9px;">Infinite scroll</p>
+				<p class="small">Automatically load more posts when scrolling on the home page</p>
 			</div>
 			<div>
 				<button class="cb" id="newtab" onclick="toggleSetting('newtab');"></button><p style="margin-bottom:9px;">Open links in new tabs</p>
