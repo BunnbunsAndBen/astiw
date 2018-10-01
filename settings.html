@@ -126,6 +126,7 @@
 			var autoloadimg = localStorage.getItem('astiw_autoloadimg') == 'true';
 			var splitcomments = localStorage.getItem('astiw_splitcomments') == 'true';
 			var hidedownvoted = localStorage.getItem('astiw_hidedownvoted') == 'true';
+			var topbuttons = localStorage.getItem('astiw_topbuttons') == 'true';
 			var view = localStorage.getItem('astiw_view');
 			if (!isSet(theme)) {
 				theme = 'dark.css';
@@ -151,6 +152,8 @@
 			document.getElementById('splitcomments').style.backgroundColor = (splitcomments ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('hidedownvoted').innerHTML = (hidedownvoted ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('hidedownvoted').style.backgroundColor = (hidedownvoted ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('topbuttons').innerHTML = (!topbuttons ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('topbuttons').style.backgroundColor = (!topbuttons ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('showsess').innerHTML = (showsess ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('showsess').style.backgroundColor = (showsess ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('messagesound').innerHTML = (!messagesound ? '&#x2714;&#xFE0E;' : '');
@@ -295,6 +298,10 @@
 			<div>
 				<button class="cb" id="newtab" onclick="toggleSetting('newtab');"></button><p style="margin-bottom:9px;">Open links in new tabs</p>
 				<p class="small">Always open links in user created content in a new tab</p>
+			</div>
+			<div>
+				<button class="cb" id="topbuttons" onclick="toggleSetting('topbuttons');"></button><p style="margin-bottom:9px;">Show scroll to top buttons</p>
+				<p class="small">Show buttons to return to the top of pages</p>
 			</div>
 			<div>
 				<button class="cb" id="hidedownvoted" onclick="toggleSetting('hidedownvoted');"></button><p style="margin-bottom:9px;">Hide downvoted posts on home page</p>

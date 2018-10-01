@@ -13,6 +13,7 @@
 		var raw;
 		var myName;
 		var myRank = 'User';
+		var doTopButton;
 		
 		function importantLoad() {
 			var temp = getAllUrlParams().q;
@@ -33,8 +34,9 @@
 			myName = getCurrentUser();
 			raw = localStorage.getItem('astiw_view');
 			if (isSet(term)) {
+				doTopButton = localStorage.getItem('astiw_topbuttons') != 'true';
 				window.onscroll = function(e) {
-					if (window.pageYOffset >= 62.5) { // change here
+					if (doTopButton && window.pageYOffset >= 62.5) { // change here
 						document.getElementById('scrollerContain').style.display = '';
 					} else {
 						document.getElementById('scrollerContain').style.display = 'none';

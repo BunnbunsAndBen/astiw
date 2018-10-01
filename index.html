@@ -18,6 +18,7 @@
 		var myRank = 'User';
 		var sessPart = '';
 		var sessPart2 = '';
+		var doTopButton;
 		
 		function scrollCond() {
 			return window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 783 && !exceeded;
@@ -31,8 +32,9 @@
 				sessPart = '?sess=' + tmpSess;
 				sessPart2 = '&sess=' + tmpSess;
 			}
+			doTopButton = localStorage.getItem('astiw_topbuttons') != 'true';
 			window.onscroll = function(e) {
-				if (window.pageYOffset >= 41) {
+				if (doTopButton && window.pageYOffset >= 41) {
 					document.getElementById('scrollerContain').style.display = '';
 				} else {
 					document.getElementById('scrollerContain').style.display = 'none';

@@ -23,6 +23,7 @@
 		var raw;
 		var myRank = 'User';
 		var sessPart = '';
+		var doTopButton;
 		
 		window.onbeforeunload = function() {
 			if (!oktoleave && (isSet(document.getElementById('commentBox').value) || document.getElementById('editText').style.display != 'none')) {
@@ -39,8 +40,9 @@
 				sessPart = '&sess=' + JSON.parse(localStorage.getItem('astiw_sesses'))[0];
 			}
 			raw = localStorage.getItem('astiw_view');
+			doTopButton = localStorage.getItem('astiw_topbuttons') != 'true';
 			window.onscroll = function(e) {
-				if (window.pageYOffset >= 105.5) {
+				if (doTopButton && window.pageYOffset >= 105.5) {
 					document.getElementById('scrollerContain').style.display = '';
 				} else {
 					document.getElementById('scrollerContain').style.display = 'none';
