@@ -83,7 +83,7 @@
 			r.addEventListener('load', function() {
 				if (isSet(r.responseText)) {
 					stuf = JSON.parse(r.responseText);
-					document.getElementById('nameThing').innerHTML = stuf.title.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+					document.getElementById('nameThing').innerHTML = putLinksInText(stuf.title.replace(/</g, '&lt;').replace(/>/g, '&gt;'), false);
 					document.title = stuf.title + ' - ASTiW';
 					var currentUser = getCurrentUser();
 					document.getElementById('metaThing').innerHTML = 'Posted by <a class="classic" ' + (stuf.poster == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(stuf.poster) + '">' + stuf.poster + '</a><span id="verified"> &#x2611;&#xFE0E;</span> at ' + stuf.postdate + (stuf.edited ? ' (edited)' : '');
@@ -380,7 +380,7 @@
 					var r = new XMLHttpRequest();
 					r.addEventListener('load', function() {
 						stuf = JSON.parse(r.responseText);
-						document.getElementById('nameThing').innerHTML = stuf.title.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+						document.getElementById('nameThing').innerHTML = putLinksInText(stuf.title.replace(/</g, '&lt;').replace(/>/g, '&gt;'), false);
 						document.title = stuf.title + ' - ASTiW';
 						var currentUser = getCurrentUser();
 						document.getElementById('metaThing').innerHTML = 'Posted by <a class="classic" ' + (stuf.poster == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(stuf.poster) + '">' + stuf.poster + '</a><span id="verified"> &#x2611;&#xFE0E;</span> at ' + stuf.postdate + (stuf.edited ? ' (edited)' : '');
