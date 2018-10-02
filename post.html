@@ -41,6 +41,12 @@
 			}
 			raw = localStorage.getItem('astiw_view');
 			doTopButton = localStorage.getItem('astiw_topbuttons') != 'true';
+			if (localStorage.getItem('astiw_scrolltocomment') == 'true' && loggedIn) {
+				document.getElementById('toCommentField').style.display = '';
+			}
+			if (localStorage.getItem('astiw_mac') == 'true') {
+				document.getElementById('toCommentField').innerHTML = '"';
+			}
 			window.onscroll = function(e) {
 				if (doTopButton && window.pageYOffset >= 105.5) {
 					document.getElementById('scrollerContain').style.display = '';
@@ -166,8 +172,7 @@
 				document.getElementById('main').style.display = 'block';
 				if (commentProperty) {
 					if (loggedIn) {
-						window.scrollTo(0, document.getElementById('commentBox').offsetTop - 58);
-						document.getElementById('commentBox').focus();
+						scrollToCommentField();
 					} else {
 						window.scrollTo(0, document.getElementById('youArentLoggedIn').offsetTop - 58);
 					}
@@ -493,6 +498,11 @@
 				sayToReload();
 			}
 		};
+		
+		function scrollToCommentField() {
+			window.scrollTo(0, document.getElementById('commentBox').offsetTop - 58);
+			document.getElementById('commentBox').focus();
+		};
 	</script>
 </head>
 <body>
@@ -541,6 +551,6 @@
 		</div>
 		<div class="loader" id="loader2"></div>
 	</main>
-	<div id="scrollerContain" style="display:none;"><button id="toTop" onclick="scrollToTop();">&#x2912;</button></div>
+	<div id="scrollerContain" style="display:none;"><button id="toTop" class="toTop" onclick="scrollToTop();">&#x2912;</button><button id="toCommentField" style="display:none; margin-left:16px;" class="toTop" onclick="scrollToCommentField();">&#x1f4ac;&#xfe0e;</button></div>
 </body>
 </html>

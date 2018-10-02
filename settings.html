@@ -127,6 +127,7 @@
 			var splitcomments = localStorage.getItem('astiw_splitcomments') == 'true';
 			var hidedownvoted = localStorage.getItem('astiw_hidedownvoted') == 'true';
 			var topbuttons = localStorage.getItem('astiw_topbuttons') == 'true';
+			var scrolltocomment = localStorage.getItem('astiw_scrolltocomment') == 'true';
 			var autoload = localStorage.getItem('astiw_autoload') == 'true';
 			var view = localStorage.getItem('astiw_view');
 			if (!isSet(theme)) {
@@ -151,6 +152,8 @@
 			document.getElementById('autoloadimg').style.backgroundColor = (autoloadimg ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('splitcomments').innerHTML = (splitcomments ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('splitcomments').style.backgroundColor = (splitcomments ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('scrolltocomment').innerHTML = (scrolltocomment ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('scrolltocomment').style.backgroundColor = (scrolltocomment ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('hidedownvoted').innerHTML = (hidedownvoted ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('hidedownvoted').style.backgroundColor = (hidedownvoted ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('autoload').innerHTML = (!autoload ? '&#x2714;&#xFE0E;' : '');
@@ -172,6 +175,7 @@
 			document.getElementById('theme').value = theme;
 			document.getElementById('view').value = view;
 			document.getElementById('customtheme').value = customtheme;
+			setCbAbility('scrolltocomment', !topbuttons);
 			var mar = document.getElementById('markallread')
 			if (markread) {
 				mar.disabled = true;
@@ -186,6 +190,7 @@
 			var cbiq = document.getElementById(id)
 			cbiq.disabled = !bool;
 			cbiq.parentNode.style.opacity = (bool ? 1 : 0.5)
+			cbiq.style.cursor = (bool ? 'pointer' : 'not-allowed');
 		};
 		
 		function testSound(soundName) {
@@ -309,6 +314,10 @@
 			<div>
 				<button class="cb" id="topbuttons" onclick="toggleSetting('topbuttons');"></button><p style="margin-bottom:9px;">Show scroll to top buttons</p>
 				<p class="small">Show buttons to return to the top of pages</p>
+			</div>
+			<div>
+				<button class="cb" id="scrolltocomment" onclick="toggleSetting('scrolltocomment');"></button><p style="margin-bottom:9px;">Show scroll to comment field button</p>
+				<p class="small">Show button to scroll to and focus the comment field (requires "Show scroll to top buttons" and login)</p>
 			</div>
 			<div>
 				<button class="cb" id="hidedownvoted" onclick="toggleSetting('hidedownvoted');"></button><p style="margin-bottom:9px;">Hide downvoted posts on home page</p>
