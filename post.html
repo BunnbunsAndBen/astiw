@@ -167,7 +167,10 @@
 					menulist.push('<span id="readLink"><a class="classic" href="javascript:markPostLoc(false);">Mark unread</a></span>');
 					localStorage.setItem('astiw_viewed' + id, 'true');
 				}
-				document.getElementById('postMenu').innerHTML = menulist.join(' &#xb7; ');
+				var totalVotes = stuf.upvotes + stuf.downvotes;
+				var percentUpvotedItem = '<span id="percentUpvoted' + id + '">' + (totalVotes > 0 ? ' &#xb7; ' + Math.round((stuf.upvotes / totalVotes) * 100).toString() + '% upvoted' : '') + '</span>';
+				var menulistFinal = menulist.join(' &#xb7; ') + percentUpvotedItem;
+				document.getElementById('postMenu').innerHTML = menulistFinal;
 				document.getElementById('rm').removeChild(document.getElementById('loader2'));
 				document.getElementById('main').style.display = 'block';
 				if (commentProperty) {

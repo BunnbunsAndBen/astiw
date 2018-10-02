@@ -128,6 +128,7 @@
 			var hidedownvoted = localStorage.getItem('astiw_hidedownvoted') == 'true';
 			var topbuttons = localStorage.getItem('astiw_topbuttons') == 'true';
 			var scrolltocomment = localStorage.getItem('astiw_scrolltocomment') == 'true';
+			var percentinlist = localStorage.getItem('astiw_percentinlist') == 'true';
 			var autoload = localStorage.getItem('astiw_autoload') == 'true';
 			var view = localStorage.getItem('astiw_view');
 			if (!isSet(theme)) {
@@ -160,6 +161,8 @@
 			document.getElementById('autoload').style.backgroundColor = (!autoload ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('topbuttons').innerHTML = (!topbuttons ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('topbuttons').style.backgroundColor = (!topbuttons ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('percentinlist').innerHTML = (!percentinlist ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('percentinlist').style.backgroundColor = (!percentinlist ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('showsess').innerHTML = (showsess ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('showsess').style.backgroundColor = (showsess ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('messagesound').innerHTML = (!messagesound ? '&#x2714;&#xFE0E;' : '');
@@ -322,6 +325,10 @@
 			<div>
 				<button class="cb" id="hidedownvoted" onclick="toggleSetting('hidedownvoted');"></button><p style="margin-bottom:9px;">Hide downvoted posts on home page</p>
 				<p class="small">Do not display posts that you downvoted on the home page</p>
+			</div>
+			<div>
+				<button class="cb" id="percentinlist" onclick="toggleSetting('percentinlist');"></button><p style="margin-bottom:9px;">Show percent upvoted on home page</p>
+				<p class="small">Show the percent of votes that are upvotes on posts in the list</p>
 			</div>
 			<div>
 				<button class="cb" id="roi" onclick="toggleSetting('roi');"></button><p style="margin-bottom:9px;">Check for new content</p>
