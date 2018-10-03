@@ -690,7 +690,7 @@
 		
 		function blockUser() {
 			if (okToCloseCM) {
-				if (confirm('Block this user? (go to settings to unblock users)')) {
+				if (confirm('Block this user? (go to Messenger settings to unblock users)')) {
 					var blocksValue = localStorage.getItem('astiw_blocks_' + myName);
 					if (!isSet(blocksValue)) {
 						blocksValue = '[]';
