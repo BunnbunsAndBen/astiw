@@ -18,12 +18,15 @@
 		var myRank = 'User';
 		var sessPart = '';
 		var sessPart2 = '';
+		var doTopButton;
+		var autoload;
 		
 		function scrollCond() {
 			return window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 783 && !exceeded;
 		};
 		
 		function load() {
+			autoload = localStorage.getItem('astiw_autoload') != 'true';
 			raw = localStorage.getItem('astiw_view');
 			myName = getCurrentUser();
 			if (isSet(myName)) {
@@ -31,13 +34,14 @@
 				sessPart = '?sess=' + tmpSess;
 				sessPart2 = '&sess=' + tmpSess;
 			}
+			doTopButton = localStorage.getItem('astiw_topbuttons') != 'true';
 			window.onscroll = function(e) {
-				if (window.pageYOffset >= 41) {
+				if (doTopButton && window.pageYOffset >= 41) {
 					document.getElementById('scrollerContain').style.display = '';
 				} else {
 					document.getElementById('scrollerContain').style.display = 'none';
 				}
-				if (!loading && scrollCond()) {
+				if (autoload && !loading && scrollCond()) {
 					loadMore();
 				}
 			}
@@ -58,10 +62,13 @@
 						addRecent(i, stuf[i], i == stuf.totalposts);
 					}
 					document.getElementById('rm').removeChild(document.getElementById('loader'));
-					if (scrollCond()) {
+					if (autoload && scrollCond()) {
 						loadMore();
 					} else {
 						loading = false;
+						if (!autoload) {
+							document.getElementById('loadmore').style.display = '';
+						}
 					}
 				}
 				if (!(localStorage.getItem('astiw_roi') == 'true')) {
@@ -81,6 +88,9 @@
 		
 		function loadMore() {
 			loading = true;
+			if (!autoload) {
+				document.getElementById('loadmore').style.display = 'none';
+			}
 			if (!sessHasChanged()) {
 				var ldr = document.createElement('div');
 				ldr.className = 'loader';
@@ -102,10 +112,13 @@
 						}
 					}
 					document.getElementById('rm').removeChild(document.getElementById('loader'));
-					if (scrollCond()) {
+					if (autoload && scrollCond()) {
 						loadMore();
 					} else {
 						loading = false;
+						if (!autoload) {
+							document.getElementById('loadmore').style.display = '';
+						}
 					}
 				});
 				r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
@@ -120,7 +133,7 @@
 			var jsonurl = 'https://api.stibarc.gq/v2/getposts.sjs' + sessPart;
 			var r = new XMLHttpRequest();
 			r.addEventListener('load', function() {
-				var thingy = r.responseText.totalposts;
+				var thingy = JSON.parse(r.responseText).totalposts;
 				if (thingy > topp) {
 					document.getElementById('refreshMarker').style.display = 'block';
 					document.title = '(\u21bb) ASTiW';
@@ -158,8 +171,14 @@
 	</div>
 	<main id="rm">
 		<div id="main"></div>
+		<button id="loadmore" style="display:none;" class="loadmore othbut widebut" onclick="loadMore();">LOAD MORE</button>
 		<div class="loader" id="loader"></div>
 	</main>
-	<div id="scrollerContain" style="display:none;"><button id="toTop" onclick="scrollToTop();">&#x2912;</button></div>
+	<div id="scrollerContain" style="display:none;"><button id="toTop" class="toTop" onclick="scrollToTop();">&#x2912;</button></div>
 </body>
 </html>
+<style>
+	.loadmore {
+		background-color: var(--content-bg);
+	}
+</style>

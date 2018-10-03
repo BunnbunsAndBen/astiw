@@ -375,7 +375,7 @@
 						currentMessage = tmp[ind].message;
 						encryptionStatus = 0;
 					}
-					msgs = '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';"><div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? generateTS(tmp[ind].time, 1) : '') + (encryptionStatus > 0 ? ' <span style="color:var(--verified);">' + (mac ? 'S' : '&#x1f512;&#xfe0e;') + '</span>' : '') + '</div><div ' + (itsMe ? 'class="specialty" ' : '') + 'style="max-width:calc(100% - 39px); display:inline-block; word-wrap:break-word; ' + (encryptionStatus == 2 ? 'color:var(--red)' : 'padding:8px 18.5px; border-radius:18.5px; border:1px solid var(--border); ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);')) + '">' + putLinksInText(currentMessage.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>')) + '</div>' + insertImage(currentMessage) + '</div>' + msgs;
+					msgs = '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';"><div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? generateTS(tmp[ind].time, 1) : '') + (encryptionStatus > 0 ? ' <span style="color:var(--verified);">' + (mac ? 'S' : '&#x1f512;&#xfe0e;') + '</span>' : '') + '</div><div ' + (itsMe ? 'class="specialty" ' : '') + 'style="max-width:calc(100% - 39px); display:inline-block; word-wrap:break-word; ' + (encryptionStatus == 2 ? 'color:var(--red)' : 'padding:8px 18.5px; border-radius:18.5px; border:1px solid var(--border); ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);')) + '">' + putLinksInText(currentMessage.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>'), true) + '</div>' + insertImage(currentMessage) + '</div>' + msgs;
 					if (ind == Object.keys(tmp).length - 1 && inputind == 'start') {
 						mostRecentTime = (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? tmp[ind].time : 0);
 					}
@@ -502,7 +502,7 @@
 									currentMessage = tmp[ind].message;
 									encryptionStatus = 0;
 								}
-								msgs += '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';"><div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? generateTS(tmp[ind].time, 1) : '') + (encryptionStatus > 0 ? ' <span style="color:var(--verified);">' + (mac ? 'S' : '&#x1f512;&#xfe0e;') + '</span>' : '') + '</div><div ' + (itsMe ? 'class="specialty" ' : '') + 'style="max-width:calc(100% - 39px); display:inline-block; word-wrap:break-word; ' + (encryptionStatus == 2 ? 'color:var(--red)' : 'padding:8px 18.5px; border-radius:18.5px; border:1px solid var(--border); ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);')) + '">' + putLinksInText(currentMessage.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>')) + '</div>' + insertImage(currentMessage) + '</div>';
+								msgs += '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';"><div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? generateTS(tmp[ind].time, 1) : '') + (encryptionStatus > 0 ? ' <span style="color:var(--verified);">' + (mac ? 'S' : '&#x1f512;&#xfe0e;') + '</span>' : '') + '</div><div ' + (itsMe ? 'class="specialty" ' : '') + 'style="max-width:calc(100% - 39px); display:inline-block; word-wrap:break-word; ' + (encryptionStatus == 2 ? 'color:var(--red)' : 'padding:8px 18.5px; border-radius:18.5px; border:1px solid var(--border); ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);')) + '">' + putLinksInText(currentMessage.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>'), true) + '</div>' + insertImage(currentMessage) + '</div>';
 								mostRecentTime = (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? tmp[ind].time : 0);
 								ind++;
 							}
@@ -690,7 +690,7 @@
 		
 		function blockUser() {
 			if (okToCloseCM) {
-				if (confirm('Block this user? (go to settings to unblock users)')) {
+				if (confirm('Block this user? (go to Messenger settings to unblock users)')) {
 					var blocksValue = localStorage.getItem('astiw_blocks_' + myName);
 					if (!isSet(blocksValue)) {
 						blocksValue = '[]';

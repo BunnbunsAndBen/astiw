@@ -387,7 +387,7 @@ hr {
 	margin-top: 24px;
 }
 
-#toTop {
+.toTop {
 	height: 48px;
 	width: 48px;
 	border: 1px solid var(--content);
@@ -402,9 +402,10 @@ hr {
 	left: 16px;
 	padding: 0px;
 	pointer-events: initial;
+	vertical-align: top;
 }
 
-#toTop:hover, #toTop:active {
+.toTop:hover, .toTop:active {
 	background-color: var(--other-rollover);
 	color: var(--probably-same-as-content-bg);
 }

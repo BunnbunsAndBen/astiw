@@ -12,6 +12,7 @@
 		var raw;
 		var myName;
 		var myRank = 'User';
+		var doTopButton;
 		
 		function importantLoad() {
 			term = decodeURIComponent(getAllUrlParams().id);
@@ -20,8 +21,9 @@
 		
 		function load() {
 			raw = localStorage.getItem('astiw_view');
+			doTopButton = localStorage.getItem('astiw_topbuttons') != 'true';
 			window.onscroll = function(e) {
-				if (window.pageYOffset >= 62.5) {
+				if (doTopButton && window.pageYOffset >= 62.5) {
 					document.getElementById('scrollerContain').style.display = '';
 				} else {
 					document.getElementById('scrollerContain').style.display = 'none';
@@ -65,7 +67,7 @@
 					}
 					if (isSet(rsp.bio)) {
 						var bio = rsp.bio.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>');
-						document.getElementById('bio').innerHTML = putLinksInText(bio);
+						document.getElementById('bio').innerHTML = putLinksInText(bio, false);
 					} else {
 						document.getElementById('detail').removeChild(document.getElementById('bio'));
 					}
@@ -155,6 +157,6 @@
 		<div id="noposts" class="stdc" style="display:none;"><p style="color:var(--border); text-align:center;">This user has no posts</p></div>
 		<div id="main"></div>
 	</div>
-	<div id="scrollerContain" style="display:none;"><button id="toTop" onclick="scrollToTop();">&#x2912;</button></div>
+	<div id="scrollerContain" style="display:none;"><button id="toTop" class="toTop" onclick="scrollToTop();">&#x2912;</button></div>
 </body>
 </html>

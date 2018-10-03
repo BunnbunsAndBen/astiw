@@ -23,6 +23,7 @@
 		var raw;
 		var myRank = 'User';
 		var sessPart = '';
+		var doTopButton;
 		
 		window.onbeforeunload = function() {
 			if (!oktoleave && (isSet(document.getElementById('commentBox').value) || document.getElementById('editText').style.display != 'none')) {
@@ -39,8 +40,15 @@
 				sessPart = '&sess=' + JSON.parse(localStorage.getItem('astiw_sesses'))[0];
 			}
 			raw = localStorage.getItem('astiw_view');
+			doTopButton = localStorage.getItem('astiw_topbuttons') != 'true';
+			if (localStorage.getItem('astiw_scrolltocomment') == 'true' && loggedIn) {
+				document.getElementById('toCommentField').style.display = '';
+			}
+			if (localStorage.getItem('astiw_mac') == 'true') {
+				document.getElementById('toCommentField').innerHTML = '"';
+			}
 			window.onscroll = function(e) {
-				if (window.pageYOffset >= 105.5) {
+				if (doTopButton && window.pageYOffset >= 105.5) {
 					document.getElementById('scrollerContain').style.display = '';
 				} else {
 					document.getElementById('scrollerContain').style.display = 'none';
@@ -81,11 +89,11 @@
 			r.addEventListener('load', function() {
 				if (isSet(r.responseText)) {
 					stuf = JSON.parse(r.responseText);
-					document.getElementById('nameThing').innerHTML = stuf.title.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+					document.getElementById('nameThing').innerHTML = putLinksInText(stuf.title.replace(/</g, '&lt;').replace(/>/g, '&gt;'), false);
 					document.title = stuf.title + ' - ASTiW';
 					var currentUser = getCurrentUser();
 					document.getElementById('metaThing').innerHTML = 'Posted by <a class="classic" ' + (stuf.poster == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(stuf.poster) + '">' + stuf.poster + '</a><span id="verified"> &#x2611;&#xFE0E;</span> at ' + stuf.postdate + (stuf.edited ? ' (edited)' : '');
-					document.getElementById('postText').innerHTML = putLinksInText(stuf.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'));
+					document.getElementById('postText').innerHTML = putLinksInText(stuf.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'), false);
 					var jsonurlv = 'https://api.stibarc.gq/v2/checkverify.sjs?id=' + stuf.poster;
 					rv.open('get', jsonurlv, true);
 					rv.send();
@@ -130,10 +138,6 @@
 				}
 				menulist.push('<span id="upvote' + id + '"><a class="classic" style="' + upStyle + '" href="javascript:vote(' + id + ', true)">' + (localStorage.getItem('astiw_mac') == 'true' ? '&uarr;' : '&#x21e7;&#xfe0e;') + ' ' + stuf.upvotes.toString() + '</a></span>');
 				menulist.push('<span id="downvote' + id + '"><a class="classic" style="' + downStyle + '" href="javascript:vote(' + id + ', false)">' + (localStorage.getItem('astiw_mac') == 'true' ? '&darr;' : '&#x21e9;&#xfe0e;') + ' ' + stuf.downvotes.toString() + '</a></span>');
-				var totalVotes = stuf.upvotes + stuf.downvotes;
-				if (totalVotes > 0) {
-					document.getElementById('percentUpvoted').innerHTML = Math.round((stuf.upvotes / (totalVotes)) * 100).toString() + '% upvoted';
-				}
 				if (isSet(rc.responseText) && rc.responseText != 'undefined\n') {
 					var objComments = JSON.parse(rc.responseText);
 					for (key in objComments) {
@@ -163,13 +167,15 @@
 					menulist.push('<span id="readLink"><a class="classic" href="javascript:markPostLoc(false);">Mark unread</a></span>');
 					localStorage.setItem('astiw_viewed' + id, 'true');
 				}
-				document.getElementById('postMenu').innerHTML = menulist.join(' &#xb7; ');
+				var totalVotes = stuf.upvotes + stuf.downvotes;
+				var percentUpvotedItem = '<span id="percentUpvoted' + id + '">' + (totalVotes > 0 ? ' &#xb7; ' + Math.round((stuf.upvotes / totalVotes) * 100).toString() + '% upvoted' : '') + '</span>';
+				var menulistFinal = menulist.join(' &#xb7; ') + percentUpvotedItem;
+				document.getElementById('postMenu').innerHTML = menulistFinal;
 				document.getElementById('rm').removeChild(document.getElementById('loader2'));
 				document.getElementById('main').style.display = 'block';
 				if (commentProperty) {
 					if (loggedIn) {
-						window.scrollTo(0, document.getElementById('commentBox').offsetTop - 58);
-						document.getElementById('commentBox').focus();
+						scrollToCommentField();
 					} else {
 						window.scrollTo(0, document.getElementById('youArentLoggedIn').offsetTop - 58);
 					}
@@ -179,6 +185,9 @@
 				}
 				if (doEdit && okToEdit) {
 					editPost();
+				}
+				if (localStorage.getItem('astiw_autoloadimg') == 'true') {
+					loadImg();
 				}
 				/*
 				if (localStorage.getItem('astiw_roi') != 'true') {
@@ -205,15 +214,24 @@
 		
 		function placeComments() {
 			var commentsDiv = document.getElementById('comments');
+			var splitComments = localStorage.getItem('astiw_splitcomments') == 'true';
 			var currentUser = getCurrentUser();
 			commentsDiv.innerHTML = '';
 			var placable;
+			var hr;
 			for (i = 0; i < comments.length; i++) {
 				placable = document.createElement('div');
 				placable.style.marginTop = '16px';
-				placable.innerHTML = '<p class="small">' + '<a class="classic" ' + (comments[i][1] == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(comments[i][1]) + '">' + comments[i][1] + '</a>' + (comments[i][1] == stuf.poster ? ' (OP)' : '') + '</p><p style="margin:9px 0px;">' + putLinksInText(comments[i][0].replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>')) + '</p>' + (loggedIn ? ('<p class="small"><a class="classic" href="javascript:reply(\'' + comments[i][1] + '\')"><b>&larr; Reply</b></a></p>') : '');
+				if (splitComments) {
+					placable.style.marginBottom = '16px';
+				}
+				placable.innerHTML = '<p class="small">' + '<a class="classic" ' + (comments[i][1] == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(comments[i][1]) + '">' + comments[i][1] + '</a>' + (comments[i][1] == stuf.poster ? ' (OP)' : '') + '</p><p style="margin:9px 0px;">' + putLinksInText(comments[i][0].replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'), false) + '</p>' + (loggedIn ? ('<p class="small"><a class="classic" href="javascript:reply(\'' + comments[i][1] + '\')"><b>&larr; Reply</b></a></p>') : '');
 				placable.id = 'commentItem' + i;
 				commentsDiv.appendChild(placable);
+				if (splitComments) {
+					hr = document.createElement('hr');
+					commentsDiv.appendChild(hr);
+				}
 			}
 		};
 		
@@ -302,7 +320,7 @@
 					document.getElementById('imgThing').removeChild(document.getElementById('loader3'));
 					document.getElementById('imgThing').appendChild(img);
 					if (cachefail) {
-						alert('Image could not be cached because local storage is full; go to settings to clear cache');
+						alert('Image could not be cached because local storage is full; go to Advanced settings to clear cache');
 					}
 				});
 				r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
@@ -366,14 +384,14 @@
 					var r = new XMLHttpRequest();
 					r.addEventListener('load', function() {
 						stuf = JSON.parse(r.responseText);
-						document.getElementById('nameThing').innerHTML = stuf.title.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+						document.getElementById('nameThing').innerHTML = putLinksInText(stuf.title.replace(/</g, '&lt;').replace(/>/g, '&gt;'), false);
 						document.title = stuf.title + ' - ASTiW';
 						var currentUser = getCurrentUser();
 						document.getElementById('metaThing').innerHTML = 'Posted by <a class="classic" ' + (stuf.poster == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(stuf.poster) + '">' + stuf.poster + '</a><span id="verified"> &#x2611;&#xFE0E;</span> at ' + stuf.postdate + (stuf.edited ? ' (edited)' : '');
 						if (holdmyverification) {
 							document.getElementById('verified').style.display = 'initial';
 						}
-						document.getElementById('postText').innerHTML = putLinksInText(stuf.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'));
+						document.getElementById('postText').innerHTML = putLinksInText(stuf.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'), false);
 						document.getElementById('editLink').innerHTML = '<a class="classic" href="javascript:editPost();">&#x270E;&#xFE0E; Edit</a>';
 						document.getElementById('oof').removeChild(document.getElementById('loader4'));
 						document.getElementById('nameThing').style.display = '';
@@ -467,6 +485,27 @@
 			r4e.open('get', jsonurl4e, true);
 			r.send();
 		};
+		
+		function flip(dir) {
+			if (!sessHasChanged()) {
+				if (dir == 'old') {
+					document.getElementById('flipper').innerHTML = '<b><a href="javascript:flip(\'new\');" class="classic">OLDEST FIRST &#x25b2;</a></b>';
+				} else if (dir == 'new') {
+					document.getElementById('flipper').innerHTML = '<b><a href="javascript:flip(\'old\');" class="classic">NEWEST FIRST &#x25bc;</a></b>';
+				}
+				if (comments.length > 0) {
+					comments.reverse();
+					placeComments();
+				}
+			} else {
+				sayToReload();
+			}
+		};
+		
+		function scrollToCommentField() {
+			window.scrollTo(0, document.getElementById('commentBox').offsetTop - 58);
+			document.getElementById('commentBox').focus();
+		};
 	</script>
 </head>
 <body>
@@ -503,17 +542,18 @@
 			<div id="contain2" style="display:none;"><button id="save" onclick="saveEdit();" class="libut" style="margin-bottom:16px; margin-right:16px;">SAVE</button><button id="cancel" onclick="cancelEdit();" class="othbut" style="margin-bottom:16px;">CANCEL</button></div>
 			<p class="small" style="color:var(--red); display:none; margin-top:0;" id="editEmpty">A title and text are required</p>
 			<div id="imgThing" style="display:none; text-align:center;"><button id="viewImg" onclick="loadImg();" class="othbut widebut" style="margin:0; display:initial;">SHOW IMAGE</button></div>
-			<b><p class="small" id="postMenu" style="display:inline-block;"></p></b><p style="float:right; margin-left:1em;" class="small" id="percentUpvoted"></p>
+			<b><p class="small" id="postMenu"></p></b>
 			<p id="youArentLoggedIn" style="margin-top:0;"><a href="register.html" class="classic">Register</a> or <a href="login.html" class="classic">log in</a> to leave a comment!</p>
 			<textarea class="txf" id="commentBox" style="display:none; height:108px; min-height:calc(1em + 3px); width:calc(100% - 34px); margin-bottom:16px;" placeholder="Comment"></textarea>
 			<div id="contain"><button id="comment" onclick="if (!pushed) {comment(id);}" class="libut" style="display:none; margin-bottom:16px;">COMMENT</button></div>
 			<p class="small" style="color:var(--red); display:none;" id="wait">You can comment again in [seconds] seconds</p>
 			<p class="small" style="color:var(--red); display:none;" id="empty">Comment text is required</p>
+			<p class="small" id="flipper" style="margin-top:16px;"><b><a href="javascript:flip('new');" class="classic">OLDEST FIRST &#x25b2;</a></b></p>
 			<hr>
 			<div id="comments"></div>
 		</div>
 		<div class="loader" id="loader2"></div>
 	</main>
-	<div id="scrollerContain" style="display:none;"><button id="toTop" onclick="scrollToTop();">&#x2912;</button></div>
+	<div id="scrollerContain" style="display:none;"><button id="toTop" class="toTop" onclick="scrollToTop();">&#x2912;</button><button id="toCommentField" style="display:none; margin-left:16px;" class="toTop" onclick="scrollToCommentField();">&#x1f4ac;&#xfe0e;</button></div>
 </body>
 </html>

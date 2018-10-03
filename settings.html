@@ -15,6 +15,8 @@
 			var myName = getCurrentUser();
 			if (isSet(myName) && myName != 'Anon') {
 				document.getElementById('blockItem').style.display = '';
+			} else {
+				document.getElementById('notBlockItem').style.display = '';
 			}
 			checkSettings();
 			blocksDialog = document.getElementById('blocksDialog');
@@ -30,6 +32,8 @@
 			});
 			document.getElementById('rm').removeChild(document.getElementById('loader'));
 			document.getElementById('eugh').style.display = '';
+			switchTab('about');
+			document.getElementById('tabBar').style.display = '';
 			document.getElementById('main').style.display = '';
 		};
 		
@@ -122,6 +126,14 @@
 			var showpreviews = localStorage.getItem('astiw_showpreviews') == 'true';
 			var theme = localStorage.getItem('astiw_theme');
 			var mac = localStorage.getItem('astiw_mac') == 'true';
+			var newtab = localStorage.getItem('astiw_newtab') == 'true';
+			var autoloadimg = localStorage.getItem('astiw_autoloadimg') == 'true';
+			var splitcomments = localStorage.getItem('astiw_splitcomments') == 'true';
+			var hidedownvoted = localStorage.getItem('astiw_hidedownvoted') == 'true';
+			var topbuttons = localStorage.getItem('astiw_topbuttons') == 'true';
+			var scrolltocomment = localStorage.getItem('astiw_scrolltocomment') == 'true';
+			var percentinlist = localStorage.getItem('astiw_percentinlist') == 'true';
+			var autoload = localStorage.getItem('astiw_autoload') == 'true';
 			var view = localStorage.getItem('astiw_view');
 			if (!isSet(theme)) {
 				theme = 'dark.css';
@@ -141,6 +153,20 @@
 			document.getElementById('markread').style.backgroundColor = (!markread ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('replacesl').innerHTML = (replacesl ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('replacesl').style.backgroundColor = (replacesl ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('autoloadimg').innerHTML = (autoloadimg ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('autoloadimg').style.backgroundColor = (autoloadimg ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('splitcomments').innerHTML = (splitcomments ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('splitcomments').style.backgroundColor = (splitcomments ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('scrolltocomment').innerHTML = (scrolltocomment ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('scrolltocomment').style.backgroundColor = (scrolltocomment ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('hidedownvoted').innerHTML = (hidedownvoted ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('hidedownvoted').style.backgroundColor = (hidedownvoted ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('autoload').innerHTML = (!autoload ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('autoload').style.backgroundColor = (!autoload ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('topbuttons').innerHTML = (!topbuttons ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('topbuttons').style.backgroundColor = (!topbuttons ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('percentinlist').innerHTML = (!percentinlist ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('percentinlist').style.backgroundColor = (!percentinlist ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('showsess').innerHTML = (showsess ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('showsess').style.backgroundColor = (showsess ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('messagesound').innerHTML = (!messagesound ? '&#x2714;&#xFE0E;' : '');
@@ -149,11 +175,14 @@
 			document.getElementById('sendsound').style.backgroundColor = (!sendsound ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('showpreviews').innerHTML = (!showpreviews ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('showpreviews').style.backgroundColor = (!showpreviews ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('newtab').innerHTML = (!newtab ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('newtab').style.backgroundColor = (!newtab ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('mac').innerHTML = (mac ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('mac').style.backgroundColor = (mac ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('theme').value = theme;
 			document.getElementById('view').value = view;
 			document.getElementById('customtheme').value = customtheme;
+			setCbAbility('scrolltocomment', !topbuttons);
 			var mar = document.getElementById('markallread')
 			if (markread) {
 				mar.disabled = true;
@@ -168,6 +197,7 @@
 			var cbiq = document.getElementById(id)
 			cbiq.disabled = !bool;
 			cbiq.parentNode.style.opacity = (bool ? 1 : 0.5)
+			cbiq.style.cursor = (bool ? 'pointer' : 'not-allowed');
 		};
 		
 		function testSound(soundName) {
@@ -183,6 +213,30 @@
 			}
 			alert('Cache cleared!');
 		}
+		
+		function switchTab(tab) {
+			document.getElementById('tabAbout').style.display = (tab == 'about' ? 'block' : 'none');
+			document.getElementById('tabTheme').style.display = (tab == 'theme' ? 'block' : 'none');
+			document.getElementById('tabFeatures').style.display = (tab == 'features' ? 'block' : 'none');
+			document.getElementById('tabMessenger').style.display = (tab == 'messenger' ? 'block' : 'none');
+			document.getElementById('tabData').style.display = (tab == 'data' ? 'block' : 'none');
+			document.getElementById('switchtoAbout').style.opacity = (tab == 'about' ? 1 : 0.75);
+			document.getElementById('switchtoTheme').style.opacity = (tab == 'theme' ? 1 : 0.75);
+			document.getElementById('switchtoFeatures').style.opacity = (tab == 'features' ? 1 : 0.75);
+			document.getElementById('switchtoMessenger').style.opacity = (tab == 'messenger' ? 1 : 0.75);
+			document.getElementById('switchtoData').style.opacity = (tab == 'data' ? 1 : 0.75);
+			document.getElementById('switchtoAbout').style.textDecoration = (tab == 'about' ? 'underline' : '');
+			document.getElementById('switchtoTheme').style.textDecoration = (tab == 'theme' ? 'underline' : '');
+			document.getElementById('switchtoFeatures').style.textDecoration = (tab == 'features' ? 'underline' : '');
+			document.getElementById('switchtoMessenger').style.textDecoration = (tab == 'messenger' ? 'underline' : '');
+			document.getElementById('switchtoData').style.textDecoration = (tab == 'data' ? 'underline' : '');
+		};
+		
+		function enableSymbolCompatibility() {
+			localStorage.setItem('astiw_mac', 'true');
+			checkSettings();
+			alert('Symbol compatibilty mode enabled; characters that are only available on Windows will not be used\nReload page to see changes\n\nThe following abbreviations may be used:\nM = Messenger\nS = Encrypted\n\nTo turn this off, go to Advanced settings');
+		};
 	</script>
 </head>
 <body>
@@ -217,118 +271,184 @@
 	</div>
 	<main id="rm">
 		<h3 id="eugh" style="display:none;">Settings</h3>
+		<div id="tabBar" style="border:1px solid var(--border); display:none; padding:8px; border-radius:4px; margin-bottom:16px; background-color:var(--link); color:var(--opposing);"><b><a id="switchtoAbout" href="javascript:switchTab('about')">About</a> &#xb7; <a id="switchtoTheme" href="javascript:switchTab('theme')">Theme</a> &#xb7; <a id="switchtoFeatures" href="javascript:switchTab('features')">Features</a> &#xb7; <a id="switchtoMessenger" href="javascript:switchTab('messenger')">Messenger</a> &#xb7; <a id="switchtoData" href="javascript:switchTab('data')">Advanced</a></b></div>
 		<div class="stdc" id="main" style="display:none;">
-			<p>Settings are stored locally and only apply to this browser</p>
-			<hr>
-			<h4>Appearance</h4>
-			<div>
-				<select id="view" onchange="applySetting('view');">
-					<option value="s">Small</option>
-					<option value="m">Medium</option>
-					<option value="l">Large</option>
-				</select>
-				<p style="margin-bottom:9px;">Set view</p>
-				<p class="small">Change the layout of the post list on the home page</p>
+			<div id="tabAbout" class="tab">
+				<h3>About</h3>
+				<hr>
+				<h4>Intro</h4>
+				<p>ASTiW settings are stored on and only apply to this browser</p>
+				<p>To edit your STiBaRC profile or otherwise modify your STiBaRC account, click your username in the top right corner of the page</p>
+				<p>Select a tab above to view settings</p>
+				<p>Some settings may require a reload of the page to take effect</p>
+				<p>If you are not on Windows, please <a class="classic" href="javascript:enableSymbolCompatibility();">click here</a> to enable symbol compatibilty mode, so you can see all characters</p>
+				<hr>
+				<h4>Resources</h4>
+				<p style="margin-bottom:9px;">Bookmarklet: <a class="classic" href="javascript:(function()%7Bvar%20cpURL%20%3D%20window.location.href%3Bvar%20rptn%20%3D%20'bad'%3Bif%20(cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2F'%20%7C%7C%20cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2Findex.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2F'%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fstibarc.gq%2Fpost.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fpost.html'%20%2B%20cpURL.substring(28)%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2Fnewpost.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fnewpost.html'%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fstibarc.gq%2Feditprofile.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Feditprofile.html'%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2Fsearch.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fsearch.html%3Fq%3D'%20%2B%20encodeURIComponent(document.getElementById('q').value)%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fstibarc.gq%2Fuser.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fuser.html'%20%2B%20cpURL.substring(28)%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2Flogin.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Flogin.html'%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2Fregister.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fregister.html'%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fstibarc.gq%2Fpasswd.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fchangepassword.html'%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fmessenger.stibarc.gq%2F'%20%7C%7C%20cpURL%20%3D%3D%20'https%3A%2F%2Fmessenger.stibarc.gq%2Findex.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fmessenger.html'%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2F'%20%7C%7C%20cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Findex.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2F'%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fpost.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Fpost.html'%20%2B%20cpURL.substring(41)%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fnewpost.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Fnewpost.html'%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Feditprofile.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Feditprofile.html'%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fsearch.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Fsearch.html'%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fuser.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Fuser.html'%20%2B%20cpURL.substring(41)%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Flogin.html')%20%7Bif%20(confirm('Target%20page%20may%20not%20be%20relevant%2C%20continue%20anyway%3F'))%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Flogin.html'%3B%7D%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fregister.html')%20%7Bif%20(confirm('Target%20page%20may%20not%20be%20relevant%2C%20continue%20anyway%3F'))%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Fregister.html'%3B%7D%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fchangepassword.html')%20%7Bif%20(confirm('Target%20page%20may%20not%20be%20relevant%2C%20continue%20anyway%3F'))%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Fpasswd.html'%3B%7D%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fmessenger.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fmessenger.stibarc.gq%2F'%3B%7Dif%20(rptn%20!%3D%20'bad')%20%7Bwindow.location.href%20%3D%20rptn%3B%7D%7D)()">STiBaRC &#x21c4; ASTiW</a></p>
+				<p class="small">Drag the link to your bookmarks bar to create a button to switch between the official STiBaRC website and ASTiW<br/>(Bookmarklets do not work on all browsers, but they do work on Chrome and Firefox)</p>
+				<p style="margin-bottom:9px;"><a href="https://github.com/savaka2/astiw/issues/new" class="classic" target="_blank">Submit issue</a></p>
+				<p class="small">Report a bug or suggest a feature as an issue on GitHub</p>
+				<hr>
+				<h4>About ASTiW</h4>
+				<p>Created by savaka<br/>
+				Based on the <a href="https://stibarc.gq/" target="_blank" class="classic">STiBaRC website</a></p>
+				<p>ASTiW connects to the STiBaRC service; by using it you accept the STiBaRC <a href="https://stibarc.gq/privacy.html" target="_blank" class="classic">Privacy Policy</a></p>
 			</div>
-			<div>
-				<select id="theme" onchange="applySetting('theme'); colors();">
-					<optgroup label="Standard">
-						<option value="dark.css">Dark</option>
-						<option value="amoled.css">Darker (AMOLED)</option>
-						<option value="light.css">Light</option>
-					</optgroup>
-					<optgroup label="Misc.">
-						<option value="stibarc.css">STiBaRC</option>
-						<option value="pacer.css">Pacer</option>
-					</optgroup>
-					<optgroup label="Colors">
-						<option value="red.css">Red</option>
-						<option value="orange.css">Orange</option>
-						<option value="yellow.css">Yellow</option>
-						<option value="green.css">Green</option>
-						<option value="blue.css">Blue</option>
-						<option value="purple.css">Purple</option>
-					</optgroup>
-					<optgroup label="From URL">
-						<option value="custom">Custom</option>
-					</optgroup>
-				</select>
-				<p style="margin-bottom:9px;">Set theme</p>
-				<p class="small">Change the colors of ASTiW</p>
+			<div id="tabTheme" class="tab">
+				<h3>Theme settings</h3>
+				<hr>
+				<div>
+					<select id="theme" onchange="applySetting('theme'); colors();">
+						<optgroup label="Standard">
+							<option value="dark.css">Dark</option>
+							<option value="amoled.css">Darker (AMOLED)</option>
+							<option value="light.css">Light</option>
+						</optgroup>
+						<optgroup label="Misc.">
+							<option value="stibarc.css">STiBaRC</option>
+							<option value="pacer.css">Pacer</option>
+						</optgroup>
+						<optgroup label="Colors">
+							<option value="red.css">Red</option>
+							<option value="orange.css">Orange</option>
+							<option value="yellow.css">Yellow</option>
+							<option value="green.css">Green</option>
+							<option value="blue.css">Blue</option>
+							<option value="purple.css">Purple</option>
+						</optgroup>
+						<optgroup label="From URL">
+							<option value="custom">Custom</option>
+						</optgroup>
+					</select>
+					<p style="margin-bottom:9px;">Set theme</p>
+					<p class="small">Change the colors of ASTiW</p>
+				</div>
+				<p style="margin-bottom:9px;">Custom theme</p>
+				<p class="small">Paste a URL of a custom theme (you must also choose "Custom" from the "Set theme" dropdown)</p>
+				<input type="text" autocomplete="off" spellcheck="false" id="customtheme" class="txf" onchange="applySetting('customtheme'); colors();" placeholder="Custom theme URL" style="display:block; margin-bottom:16px;">
+				<p style="margin-bottom:9px;"><a href="https://github.com/savaka2/astiw/wiki/Theme-Documentation" target="_blank" class="classic">Theme documentation</a></p>
+				<p class="small">Learn how to create a custom theme</p>
 			</div>
-			<p style="margin-bottom:9px;">Custom theme</p>
-			<p class="small">Paste a URL of a custom theme (you must also choose "Custom" from the "Set theme" dropdown)</p>
-			<input type="text" autocomplete="off" spellcheck="false" id="customtheme" class="txf" onchange="applySetting('customtheme'); colors();" placeholder="Custom theme URL" style="display:block; margin-bottom:16px;">
-			<hr>
-			<h4>Behavior</h4>
-			<div>
-				<button class="cb" id="replacesl" onclick="toggleSetting('replacesl');"></button><p style="margin-bottom:9px;">Replace STiBaRC links with ASTiW links</p>
-				<p class="small">Replace user-created links to STiBaRC content on the STiBaRC website with links to the same content on ASTiW</p>
+			<div id="tabFeatures" class="tab">
+				<h3>Features</h3>
+				<hr>
+				<h4>Links</h4>
+				<div>
+					<button class="cb" id="replacesl" onclick="toggleSetting('replacesl');"></button><p style="margin-bottom:9px;">Replace STiBaRC links with ASTiW links</p>
+					<p class="small">Replace user-created links to STiBaRC content on the STiBaRC website with links to the same content on ASTiW</p>
+				</div>
+				<div>
+					<button class="cb" id="newtab" onclick="toggleSetting('newtab');"></button><p style="margin-bottom:9px;">Open links in new tabs</p>
+					<p class="small">Always open links in user created content in a new tab</p>
+				</div>
+				<hr>
+				<h4>Posts and Lists</h4>
+				<div>
+					<select id="view" onchange="applySetting('view');">
+						<option value="s">Small</option>
+						<option value="m">Medium</option>
+						<option value="l">Large</option>
+					</select>
+					<p style="margin-bottom:9px;">Set view</p>
+					<p class="small">Change the layout of the post list on the home page</p>
+				</div>
+				<div>
+					<button class="cb" id="markread" onclick="toggleSetting('markread');"></button><p style="margin-bottom:9px;">Mark posts read</p>
+					<p class="small">Display titles of posts that have been viewed with lower opacity in lists</p>
+				</div>
+				<div id="marContain" style="margin-top:16px;">
+					<button class="othbut" id="markallread" onclick="markAllRead();">Mark all posts read</button>
+				</div>
+				<div>
+					<button class="cb" id="roi" onclick="toggleSetting('roi');"></button><p style="margin-bottom:9px;">Check for new content</p>
+					<p class="small">Check for new posts on the home page every 0.5 seconds</p>
+				</div>
+				<div>
+					<button class="cb" id="splitcomments" onclick="toggleSetting('splitcomments');"></button><p style="margin-bottom:9px;">Divide comments with horizontal lines</p>
+					<p class="small">Use horizontal lines to mark the divisions between comments more clearly</p>
+				</div>
+				<div>
+					<button class="cb" id="hidedownvoted" onclick="toggleSetting('hidedownvoted');"></button><p style="margin-bottom:9px;">Hide downvoted posts on home page</p>
+					<p class="small">Do not display posts that you downvoted on the home page</p>
+				</div>
+				<div>
+					<button class="cb" id="percentinlist" onclick="toggleSetting('percentinlist');"></button><p style="margin-bottom:9px;">Show percent upvoted on home page</p>
+					<p class="small">Show the percent of votes that are upvotes on posts in the list</p>
+				</div>
+				<hr>
+				<h4>Scrolling</h4>
+				<div>
+					<button class="cb" id="autoload" onclick="toggleSetting('autoload');"></button><p style="margin-bottom:9px;">Infinite scroll</p>
+					<p class="small">Automatically load more posts when scrolling on the home page</p>
+				</div>
+				<div>
+					<button class="cb" id="topbuttons" onclick="toggleSetting('topbuttons');"></button><p style="margin-bottom:9px;">Show scroll to top buttons</p>
+					<p class="small">Show buttons to return to the top of pages</p>
+				</div>
+				<div>
+					<button class="cb" id="scrolltocomment" onclick="toggleSetting('scrolltocomment');"></button><p style="margin-bottom:9px;">Show scroll to comment field button</p>
+					<p class="small">Show button to scroll to and focus the comment field (requires "Show scroll to top buttons" and login)</p>
+				</div>
+				<hr>
+				<h4>Images</h4>
+				<div>
+					<button class="cb" id="autoloadimg" onclick="toggleSetting('autoloadimg');"></button><p style="margin-bottom:9px;">Show images on load</p>
+					<p class="small">Load images automatically instead of by clicking a button</p>
+				</div>
+				<div>
+					<button class="cb" id="docache" onclick="toggleSetting('docache');"></button><p style="margin-bottom:9px;">Cache images</p>
+					<p class="small">Save images to your browser to not have to load them again (turning this off does not delete already cached images; go to Advanced to do that)</p>
+				</div>
 			</div>
-			<div>
-				<button class="cb" id="markread" onclick="toggleSetting('markread');"></button><p style="margin-bottom:9px;">Mark posts read</p>
-				<p class="small">Display titles of posts that have been viewed with lower opacity in lists</p>
+			<div id="tabMessenger" class="tab">
+				<h3>Messenger settings</h3>
+				<hr>
+				<div>
+					<button class="cb" id="messagesound" onclick="toggleSetting('messagesound');"></button><p style="margin-bottom:9px;">Play sound for new messages</p>
+					<p class="small">Play a <a class="classic" href="javascript:testSound('res/new_message.wav')">sound</a> when a message is received in the current chat</p>
+				</div>
+				<div>
+					<button class="cb" id="sendsound" onclick="toggleSetting('sendsound');"></button><p style="margin-bottom:9px;">Play sound for sent messages</p>
+					<p class="small">Play a <a class="classic" href="javascript:testSound('res/send_message.wav')">sound</a> when your message is sent</p>
+				</div>
+				<div>
+					<button class="cb" id="showpreviews" onclick="toggleSetting('showpreviews');"></button><p style="margin-bottom:9px;">Show previews</p>
+					<p class="small">Show images, thumbnails of YouTube videos, and audio players where the content is linked to</p>
+				</div>
+				<div id="blockItem" style="display:none;">
+					<p style="margin-bottom:9px;"><a href="javascript:showBlocks();" class="classic">Manage blocks</a></p>
+					<p class="small">View and unblock the users you have blocked</p>
+				</div>
+				<p id="notBlockItem" style="display:none; color:var(--border);">Sign in to manage blocks</p>
 			</div>
-			<div id="marContain" style="margin-top:16px;">
-				<button class="othbut" id="markallread" onclick="markAllRead();">Mark all posts read</button>
-			</div>
-			<div>
-				<button class="cb" id="roi" onclick="toggleSetting('roi');"></button><p style="margin-bottom:9px;">Repeating requests</p>
-				<p class="small">Home <s>and post</s> page<s>s</s> will check for new content every 0.5 seconds (Messenger always uses repeating requests regardless of this setting)</p>
-			</div>
-			<div>
-				<button class="cb" id="docache" onclick="toggleSetting('docache');"></button><p style="margin-bottom:9px;">Cache images</p>
-				<p class="small">Save images to your browser to not have to load them again (turning this off does not delete already cached images)</p>
-			</div>
-			<hr>
-			<h4>Messenger</h4>
-			<div>
-				<button class="cb" id="messagesound" onclick="toggleSetting('messagesound');"></button><p style="margin-bottom:9px;">Play sound for new messages</p>
-				<p class="small">Play a <a class="classic" href="javascript:testSound('res/new_message.wav')">sound</a> when a message is received in the current chat</p>
-			</div>
-			<div>
-				<button class="cb" id="sendsound" onclick="toggleSetting('sendsound');"></button><p style="margin-bottom:9px;">Play sound for sent messages</p>
-				<p class="small">Play a <a class="classic" href="javascript:testSound('res/send_message.wav')">sound</a> when your message is sent</p>
-			</div>
-			<div>
-				<button class="cb" id="showpreviews" onclick="toggleSetting('showpreviews');"></button><p style="margin-bottom:9px;">Show previews</p>
-				<p class="small">Show images, thumbnails of YouTube videos, and audio players where the content is linked to</p>
-			</div>
-			<div id="blockItem" style="display:none;">
-				<p style="margin-bottom:9px;"><a href="javascript:showBlocks();" class="classic">Manage blocks</a></p>
-				<p class="small">View and unblock the users you have blocked</p>
-			</div>
-			<hr>
-			<h4>Extras</h4>
-			<p style="margin-bottom:9px;">Bookmarklet: <a class="classic" href="javascript:(function()%7Bvar%20cpURL%20%3D%20window.location.href%3Bvar%20rptn%20%3D%20'bad'%3Bif%20(cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2F'%20%7C%7C%20cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2Findex.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2F'%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fstibarc.gq%2Fpost.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fpost.html'%20%2B%20cpURL.substring(28)%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2Fnewpost.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fnewpost.html'%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fstibarc.gq%2Feditprofile.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Feditprofile.html'%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2Fsearch.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fsearch.html%3Fq%3D'%20%2B%20encodeURIComponent(document.getElementById('q').value)%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fstibarc.gq%2Fuser.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fuser.html'%20%2B%20cpURL.substring(28)%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2Flogin.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Flogin.html'%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fstibarc.gq%2Fregister.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fregister.html'%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fstibarc.gq%2Fpasswd.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fchangepassword.html'%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fmessenger.stibarc.gq%2F'%20%7C%7C%20cpURL%20%3D%3D%20'https%3A%2F%2Fmessenger.stibarc.gq%2Findex.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fmessenger.html'%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2F'%20%7C%7C%20cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Findex.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2F'%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fpost.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Fpost.html'%20%2B%20cpURL.substring(41)%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fnewpost.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Fnewpost.html'%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Feditprofile.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Feditprofile.html'%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fsearch.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Fsearch.html'%3B%7D%20else%20if%20(cpURL.indexOf('https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fuser.html')%20%3D%3D%200)%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Fuser.html'%20%2B%20cpURL.substring(41)%3B%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Flogin.html')%20%7Bif%20(confirm('Target%20page%20may%20not%20be%20relevant%2C%20continue%20anyway%3F'))%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Flogin.html'%3B%7D%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fregister.html')%20%7Bif%20(confirm('Target%20page%20may%20not%20be%20relevant%2C%20continue%20anyway%3F'))%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Fregister.html'%3B%7D%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fchangepassword.html')%20%7Bif%20(confirm('Target%20page%20may%20not%20be%20relevant%2C%20continue%20anyway%3F'))%20%7Brptn%20%3D%20'https%3A%2F%2Fstibarc.gq%2Fpasswd.html'%3B%7D%7D%20else%20if%20(cpURL%20%3D%3D%20'https%3A%2F%2Fsavaka2.github.io%2Fastiw%2Fmessenger.html')%20%7Brptn%20%3D%20'https%3A%2F%2Fmessenger.stibarc.gq%2F'%3B%7Dif%20(rptn%20!%3D%20'bad')%20%7Bwindow.location.href%20%3D%20rptn%3B%7D%7D)()">STiBaRC &#x21c4; ASTiW</a></p>
-			<p class="small">Drag the link to your bookmarks bar to create a button to switch between the official STiBaRC website and ASTiW<br/>(Bookmarklets do not work on all browsers, but they do work on Chrome and Firefox)</p>
-			<hr>
-			<h4>Troubleshooting</h4>
-			<div>
-				<button class="cb" id="mac" onclick="toggleSetting('mac');"></button><p style="margin-bottom:9px;">Symbol compatibilty mode</p>
-				<p class="small">Use alphabetical alternatives to symbols from fonts that are only available on Windows (reload page to see changes)</p>
-			</div>
-			<p style="margin-bottom:9px;"><a href="javascript:clearCache();" class="classic">Clear cache</a></p>
-			<p class="small">Delete all cached images</p>
-			<p style="margin-bottom:9px;"><a href="javascript:clearData();" class="classic">Clear data</a></p>
-			<p class="small">Use this to reset ASTiW if something isn't working (This will not log out your sess(es))</p>
-			<p style="margin-bottom:9px;"><a href="https://github.com/savaka2/astiw/issues/new" class="classic" target="_blank">Submit issue</a></p>
-			<p class="small">Report a bug (or suggest a feature) as an issue on GitHub</p>
-			<hr>
-			<h4>About</h4>
-			<p>Created by savaka<br/>
-			Based on the <a href="https://stibarc.gq/" target="_blank" class="classic">STiBaRC website</a></p>
-			<p>ASTiW connects to the STiBaRC service; by using it you accept the STiBaRC <a href="https://stibarc.gq/privacy.html" target="_blank" class="classic">Privacy Policy</a></p>
-			<hr>
-			<h4>Developer</h4>
-			<p style="margin-bottom:9px;"><a href="https://github.com/savaka2/astiw/wiki/Theme-Documentation" target="_blank" class="classic">Theme documentation</a></p>
-			<p class="small">Learn how to create a custom theme</p>
-			<div>
-				<button class="cb" id="showsess" onclick="toggleSetting('showsess');"></button><p style="margin-bottom:9px;">Show sesses in user menu</p>
-				<p class="small">Show session keys of logins in the user menu</p>
+			<div id="tabData" class="tab">
+				<h3>Advanced settings</h3>
+				<hr>
+				<h4>Data</h4>
+				<div style="margin-top:16px;">
+					<button class="othbut" onclick="clearCache();">Clear image cache</button>
+				</div>
+				<div style="margin-top:16px; margin-bottom:16px;">
+					<button class="othbut" onclick="clearData();">Clear all data</button>
+				</div>
+				<hr>
+				<h4>Miscellaneous advanced settings</h4>
+				<div>
+					<button class="cb" id="mac" onclick="toggleSetting('mac');"></button><p style="margin-bottom:9px;">Symbol compatibilty mode</p>
+					<p class="small">Use alternatives to symbols from fonts that are only available on Windows</p>
+				</div>
+				<div>
+					<button class="cb" id="showsess" onclick="toggleSetting('showsess');"></button><p style="margin-bottom:9px;">Show sesses in user menu</p>
+					<p class="small">Show session keys of logins in the user menu</p>
+				</div>
 			</div>
 		</div>
 		<div class="loader" id="loader"></div>
 	</main>
 </body>
 </html>
+<style>
+	.tab {
+		display: none;
+	}
+</style>
