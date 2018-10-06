@@ -89,7 +89,7 @@
 			r.addEventListener('load', function() {
 				if (isSet(r.responseText)) {
 					stuf = JSON.parse(r.responseText);
-					if (stuf.deleted == 'true') {
+					if (stuf.deleted != 'true') {
 						document.getElementById('nameThing').innerHTML = putLinksInText(stuf.title.replace(/</g, '&lt;').replace(/>/g, '&gt;'), false);
 						document.title = stuf.title + ' - ASTiW';
 						var currentUser = getCurrentUser();
