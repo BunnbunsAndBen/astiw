@@ -303,7 +303,9 @@ function addRecent(id, item, b) {
 			downStyle = 'color:var(--red)';
 		}
 	}
-	if (localStorage.getItem('astiw_hidedownvoted') == 'true' && home && item.vote == 'down' && item.poster != myName) {
+	if (item.deleted == true) {
+		el.style.display = 'none';
+	} else if (localStorage.getItem('astiw_hidedownvoted') == 'true' && home && item.vote == 'down' && item.poster != myName) {
 		el.style.display = 'none';
 	}
 	if (view == 'l') {
