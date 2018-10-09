@@ -20,6 +20,7 @@
 		var sessPart2 = '';
 		var doTopButton;
 		var autoload;
+		var bbbbbb = true;
 		
 		function scrollCond() {
 			return window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 783 && !exceeded;
@@ -59,7 +60,7 @@
 					var stuf = JSON.parse(r.responseText);
 					topp = stuf.totalposts;
 					for (i = stuf.totalposts; i > stuf.totalposts - 20; i--) {
-						addRecent(i, stuf[i], i == stuf.totalposts);
+						addRecent(i, stuf[i]);
 					}
 					document.getElementById('rm').removeChild(document.getElementById('loader'));
 					if (autoload && scrollCond()) {
@@ -104,7 +105,7 @@
 						var temp = lastid;
 						for (i = temp - 1; i > temp - 21; i--) {
 							if (isSet(stuf[i])) {
-								addRecent(i, stuf[i], false);
+								addRecent(i, stuf[i]);
 							} else {
 								exceeded = true;
 								break;
