@@ -480,7 +480,7 @@ function vote(postid, dir) {
 			sayToReload();
 		}
 	} else {
-		if (confirm('You must be logged in to do that; login?')) {
+		if (confirm('You must be logged in to do that; log in?')) {
 			window.location.href = 'login.html';
 		}
 	}
