@@ -34,9 +34,13 @@
 		function load() {
 			loggedIn = isSet(localStorage.getItem('astiw_sesses')) && JSON.parse(localStorage.getItem('astiw_sesses')).length > 0;
 			if (loggedIn) {
-				document.getElementById('commentBox').style.display = 'initial';
-				document.getElementById('comment').style.display = 'block';
 				document.getElementById('youArentLoggedIn').style.display = 'none';
+				if (userBanned) {
+					document.getElementById('banned').style.display = 'block';
+				} else {
+					document.getElementById('commentBox').style.display = 'initial';
+					document.getElementById('comment').style.display = 'block';
+				}
 				sessPart = '&sess=' + JSON.parse(localStorage.getItem('astiw_sesses'))[0];
 			}
 			raw = localStorage.getItem('astiw_view');
@@ -273,8 +277,12 @@
 							var jsonurl = 'https://api.stibarc.gq/v2/newcomment.sjs';
 							var r = new XMLHttpRequest();
 							r.addEventListener('load', function() {
-								oktoleave = true;
-								window.location.replace('post.html?id=' + id + '&newComment');
+								if (r.responseText != 'Error\n') {
+									oktoleave = true;
+									window.location.replace('post.html?id=' + id + '&newComment');
+								} else {
+									alert('Comment failed, probably because you are banned, please reload the page or something');
+								}
 							});
 							r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 							r.open('post', jsonurl, true);
@@ -343,29 +351,33 @@
 		
 		function editPost() {
 			if (!sessHasChanged()) {
-				document.getElementById('editLink').innerHTML = '&#x270E;&#xFE0E; Editing';
-				document.getElementById('nameThing').style.display = 'none';
-				document.getElementById('postText').style.display = 'none';
-				var ldr = document.createElement('div');
-				ldr.className = 'loader';
-				ldr.id = 'loader4';
-				ldr.style.margin = '0 auto 1em auto';
-				document.getElementById('oof').appendChild(ldr);
-				var jsonurl = 'https://api.stibarc.gq/v2/getpost.sjs?id=' + id;
-				var r = new XMLHttpRequest();
-				r.addEventListener('load', function() {
-					var goodContent  = JSON.parse(r.responseText);
-					document.getElementById('editTitle').value = goodContent.title;
-					document.getElementById('editText').value = goodContent.content;
-					document.title = goodContent.title + ' - ASTiW';
-					document.getElementById('oof').removeChild(document.getElementById('loader4'));
-					document.getElementById('editTitle').style.display = 'block';
-					document.getElementById('editText').style.display = 'initial';
-					document.getElementById('contain2').style.display = 'block';
-				});
-				r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
-				r.open('get', jsonurl, true);
-				r.send();
+				if (userBanned) {
+					alert('You have been banned from STiBaRC. You cannot submit content at this time.')
+				} else {
+					document.getElementById('editLink').innerHTML = '&#x270E;&#xFE0E; Editing';
+					document.getElementById('nameThing').style.display = 'none';
+					document.getElementById('postText').style.display = 'none';
+					var ldr = document.createElement('div');
+					ldr.className = 'loader';
+					ldr.id = 'loader4';
+					ldr.style.margin = '0 auto 1em auto';
+					document.getElementById('oof').appendChild(ldr);
+					var jsonurl = 'https://api.stibarc.gq/v2/getpost.sjs?id=' + id;
+					var r = new XMLHttpRequest();
+					r.addEventListener('load', function() {
+						var goodContent  = JSON.parse(r.responseText);
+						document.getElementById('editTitle').value = goodContent.title;
+						document.getElementById('editText').value = goodContent.content;
+						document.title = goodContent.title + ' - ASTiW';
+						document.getElementById('oof').removeChild(document.getElementById('loader4'));
+						document.getElementById('editTitle').style.display = 'block';
+						document.getElementById('editText').style.display = 'initial';
+						document.getElementById('contain2').style.display = 'block';
+					});
+					r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
+					r.open('get', jsonurl, true);
+					r.send();
+				}
 			} else {
 				sayToReload();
 			}
@@ -430,8 +442,12 @@
 						var jsonurl = 'https://api.stibarc.gq/v2/editpost.sjs';
 						var r = new XMLHttpRequest();
 						r.addEventListener('load', function() {
-							oktoleave = true;
-							window.location.reload();
+							if (r.responseText != 'Error\n') {
+								oktoleave = true;
+								window.location.reload();
+							} else {
+								alert('Edit failed, probably because you are banned, please reload the page or something');
+							}
 						});
 						r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 						r.open('post', jsonurl, true);
@@ -550,6 +566,7 @@
 			<div id="imgThing" style="display:none; text-align:center;"><button id="viewImg" onclick="loadImg();" class="othbut widebut" style="margin:0; display:initial;">SHOW IMAGE</button></div>
 			<b><p class="small" id="postMenu"></p></b>
 			<p id="youArentLoggedIn" style="margin-top:0;"><a href="register.html" class="classic">Register</a> or <a href="login.html" class="classic">log in</a> to leave a comment!</p>
+			<p id="banned" style="display:none; margin-top:0; color:var(--red);">You have been banned from STiBaRC. You cannot submit content at this time.</p>
 			<textarea class="txf" id="commentBox" style="display:none; height:108px; min-height:calc(1em + 3px); width:calc(100% - 34px); margin-bottom:16px;" placeholder="Comment"></textarea>
 			<div id="contain"><button id="comment" onclick="if (!pushed) {comment(id);}" class="libut" style="display:none; margin-bottom:16px;">COMMENT</button></div>
 			<p class="small" style="color:var(--red); display:none;" id="wait">You can comment again in [seconds] seconds</p>

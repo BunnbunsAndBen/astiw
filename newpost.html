@@ -43,8 +43,12 @@
 				document.getElementById('file').addEventListener('change', acquireFile, false);
 				document.getElementById('rm').removeChild(document.getElementById('loader2'));
 				document.getElementById('nameThing').style.display = '';
-				document.getElementById('main').style.display = 'block';
-				document.getElementById('postTitle').focus();
+				if (userBanned) {
+					document.getElementById('banned').style.display = 'block';
+				} else {
+					document.getElementById('main').style.display = 'block';
+					document.getElementById('postTitle').focus();
+				}
 			} else {
 				window.location.replace('login.html');
 			}
@@ -104,11 +108,15 @@
 			var r = new XMLHttpRequest();
 			r.addEventListener('load', function() {
 				var newpostid = r.responseText;
-				if (localStorage.getItem('astiw_markread') != 'true') {
-					localStorage.setItem('astiw_viewed' + newpostid, 'true');
+				if (newpostid != 'Error\n') {
+					if (localStorage.getItem('astiw_markread') != 'true') {
+						localStorage.setItem('astiw_viewed' + newpostid, 'true');
+					}
+					oktoleave = true;
+					window.location.replace('post.html?id=' + newpostid);
+				} else {
+					alert('Post failed, probably because you are banned, please reload the page or something');
 				}
-				oktoleave = true;
-				window.location.replace('post.html?id=' + newpostid);
 			});
 			r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 			r.open('post', jsonurl, true);
@@ -351,6 +359,7 @@
 	</div>
 	<main id="rm">
 		<h3 style="display:none;" id="nameThing">Create post</h3>
+		<div id="banned" class="stdc" style="display:none; color:var(--red);"><p style="text-align:center;">You have been banned from STiBaRC. You cannot submit content at this time.</p></div>
 		<div id="main" class="stdc" style="display:none;">
 			<input type="text" autocomplete="off" id="postTitle" class="txf" placeholder="Title" style="width:calc(100% - 34px); display:block; margin-top:16px; margin-bottom:16px;">
 			<textarea class="txf" id="postText" style="height:108px; min-height:calc(1em + 3px); width:calc(100% - 34px);" placeholder="Text"></textarea>

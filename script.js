@@ -1,5 +1,6 @@
 var modal;
 var sessesAtLoad;
+var userBanned = false;
 
 window.onload = function() {
 	colors();
@@ -157,6 +158,9 @@ function checkSess(sess) {
 			localStorage.removeItem('astiw_usernames');
 			window.location.reload();
 		} else {
+			if (xmlHttp.responseText == 'banned\n') {
+				userBanned = true;
+			}
 			load();
 		}
 	});

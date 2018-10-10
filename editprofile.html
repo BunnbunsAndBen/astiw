@@ -113,7 +113,11 @@
 					if (obj.displaybio) {toggleShow('bio');}
 					document.getElementById('rm').removeChild(document.getElementById('loader2'));
 					document.getElementById('eugh').style.display = '';
-					document.getElementById('main').style.display = 'block';
+					if (userBanned) {
+						document.getElementById('banned').style.display = 'block';
+					} else {
+						document.getElementById('main').style.display = 'block';
+					}
 				});
 				r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
 				r.open('get', jsonurl, true);
@@ -159,6 +163,7 @@
 	</div>
 	<main id="rm">
 		<h3 id="eugh" style="display:none;">Edit profile</h3>
+		<div id="banned" class="stdc" style="display:none; color:var(--red);"><p style="text-align:center;">You have been banned from STiBaRC. You cannot submit content at this time.</p></div>
 		<div class="stdc" style="display:none;" id="main">
 			<p class="tfl">Name</p>
 			<div style="display:block; margin-bottom:10px;"><input autocomplete="off" spellcheck="false" type="text" id="name" class="txf e" placeholder="Name" style="margin-bottom:6px;"><div style="display:inline-block; vertical-align:top;"><button id="showname" class="cb" onclick="toggleShow('name');" style="margin-bottom:6px;"></button><p class="whateverthisis">Make name public</p></div></div>
