@@ -30,6 +30,14 @@ window.onload = function() {
 	if (localStorage.getItem('astiw_mac') == 'true') {
 		document.getElementById('messengerButton').innerHTML = 'M';
 	}
+	if (localStorage.getItem('astiw_changetitlelink') == 'true') {
+		document.getElementById('homeButton').style.display = '';
+		document.getElementById('buttonsDivider').style.display = 'block';
+		var newDest = localStorage.getItem('astiw_titlelink');
+		if (isSet(newDest)) {
+			document.getElementById('title').href = newDest;
+		}
+	}
 	var sesses = localStorage.getItem('astiw_sesses');
 	var usernames = localStorage.getItem('astiw_usernames');
 	if (isSet(sesses)) {

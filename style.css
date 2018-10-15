@@ -38,7 +38,7 @@ nav {
 	width: 0;
 }
 
-.txf:hover, .txf:focus {
+.txf:not(.disabledtxf):hover, .txf:not(.disabledtxf):focus {
 	border-color: var(--tb-rollover-border);
 }
 
@@ -416,4 +416,10 @@ hr {
 	position: sticky;
 	bottom: 0;
 	pointer-events: none;
+}
+
+#buttonsDivider {
+	display: none;
+	border-left: 1px solid var(--border);
+	margin: 0 4px;
 }

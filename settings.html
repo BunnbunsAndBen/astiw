@@ -134,9 +134,14 @@
 			var scrolltocomment = localStorage.getItem('astiw_scrolltocomment') == 'true';
 			var percentinlist = localStorage.getItem('astiw_percentinlist') == 'true';
 			var autoload = localStorage.getItem('astiw_autoload') == 'true';
+			var changetitlelink = localStorage.getItem('astiw_changetitlelink') == 'true';
 			var view = localStorage.getItem('astiw_view');
+			var titlelink = localStorage.getItem('astiw_titlelink');
 			if (!isSet(theme)) {
 				theme = 'dark.css';
+			}
+			if (!isSet(titlelink)) {
+				titlelink = '';
 			}
 			if (!isSet(view)) {
 				view = 'm';
@@ -179,10 +184,15 @@
 			document.getElementById('newtab').style.backgroundColor = (!newtab ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('mac').innerHTML = (mac ? '&#x2714;&#xFE0E;' : '');
 			document.getElementById('mac').style.backgroundColor = (mac ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('changetitlelink').innerHTML = (changetitlelink ? '&#x2714;&#xFE0E;' : '');
+			document.getElementById('changetitlelink').style.backgroundColor = (changetitlelink ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('theme').value = theme;
 			document.getElementById('view').value = view;
 			document.getElementById('customtheme').value = customtheme;
-			setCbAbility('scrolltocomment', !topbuttons);
+			document.getElementById('titlelink').value = titlelink;
+			setCbAbility('scrolltocomment', !topbuttons, false);
+			setCbAbility('titlelink', changetitlelink, true);
+			setCbAbility('customtheme', theme == 'custom', true);
 			var mar = document.getElementById('markallread')
 			if (markread) {
 				mar.disabled = true;
@@ -193,11 +203,14 @@
 			}
 		};
 		
-		function setCbAbility(id, bool) {
-			var cbiq = document.getElementById(id)
+		function setCbAbility(id, bool, isTextBox) {
+			var cbiq = document.getElementById(id);
 			cbiq.disabled = !bool;
 			cbiq.parentNode.style.opacity = (bool ? 1 : 0.5)
-			cbiq.style.cursor = (bool ? 'pointer' : 'not-allowed');
+			cbiq.style.cursor = (bool ? (isTextBox ? 'text' : 'pointer') : 'not-allowed');
+			if (isTextBox) {
+				cbiq.className = (bool ? 'txf' : 'txf disabledtxf');
+			}
 		};
 		
 		function testSound(soundName) {
@@ -240,7 +253,7 @@
 	</script>
 </head>
 <body>
-	<nav><a id="title" href="index.html">ASTiW</a><input type="search" id="search" class="txf" placeholder="Search"><a href="messenger.html" id="messengerButton" class="mi ib noanon">&#x1f4ac;&#xfe0e;</a><a href="newpost.html" class="mi ib">+</a><a href="settings.html" class="mi">&#8943;</a><a href="javascript:openUserMenu();" id="usermenu" class="mi ib rightmost"></a><a href="register.html" class="lb" id="register">REGISTER</a><a href="login.html" class="lb rightmost">LOG IN</a></nav>
+	<nav><a id="title" href="index.html">ASTiW</a><input type="search" id="search" class="txf" placeholder="Search"><a href="index.html" id="homeButton" style="display:none;" class="mi">&#x2302;</a><div id="buttonsDivider"></div><a href="messenger.html" id="messengerButton" class="mi ib noanon">&#x1f4ac;&#xfe0e;</a><a href="newpost.html" class="mi ib">+</a><a href="settings.html" class="mi">&#8943;</a><a href="javascript:openUserMenu();" id="usermenu" class="mi ib rightmost"></a><a href="register.html" class="lb" id="register">REGISTER</a><a href="login.html" class="lb rightmost">LOG IN</a></nav>
 	<div id="cssshade"></div>
 	<div class="dbg" id="usermenubox">
 		<div class="dialog">
@@ -323,9 +336,11 @@
 					<p style="margin-bottom:9px;">Set theme</p>
 					<p class="small">Change the colors of ASTiW</p>
 				</div>
-				<p style="margin-bottom:9px;">Custom theme</p>
-				<p class="small">Paste a URL of a custom theme (you must also choose "Custom" from the "Set theme" dropdown)</p>
-				<input type="text" autocomplete="off" spellcheck="false" id="customtheme" class="txf" onchange="applySetting('customtheme'); colors();" placeholder="Custom theme URL" style="display:block; margin-bottom:16px;">
+				<div>
+					<p style="margin-bottom:9px;">Custom theme</p>
+					<p class="small">Paste a URL of a custom theme</p>
+					<input type="text" autocomplete="off" spellcheck="false" id="customtheme" class="txf" onchange="applySetting('customtheme'); colors();" placeholder="Custom theme URL" style="display:block; margin-bottom:16px;">
+				</div>
 				<p style="margin-bottom:9px;"><a href="https://github.com/savaka2/astiw/wiki/Theme-Documentation" target="_blank" class="classic">Theme documentation</a></p>
 				<p class="small">Learn how to create a custom theme</p>
 			</div>
@@ -368,6 +383,10 @@
 					<p class="small">Use horizontal lines to mark the divisions between comments more clearly</p>
 				</div>
 				<div>
+					<button class="cb" id="autoload" onclick="toggleSetting('autoload');"></button><p style="margin-bottom:9px;">Infinite scroll</p>
+					<p class="small">Automatically load more posts when scrolling on the home page</p>
+				</div>
+				<div>
 					<button class="cb" id="hidedownvoted" onclick="toggleSetting('hidedownvoted');"></button><p style="margin-bottom:9px;">Hide downvoted posts on home page</p>
 					<p class="small">Do not display posts that you downvoted on the home page</p>
 				</div>
@@ -376,11 +395,7 @@
 					<p class="small">Show the percent of votes that are upvotes on posts in the list</p>
 				</div>
 				<hr>
-				<h4>Scrolling</h4>
-				<div>
-					<button class="cb" id="autoload" onclick="toggleSetting('autoload');"></button><p style="margin-bottom:9px;">Infinite scroll</p>
-					<p class="small">Automatically load more posts when scrolling on the home page</p>
-				</div>
+				<h4>Navigation</h4>
 				<div>
 					<button class="cb" id="topbuttons" onclick="toggleSetting('topbuttons');"></button><p style="margin-bottom:9px;">Show scroll to top buttons</p>
 					<p class="small">Show buttons to return to the top of pages</p>
@@ -388,6 +403,15 @@
 				<div>
 					<button class="cb" id="scrolltocomment" onclick="toggleSetting('scrolltocomment');"></button><p style="margin-bottom:9px;">Show scroll to comment field button</p>
 					<p class="small">Show button to scroll to and focus the comment field (requires "Show scroll to top buttons" and login)</p>
+				</div>
+				<div>
+					<button class="cb" id="changetitlelink" onclick="toggleSetting('changetitlelink');"></button><p style="margin-bottom:9px;">Change title link</p>
+					<p class="small">Change the target of the "ASTiW" title link</p>
+				</div>
+				<div>
+					<p style="margin-bottom:9px;">Title link</p>
+					<p class="small">Enter a URL for the title link</p>
+					<input type="text" autocomplete="off" spellcheck="false" id="titlelink" class="txf" onchange="applySetting('titlelink');" placeholder="Title link URL" style="display:block; margin-bottom:16px;">
 				</div>
 				<hr>
 				<h4>Images</h4>
