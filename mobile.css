@@ -39,3 +39,7 @@ main > h3 {
 	border-left: none !important;
 	border-right: none !important;
 }
+
+.ntbom {
+	border-top: none;
+}
