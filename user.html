@@ -30,7 +30,7 @@
 					document.getElementById('scrollerContain').style.display = 'none';
 				}
 			}
-			document.getElementById('username').innerHTML = term.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '<span id="verified"> &#x2611;&#xFE0E;</span>';
+			document.getElementById('username').innerHTML = term.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '<span id="verified"> ' + (onMobile ? '(Verified)' : '&#x2611;&#xFE0E;') + '</span>';
 			myName = getCurrentUser();
 			if (term == myName && myName != 'Anon') {
 				var editproflink = document.createElement('p');
