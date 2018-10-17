@@ -49,7 +49,7 @@
 			if (localStorage.getItem('astiw_scrolltocomment') == 'true' && loggedIn) {
 				document.getElementById('toCommentField').style.display = '';
 			}
-			if (localStorage.getItem('astiw_mac') == 'true') {
+			if (localStorage.getItem('astiw_mac') == 'true' || onMobile) {
 				document.getElementById('toCommentField').innerHTML = '"';
 			}
 			window.onscroll = function(e) {
@@ -154,9 +154,9 @@
 						comments.push([objComments[key].content, objComments[key].poster]);
 					}
 					if (comments.length == 1) {
-						menulist.push((localStorage.getItem('astiw_mac') == 'true' ? '' : '&#x1f4ac;&#xfe0e; ') + '1 comment');
+						menulist.push((localStorage.getItem('astiw_mac') == 'true' || onMobile ? '' : '&#x1f4ac;&#xfe0e; ') + '1 comment');
 					} else {
-						menulist.push((localStorage.getItem('astiw_mac') == 'true' ? '' : '&#x1f4ac;&#xfe0e; ') + comments.length.toString() + ' comments');
+						menulist.push((localStorage.getItem('astiw_mac') == 'true' || onMobile ? '' : '&#x1f4ac;&#xfe0e; ') + comments.length.toString() + ' comments');
 					}
 					commCount = comments.length;
 					placeComments();

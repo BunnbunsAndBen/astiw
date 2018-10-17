@@ -405,9 +405,9 @@ function addRecent(id, item) {
 	menulist.push('<span id="upvote' + id + '"><a class="classic" style="' + upStyle + '" href="javascript:vote(' + id + ', true)">' + (mac ? '&uarr;' : '&#x21e7;&#xfe0e;') + ' ' + item.upvotes.toString() + '</a></span>');
 	menulist.push('<span id="downvote' + id + '"><a class="classic" style="' + downStyle + '" href="javascript:vote(' + id + ', false)">' + (mac ? '&darr;' : '&#x21e9;&#xfe0e;') + ' ' + item.downvotes.toString() + '</a></span>');
 	if (view == 's') {
-		menulist.push('<a class="classic" href="post.html?id=' + id + '&comment">' + (mac ? 'Comment' : '&#x1f4ac;&#xfe0e;') + '</a>');
+		menulist.push('<a class="classic" href="post.html?id=' + id + '&comment">' + (mac || onMobile ? 'Comment' : '&#x1f4ac;&#xfe0e;') + '</a>');
 	} else {
-		menulist.push('<a class="classic" href="post.html?id=' + id + '&comment">' + (mac ? '' : '&#x1f4ac;&#xfe0e; ') + 'Comment</a>');
+		menulist.push('<a class="classic" href="post.html?id=' + id + '&comment">' + (mac || onMobile ? '' : '&#x1f4ac;&#xfe0e; ') + 'Comment</a>');
 	}
 	if (myName != 'Anon' && item.poster == myName && myRank != 'User')	 {
 		menulist.push('<a class="classic" href="javascript:openEdit(' + id + ');">&#x270E;&#xFE0E;' + (view != 's' ? ' Edit' : '') + '</a>');
@@ -426,7 +426,7 @@ function addRecent(id, item) {
 	}
 	var menulistFinal = menulist.join(' &#xb7; ') + percentUpvotedItem;
 	if (onMobile) {
-		el.innerHTML = '<div class="recent"><p style="margin-top:0;" class="small">' + item.postdate + (item.edited ? ' (edited)' : '') + ' <b>&#xb7;</b> <a class="classic" ' + (item.poster == myName ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a></p><span class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</span><b><p class="small" style="margin-bottom:0;">' + menulistFinal + '</p></b></div>';
+		el.innerHTML = '<div class="recent"><p style="margin-top:0;" class="small">' + item.postdate + (item.edited ? ' (edited)' : '') + ' <b>&#xb7;</b> <a class="classic" ' + (item.poster == myName ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a></p><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b><b><p class="small" style="margin-bottom:0;">' + menulistFinal + '</p></b></div>';
 	} else {
 		if (view == 'l') {
 			el.innerHTML = '<div class="recentCard' + (bbbbbb ? ' bb' : '') + '"><p class="small" style="margin-top:0;">Posted by <a class="classic" ' + (item.poster == myName ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b><p id="cardText' + id + '" class="fadeOutText">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'), false) + '</p><b><p class="small" style="margin-bottom:0;">' + expandLink + menulistFinal + '</p></b></div>';
