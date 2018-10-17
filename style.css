@@ -423,3 +423,24 @@ hr {
 	border-left: 1px solid var(--border);
 	margin: 0 4px;
 }
+
+.mobileOnly {
+	display: none;
+}
+
+#mobileSearchButton {
+	font-size: 16px;
+	width: auto;
+	padding: 0px 16px;
+	display: none;
+}
+
+#mobileDivider {
+	flex-grow: 1;
+}
+
+#mobileUserLink {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}

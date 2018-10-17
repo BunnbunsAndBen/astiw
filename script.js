@@ -1,11 +1,26 @@
 var modal;
+var mobileModal;
+var mobileSearchModal;
 var sessesAtLoad;
 var userBanned = false;
+var onMobile;
 
 window.onload = function() {
 	colors();
+	if (localStorage.getItem('astiw_checkeddevice') != 'true') {
+		localStorage.setItem('astiw_onmobile', (screen.width <= 800 ? 'true' : 'false'));
+		localStorage.setItem('astiw_checkeddevice', 'true');
+	}
+	onMobile = localStorage.getItem('astiw_onmobile') == 'true';
+	if (onMobile) {
+		var mobileStyler = document.createElement('link');
+		mobileStyler.rel = 'stylesheet';
+		mobileStyler.href = 'mobile.css';
+		document.head.appendChild(mobileStyler);
+	}
 	document.getElementById('cssshade').style.display = 'none';
 	var sb = document.getElementById('search');
+	var msb = document.getElementById('mobileSearchBox');
 	window.addEventListener('keydown', function(e) {
 		if (e.keyCode == 27) {
 			closeUserMenu();
@@ -18,13 +33,28 @@ window.onload = function() {
 			}
 		}
 	});
+	msb.addEventListener('keydown', function(e) {
+		if (e.keyCode == 13) {
+			if (isSet(msb.value)) {
+				window.location.href = 'search.html?q=' + encodeURIComponent(msb.value);
+			}
+		}
+	});
 	if (typeof importantLoad == 'function') {
 		importantLoad();
 	}
 	modal = document.getElementById('usermenubox');
+	mobileModal = document.getElementById('mobileMenu');
+	mobileSearchModal = document.getElementById('mobileSearch');
 	window.addEventListener('click', function(e) {
 		if (event.target == modal) {
 			modal.style.display = 'none';
+		}
+		if (event.target == mobileModal) {
+			mobileModal.style.display = 'none';
+		}
+		if (event.target == mobileSearchModal) {
+			mobileSearchModal.style.display = 'none';
 		}
 	});
 	if (localStorage.getItem('astiw_mac') == 'true') {
@@ -58,6 +88,7 @@ window.onload = function() {
 						stsbsiyaa[ite].style.display = 'none';
 					}
 				}
+				mobileButtons(true);
 				checkSess(sessList[0]);
 			} else {
 				notLoggedIn();
@@ -69,6 +100,27 @@ window.onload = function() {
 		}
 	} else {
 		notLoggedIn();
+	}
+};
+
+function mobileButtons(buttonLogin) {
+	if (onMobile) {
+		document.getElementById('settingsButton').style.display = 'none';
+		document.getElementById('messengerButton').style.display = 'none';
+		document.getElementById('search').style.display = 'none';
+		document.getElementById('mobileDivider').style.display = 'initial';
+		document.getElementById('register').style.display = 'none';
+		document.getElementById('loginTitleButton').style.display = 'none';
+		document.getElementById('usermenu').style.display = 'none';
+		document.getElementById('mobileMenuButton').style.display = 'initial';
+		document.getElementById('mobileSearchButton').style.display = 'initial';
+		if (buttonLogin) {
+			document.getElementById('mobileLogin').style.display = 'none';
+			document.getElementById('mobileRegister').style.display = 'none';
+			document.getElementById('mobileUserLink').innerHTML = document.getElementById('usermenu').innerHTML;
+		} else {
+			document.getElementById('mobileIb').style.display = 'none';
+		}
 	}
 };
 
@@ -151,6 +203,7 @@ function notLoggedIn() {
 	for (i = 0; i < lbs.length; i++) {
 		lbs[i].style.display = 'initial';
 	}
+	mobileButtons(false);
 	load();
 };
 
@@ -202,8 +255,31 @@ function openUserMenu() {
 	}
 };
 
+function openMobileMenu() {
+	mobileModal.style.display = 'initial';
+};
+
+function openMobileSearch() {
+	if (window.location.href.indexOf('search.html') != -1) {
+		document.getElementById('mobileSearchBox').value = term;
+	} else {
+		document.getElementById('mobileSearchBox').value = '';
+	}
+	mobileSearchModal.style.display = 'initial';
+	document.getElementById('mobileSearchBox').focus();
+};
+
 function closeUserMenu() {
 	modal.style.display = 'none';
+};
+
+function closeMobileMenu() {
+	mobileModal.style.display = 'none';
+};
+
+function closeMobileSearch() {
+	mobileSearchModal.style.display = 'none';
+	document.getElementById('mobileSearchBox').value = '';
 };
 
 function logoutCurrentUser() {
@@ -298,7 +374,7 @@ function addRecent(id, item) {
 	var menulist = [];
 	var expandLink = '';
 	var home = typeof youreOnTheHomepage !== 'undefined' && youreOnTheHomepage == true;
-	if (home) {
+	if (home && !onMobile) {
 		var view = (isSet(raw) ? raw : 'm');
 	} else {
 		var view = 'm';
@@ -349,12 +425,16 @@ function addRecent(id, item) {
 		var percentUpvotedItem = '';
 	}
 	var menulistFinal = menulist.join(' &#xb7; ') + percentUpvotedItem;
-	if (view == 'l') {
-		el.innerHTML = '<div class="recentCard' + (bbbbbb ? ' bb' : '') + '"><p class="small" style="margin-top:0;">Posted by <a class="classic" ' + (item.poster == myName ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b><p id="cardText' + id + '" class="fadeOutText">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'), false) + '</p><b><p class="small" style="margin-bottom:0;">' + expandLink + menulistFinal + '</p></b></div>';
-	} else if (view == 's') {
-		el.innerHTML = '<div class="recent' + (bbbbbb ? ' bb' : '') + '"><b><p class="small" style="margin:0 0 0 8px; float:right;">' + expandLink + menulistFinal + '</p></b><p class="small" style="margin-top:0; color:var(--content);"><a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', false)">&#x25bc;</a> <b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b></p><p class="small" style="margin-bottom:0;">Posted by <a class="classic" ' + (item.poster == myName ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><p id="expanded' + id + '" style="margin-bottom:0; display:none;">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'), false) + '</p></div>';
+	if (onMobile) {
+		el.innerHTML = '<div class="recent"><p style="margin-top:0;" class="small">' + item.postdate + (item.edited ? ' (edited)' : '') + ' <b>&#xb7;</b> <a class="classic" ' + (item.poster == myName ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a></p><span class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</span><b><p class="small" style="margin-bottom:0;">' + menulistFinal + '</p></b></div>';
 	} else {
-		el.innerHTML = '<div class="recent' + (bbbbbb ? ' bb' : '') + '"><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b><p class="small">Posted by <a class="classic" ' + (item.poster == myName ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><b><p class="small" style="margin-bottom:0;">' + expandLink + menulistFinal + '</p></b><p id="expanded' + id + '" style="margin-bottom:0; display:none;">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'), false) + '</p></div>';
+		if (view == 'l') {
+			el.innerHTML = '<div class="recentCard' + (bbbbbb ? ' bb' : '') + '"><p class="small" style="margin-top:0;">Posted by <a class="classic" ' + (item.poster == myName ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b><p id="cardText' + id + '" class="fadeOutText">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'), false) + '</p><b><p class="small" style="margin-bottom:0;">' + expandLink + menulistFinal + '</p></b></div>';
+		} else if (view == 's') {
+			el.innerHTML = '<div class="recent' + (bbbbbb ? ' bb' : '') + '"><b><p class="small" style="margin:0 0 0 8px; float:right;">' + expandLink + menulistFinal + '</p></b><p class="small" style="margin-top:0; color:var(--content);"><a id="expander' + id + '" class="classic" href="javascript:expand(' + id + ', false)">&#x25bc;</a> <b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b></p><p class="small" style="margin-bottom:0;">Posted by <a class="classic" ' + (item.poster == myName ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><p id="expanded' + id + '" style="margin-bottom:0; display:none;">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'), false) + '</p></div>';
+		} else {
+			el.innerHTML = '<div class="recent' + (bbbbbb ? ' bb' : '') + '"><b class="theB"' + (localStorage.getItem('astiw_markread') != 'true' && localStorage.getItem('astiw_viewed' + id) == 'true' ? ' style="opacity:0.5;"' : '') + '>' + trimTitle(item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')) +'</b><p class="small">Posted by <a class="classic" ' + (item.poster == myName ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(item.poster) + '">' + item.poster + '</a> at ' + item.postdate + (item.edited ? ' (edited)' : '') + '</p><b><p class="small" style="margin-bottom:0;">' + expandLink + menulistFinal + '</p></b><p id="expanded' + id + '" style="margin-bottom:0; display:none;">' + putLinksInText(item.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'), false) + '</p></div>';
+		}
 	}
 	if (bbbbbb & el.style.display != 'none') {
 		bbbbbb = false;

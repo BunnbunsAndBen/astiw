@@ -1,0 +1,37 @@
+main {
+	padding: 0 0 24px 0;
+}
+
+.recent {
+	border-left: none;
+	border-right: none;
+}
+
+main > h3 {
+	margin-left: 16px;
+	margin-right: 16px;
+}
+
+.stdc {
+	border-radius: 0;
+	border-left: none;
+	border-right: none;
+}
+
+#userPostsContainer {
+	padding: 0 0 24px 0 !important;
+}
+
+.dialog {
+	width: calc(100% - 40px);
+	margin: 0;
+	max-height: calc(100% - 40px);
+	border-style: none;
+	border-bottom: 1px solid var(--border);
+}
+
+#tabBar {
+	border-radius: 0 !important;
+	border-left: none !important;
+	border-right: none !important;
+}

@@ -531,7 +531,7 @@
 	</script>
 </head>
 <body>
-	<nav><a id="title" href="index.html">ASTiW</a><input type="search" id="search" class="txf" placeholder="Search"><a href="index.html" id="homeButton" style="display:none;" class="mi">&#x2302;</a><div id="buttonsDivider"></div><a href="messenger.html" id="messengerButton" class="mi ib noanon">&#x1f4ac;&#xfe0e;</a><a href="newpost.html" class="mi ib">+</a><a href="settings.html" class="mi">&#8943;</a><a href="javascript:openUserMenu();" id="usermenu" class="mi ib rightmost"></a><a href="register.html" class="lb" id="register">REGISTER</a><a href="login.html" class="lb rightmost">LOG IN</a></nav>
+	<nav><a id="title" href="index.html">ASTiW</a><input type="search" id="search" class="txf" placeholder="Search"><div id="mobileDivider" style="display:none;"></div><a href="index.html" id="homeButton" style="display:none;" class="mi">&#x2302;</a><div id="buttonsDivider"></div><a href="messenger.html" id="messengerButton" class="mi ib noanon">&#x1f4ac;&#xfe0e;</a><a href="javascript:openMobileSearch();" class="mi" id="mobileSearchButton">Search</a><a href="newpost.html" class="mi ib">+</a><a href="settings.html" class="mi" id="settingsButton">&#8943;</a><a href="javascript:openMobileMenu();" id="mobileMenuButton" class="mi mobileOnly rightmost">&#9776;</a><a href="javascript:openUserMenu();" id="usermenu" class="mi ib rightmost"></a><a href="register.html" class="lb" id="register">REGISTER</a><a href="login.html" class="lb rightmost" id="loginTitleButton">LOG IN</a></nav>
 	<div id="refreshMarker" onclick="window.location.reload();">&#8635; Reload to see new comment(s) or edit</div>
 	<div id="cssshade"></div>
 	<div class="dbg" id="usermenubox">
@@ -550,6 +550,35 @@
 			</div>
 			<div style="margin-top:16px;"><a class="othbut" href="login.html" style="margin-right:8px;">Add account</a><a class="othbut" href="javascript:logoutCurrentUser();" id="lobut">Log out</a></div>
 			<p style="margin:8px 0;"><a class="classic" href="register.html">Register a new account</a></p>
+		</div>
+	</div>
+	<div class="dbg" id="mobileSearch">
+		<div class="dialog" style="padding:6px 24px; width:calc(100% - 48px);">
+			<input type="search" id="mobileSearchBox" class="txf" placeholder="Search" style="width:100%;">
+		</div>
+	</div>
+	<div class="dbg" id="mobileMenu">
+		<div class="dialog" style="padding:0; border:0; width:100%;">
+			<a class="recentLinks" href="login.html" id="mobileLogin">
+				<div class="recent">
+					Log in
+				</div>
+			</a>
+			<a class="recentLinks" href="register.html" id="mobileRegister">
+				<div class="recent">
+					Register
+				</div>
+			</a>
+			<a class="recentLinks" href="javascript:closeMobileMenu(); openUserMenu();" id="mobileIb">
+				<div class="recent" id="mobileUserLink">
+					
+				</div>
+			</a>
+			<a class="recentLinks" href="settings.html">
+				<div class="recent">
+					Settings
+				</div>
+			</a>
 		</div>
 	</div>
 	<main id="rm">
