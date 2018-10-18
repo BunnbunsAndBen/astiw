@@ -96,7 +96,7 @@
 		function toggleShow(field) {
 			var bttn = document.getElementById('show' + field);
 			if (bttn.innerHTML == '') {
-				bttn.innerHTML = '&#x2714;&#xFE0E;';
+				bttn.innerHTML = (onMobile ? '<b style="font-weight:bold; font-size:1.3em;">&times;</b>' : '&#x2714;&#xFE0E;');
 				bttn.style.backgroundColor = 'var(--probably-same-as-link)';
 			} else {
 				bttn.innerHTML = '';
