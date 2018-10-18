@@ -22,6 +22,11 @@
 			}
 			checkSettings();
 			blocksDialog = document.getElementById('blocksDialog');
+			if (onMobile) {
+				document.getElementById('showIfMobile').style.display = '';
+				document.getElementById('view').disabled = true;
+				document.getElementById('viewSettingItem').style.opacity = 0.5;
+			}
 			window.addEventListener('click', function(e) {
 				if (e.target == blocksDialog) {
 					closeBlocks();
@@ -393,14 +398,14 @@
 				</div>
 				<hr>
 				<h4>Posts and Lists</h4>
-				<div>
+				<div id="viewSettingItem">
 					<select id="view" onchange="applySetting('view');">
 						<option value="s">Small</option>
 						<option value="m">Medium</option>
 						<option value="l">Large</option>
 					</select>
 					<p style="margin-bottom:9px;">Set view</p>
-					<p class="small">Change the layout of the post list on the home page</p>
+					<p class="small">Change the layout of the post list on the home page<span style="display:none;" id="showIfMobile"> (not available on mobile)</span></p>
 				</div>
 				<div>
 					<button class="cb" id="markread" onclick="toggleSetting('markread');"></button><p style="margin-bottom:9px;">Mark posts read</p>
