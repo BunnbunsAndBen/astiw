@@ -24,9 +24,8 @@
 			checkSettings();
 			blocksDialog = document.getElementById('blocksDialog');
 			if (onMobile) {
-				document.getElementById('showIfMobile').style.display = '';
-				document.getElementById('view').disabled = true;
-				document.getElementById('viewSettingItem').style.opacity = 0.5;
+				document.getElementById('viewSettingItem').style.display = 'none';
+				document.getElementById('noMessengerYet').style.display = '';
 			}
 			window.addEventListener('click', function(e) {
 				if (e.target == blocksDialog) {
@@ -406,7 +405,7 @@
 						<option value="l">Large</option>
 					</select>
 					<p style="margin-bottom:9px;">Set view</p>
-					<p class="small">Change the layout of the post list on the home page<span style="display:none;" id="showIfMobile"> (not available on mobile)</span></p>
+					<p class="small">Change the layout of the post list on the home page</p>
 				</div>
 				<div>
 					<button class="cb" id="markread" onclick="toggleSetting('markread');"></button><p style="margin-bottom:9px;">Mark posts read</p>
@@ -468,6 +467,7 @@
 			<div id="tabMessenger" class="tab">
 				<h3>Messenger settings</h3>
 				<hr>
+				<p id="noMessengerYet" style="display:none; color:var(--border);">Messenger is not yet available on mobile</p>
 				<div>
 					<button class="cb" id="messagesound" onclick="toggleSetting('messagesound');"></button><p style="margin-bottom:9px;">Play sound for new messages</p>
 					<p class="small">Play a <a class="classic" href="javascript:testSound('res/new_message.wav')">sound</a> when a message is received in the current chat</p>
