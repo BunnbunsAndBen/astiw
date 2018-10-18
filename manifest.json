@@ -1,0 +1,14 @@
+{
+  "name": "ASTiW",
+  "icons": [
+    {
+      "src": "/res/logo.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/astiw/index.html",
+  "background_color": "#000000",
+  "display": "standalone",
+  "scope": "/astiw/"
+}
