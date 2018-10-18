@@ -2,12 +2,12 @@
 	"name": "ASTiW",
 	"icons": [
 		{
-			"src": "/res/logo.png",
+			"src": "/astiw/res/logo.png",
 			"type": "image/png",
 			"sizes": "512x512"
 		},
 		{
-			"src": "/res/logo-192.png",
+			"src": "/astiw/res/logo-192.png",
 			"type": "image/png",
 			"sizes": "192x192"
 		}
