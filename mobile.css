@@ -43,3 +43,50 @@ main > h3 {
 .ntbom {
 	border-top: none;
 }
+
+.txf:not(.disabledtxf):hover {
+	border-color: var(--border);
+}
+
+.txf:not(.disabledtxf):focus {
+	border-color: var(--tb-rollover-border);
+}
+
+.othbut:not(.disabledbut):hover, .othbut:not(.disabledbut):active {
+	background-color: transparent;
+	text-decoration: none;
+}
+
+.libut:hover, .libut:active {
+	background-color: var(--content);
+	color: var(--content-bg);
+}
+
+#register:hover, #register:active {
+	background-color: var(--content);
+	color: var(--content-bg);
+}
+
+.lb:hover, .lb.active {
+	background-color: transparent;
+	text-decoration: none;
+}
+
+.mi:hover, .mi.active {
+	background-color: transparent;
+	text-decoration: none;
+}
+
+.recent:hover, .recent:active, .recentCard:hover, .recentCard:active {
+	background-color: var(--content-bg);
+}
+
+a:hover, a:active {
+	color: inherit;
+	text-decoration: none;
+}
+
+.toTop:hover, .toTop:active {
+	background-color: var(--content);
+	color: var(--content-bg);
+}
