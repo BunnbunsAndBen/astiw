@@ -4,7 +4,7 @@
 	--content-bg: #fafafa;
 	--header-bg: #007bff;
 	--border: black;
-	--rollover: #006bdd;
+	--rollover: dimgray;
 	--other-rollover: #006bdd;
 	--probably-same-as-content-bg: #fafafa;
 	--tb-back: white;
@@ -12,10 +12,10 @@
 	--tb-hint: gray;
 	--link: #007bff;
 	--opposing: white;
-	--verified: #007bff;
+	--verified: lime;
 	--you: mediumaquamarine;
 	--probably-same-as-link: #007bff;
 	--cb-off: lightgray;
-	--cb-sign: dimgray;
+	--cb-sign: white;
 	--red: red;
 }
