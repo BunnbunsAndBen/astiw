@@ -1,0 +1,21 @@
+:root {
+	--bg: #ffffff;
+	--content: black;
+	--content-bg: #fafafa;
+	--header-bg: #007bff;
+	--border: black;
+	--rollover: #e2e2e2;
+	--other-rollover: #006bdd;
+	--probably-same-as-content-bg: #fafafa;
+	--tb-back: white;
+	--tb-rollover-border: #007bff;
+	--tb-hint: gray;
+	--link: #007bff;
+	--opposing: white;
+	--verified: lime;
+	--you: mediumaquamarine;
+	--probably-same-as-link: #007bff;
+	--cb-off: lightgray;
+	--cb-sign: white;
+	--red: red;
+}
