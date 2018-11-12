@@ -97,10 +97,14 @@
 				if (isSet(r.responseText)) {
 					stuf = JSON.parse(r.responseText);
 					if (stuf.deleted != true) {
+						if (stuf.poster == 'savaka' && stuf.title.substring(0, 7) == '[ASTiW]') {
+							officialMark = ' <span style="color:var(--verified); line-height:1em;">&#x24b6;</span>';
+							stuf.title = stuf.title.substring(7);
+						}
 						document.getElementById('nameThing').innerHTML = putLinksInText(stuf.title.replace(/</g, '&lt;').replace(/>/g, '&gt;'), false);
 						document.title = stuf.title + ' - ASTiW';
 						var currentUser = getCurrentUser();
-						document.getElementById('metaThing').innerHTML = 'Posted by <a class="classic" ' + (stuf.poster == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(stuf.poster) + '">' + stuf.poster + '</a><span id="verified"> ' + (onMobile ? '(Verified)' : '&#x2611;&#xFE0E;') + '</span> at ' + stuf.postdate + (stuf.edited ? ' (edited)' : '');
+						document.getElementById('metaThing').innerHTML = 'Posted by <a class="classic" ' + (stuf.poster == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(stuf.poster) + '">' + stuf.poster + '</a><span id="verified"> ' + (onMobile ? '(Verified)' : '&#x2611;&#xFE0E;') + '</span>' + officialMark + ' at ' + stuf.postdate + (stuf.edited ? ' (edited)' : '');
 						document.getElementById('postText').innerHTML = putLinksInText(stuf.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'), false);
 						var jsonurlv = 'https://api.stibarc.gq/v2/checkverify.sjs?id=' + stuf.poster;
 						rv.open('get', jsonurlv, true);
