@@ -97,6 +97,7 @@
 				if (isSet(r.responseText)) {
 					stuf = JSON.parse(r.responseText);
 					if (stuf.deleted != true) {
+						var officialMark = '';
 						if (stuf.poster == 'savaka' && stuf.title.substring(0, 7) == '[ASTiW]') {
 							officialMark = ' <span style="color:var(--verified); line-height:1em;">&#x24b6;</span>';
 							stuf.title = stuf.title.substring(7);
