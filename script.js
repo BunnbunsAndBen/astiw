@@ -118,8 +118,12 @@ function mobileButtons(buttonLogin) {
 			document.getElementById('mobileLogin').style.display = 'none';
 			document.getElementById('mobileRegister').style.display = 'none';
 			document.getElementById('mobileUserLink').innerHTML = document.getElementById('usermenu').innerHTML;
+			if (document.getElementById('usermenu').innerHTML == 'Anon') {
+				document.getElementById('mobileMessenger').style.display = 'none';
+			}
 		} else {
 			document.getElementById('mobileIb').style.display = 'none';
+			document.getElementById('mobileMessenger').style.display = 'none';
 		}
 	}
 };

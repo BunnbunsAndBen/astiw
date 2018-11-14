@@ -42,8 +42,16 @@
 		
 		function load() {
 			if (onMobile) {
-				alert('Messenger is not available on mobile yet');
-				window.location.href = 'index.html';
+				document.getElementById('rightSide').style.width = '100%';
+				document.getElementById('leftSide').style.width = '100%';
+				document.getElementById('chatOptionsTWW').style.width = '100%';
+				document.getElementById('sorterTWW').style.width = '100%';
+				document.getElementById('noPinning').style.setProperty('border-top', 0, 'important');
+				document.getElementById('pinner').style.setProperty('border-top', 0, 'important');
+				document.getElementById('leftSide').style.borderRight = 0;
+				document.getElementById('rightSide').style.display = 'none';
+				document.getElementById('leftSide').style.display = '';
+				document.getElementById('closeChatButton').style.display = '';
 			}
 			sesses = localStorage.getItem('astiw_sesses');
 			myName = getCurrentUser();
@@ -238,6 +246,10 @@
 		};
 		
 		function closeChat() {
+			if (onMobile) {
+				document.getElementById('rightSide').style.display = 'none';
+				document.getElementById('leftSide').style.display = '';
+			}
 			if (isSet(currentChat) && isSet(document.getElementById('chatItem' + currentChat))) {
 				document.getElementById('chatItem' + currentChat).className = 'recent nosides';
 			}
@@ -260,11 +272,18 @@
 					document.getElementById('chatItem' + currentChat).className = 'recent nosides';
 				}
 				currentChat = 'processing';
+				if (onMobile) {
+					document.getElementById('rightSide').style.display = '';
+					document.getElementById('leftSide').style.display = 'none';
+				}
 				document.getElementById('theChat').style.display = 'none';
 				document.getElementById('noChat').style.display = 'none';
 				var ldr = document.createElement('div');
 				ldr.className = 'loader';
 				ldr.style.margin = 'auto';
+				if (onMobile) {
+					ldr.style.marginTop = '24px';
+				}
 				ldr.id = 'loader2';
 				document.getElementById('rightSide').appendChild(ldr);
 				document.getElementById('chatItem' + chatid).className = 'recent selectedChatItem nosides';
@@ -860,6 +879,11 @@
 					
 				</div>
 			</a>
+			<a class="recentLinks" href="messenger.html" id="mobileMessenger">
+				<div class="recent">
+					Messenger
+				</div>
+			</a>
 			<a class="recentLinks" href="settings.html">
 				<div class="recent">
 					Settings
@@ -892,7 +916,7 @@
 		</div>
 	</div>
 	<div class="dbg" id="chatOptions">
-		<div class="dialog" style="padding:0; border:0; width:30%;">
+		<div class="dialog" style="padding:0; border:0; width:30%;" id="chatOptionsTWW">
 			<a class="recentLinks">
 				<div class="recent bb" id="pinner">
 					<b></b>
@@ -920,7 +944,7 @@
 		</div>
 	</div>
 	<div class="dbg" id="sorter">
-		<div class="dialog" style="padding:0; border:0; width:30%;">
+		<div class="dialog" style="padding:0; border:0; width:30%;" id="sorterTWW">
 			<a class="recentLinks" href="javascript:togglePinning();">
 				<div class="recent bb" id="noPinning">
 					<b></b>
@@ -935,7 +959,7 @@
 	</div>
 	<main id="rm" style="margin:0;">
 		<div id="hidden" style="display:none;">
-			<div style="position:absolute; width:30%; left:0; top:49px; bottom:0; border-right:1px solid var(--border); background-color:var(--content-bg);">
+			<div style="position:absolute; width:30%; left:0; top:49px; bottom:0; border-right:1px solid var(--border); background-color:var(--content-bg);" id="leftSide">
 				<div style="height:22.5px; background-color:var(--content-bg); border-bottom: 1px solid var(--border); padding:8px;"><h3 style="margin:0; display:inline-block;">Messenger</h3><h3 style="margin:0; float:right; display:inline-block;"><a class="classic" href="javascript:newChat();">New</a><a style="margin-left:8px;" id="sortLink" class="classic" href="javascript:sortMenu();">&#x21c5;</a></h3></div>
 				<div id="main" style="overflow:auto; height:calc(100vh - 88.5px);"></div>
 			</div>
@@ -944,7 +968,7 @@
 					<div class="stdc" style="margin: 16px;"><p style="color:var(--border);">Select a chat from the list or <a class="classic" href="javascript:newChat();">start a new chat</a></p></div>
 				</div>
 				<div id="theChat" style="display:none;">
-					<div style="height:22.5px; background-color:var(--content-bg); border-bottom: 1px solid var(--border); padding:8px 16px;"><h3 style="margin:0; display:inline-block;"><a class="classic" target="_blank" id="chatPersonUsername"></a></h3><div style="float:right;"><a class="classic" href="javascript:toggleEncrypt();" id="encryptionMarker" style="margin-right:8px; color:var(--verified);">&#x1f512;&#xfe0e;</a><h3 style="margin:0; display:inline-block;"><a class="classic" href="javascript:chatMenu();">&#8943;</a></h3></div></div>
+					<div style="height:22.5px; background-color:var(--content-bg); border-bottom: 1px solid var(--border); padding:8px 16px;"><h3 style="margin:0; display:inline-block;"><a id="closeChatButton" style="margin-right:8px; display:none;" href="javascript:closeChat();" class="classic">&lt;</a><a class="classic" target="_blank" id="chatPersonUsername"></a></h3><div style="float:right;"><a class="classic" href="javascript:toggleEncrypt();" id="encryptionMarker" style="margin-right:8px; color:var(--verified);">&#x1f512;&#xfe0e;</a><h3 style="margin:0; display:inline-block;"><a class="classic" href="javascript:chatMenu();">&#8943;</a></h3></div></div>
 					<div style="overflow-y:auto; overflow-x:hidden; height:calc(100vh - 137.5px);" id="messages"></div>
 					<textarea oninput="saveMessage();" autocomplete="off" id="messageBox" class="chattxf" placeholder="Type a message"></textarea>
 					<button id="sendButton" onclick="submitMessage()">&#x25b6;&#xfe0e;</button>
