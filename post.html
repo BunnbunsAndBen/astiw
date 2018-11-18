@@ -516,7 +516,7 @@
 	</script>
 </head>
 <body>
-	<nav><a id="title" href="index.html">ASTiW</a><input type="search" id="search" class="txf" placeholder="Search"><div id="mobileDivider" style="display:none;"></div><a href="index.html" id="homeButton" style="display:none;" class="mi">&#x2302;</a><div id="buttonsDivider"></div><a href="messenger.html" id="messengerButton" class="mi ib noanon">&#x1f4ac;&#xfe0e;</a><a href="javascript:openMobileSearch();" class="mi" id="mobileSearchButton">Search</a><a href="newpost.html" class="mi ib">+</a><a href="settings.html" class="mi" id="settingsButton">&#8943;</a><a href="javascript:openMobileMenu();" id="mobileMenuButton" class="mi mobileOnly rightmost">&#8943;</a><a href="javascript:openUserMenu();" id="usermenu" class="mi ib rightmost"></a><a href="register.html" class="lb" id="register">REGISTER</a><a href="login.html" class="lb rightmost" id="loginTitleButton">LOG IN</a></nav>
+	<nav><a id="title" href="index.html">ASTiW</a><input type="search" id="search" class="txf" placeholder="Search"><div id="mobileDivider" style="display:none;"></div><a href="index.html" id="homeButton" style="display:none;" class="mi">&#x2302;</a><div id="buttonsDivider"></div><a href="messenger.html" id="messengerButton" class="mi ib noanon">&#x1f4ac;&#xfe0e;</a><a href="javascript:openMobileSearch();" class="mi" id="mobileSearchButton">Search</a><a href="newpost.html" class="mi ib">+</a><a href="settings.html" class="mi" id="settingsButton">&#8943;</a><a href="javascript:openMobileMenu();" id="mobileMenuButton" class="mi mobileOnly rightmost">&#8943;</a><a href="javascript:openUserMenu();" id="usermenu" class="mi ib rightmost"></a><a href="login.html" class="lb rightmost" id="loginTitleButton">LOG IN</a></nav>
 	<div id="refreshMarker" onclick="window.location.reload();">&#8635; Reload to see new comment(s) or edit</div>
 	<div id="cssshade"></div>
 	<div class="dbg" id="usermenubox">
@@ -534,7 +534,6 @@
 				<hr style="margin:20px 0;">
 			</div>
 			<div style="margin-top:16px;"><a class="othbut" href="login.html" style="margin-right:8px;">Add account</a><a class="othbut" href="javascript:logoutCurrentUser();" id="lobut">Log out</a></div>
-			<p style="margin:8px 0;"><a class="classic" href="register.html">Register a new account</a></p>
 		</div>
 	</div>
 	<div class="dbg" id="mobileSearch">
@@ -547,11 +546,6 @@
 			<a class="recentLinks" href="login.html" id="mobileLogin">
 				<div class="recent">
 					Log in
-				</div>
-			</a>
-			<a class="recentLinks" href="register.html" id="mobileRegister">
-				<div class="recent">
-					Register
 				</div>
 			</a>
 			<a class="recentLinks" href="javascript:closeMobileMenu(); openUserMenu();" id="mobileIb">
@@ -585,7 +579,7 @@
 			<p class="small" style="color:var(--red); display:none; margin-top:0;" id="editEmpty">A title and text are required</p>
 			<div id="imgThing" style="display:none; text-align:center;"><button id="viewImg" onclick="loadImg();" class="othbut widebut" style="margin:0; display:initial;">SHOW IMAGE</button></div>
 			<b><p class="small" id="postMenu"></p></b>
-			<p id="youArentLoggedIn" style="margin-top:0;"><a href="register.html" class="classic">Register</a> or <a href="login.html" class="classic">log in</a> to leave a comment!</p>
+			<p id="youArentLoggedIn" style="margin-top:0;"><a href="login.html" class="classic">Log in</a> to leave a comment!</p>
 			<p id="banned" style="display:none; margin-top:0; color:var(--red);">You have been banned from STiBaRC. You cannot submit content at this time.</p>
 			<textarea class="txf" id="commentBox" style="display:none; height:108px; min-height:calc(1em + 3px); width:calc(100% - 34px); margin-bottom:16px;" placeholder="Comment"></textarea>
 			<div id="contain"><button id="comment" onclick="if (!pushed) {comment(id);}" class="libut" style="display:none; margin-bottom:16px;">COMMENT</button></div>

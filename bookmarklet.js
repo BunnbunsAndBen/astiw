@@ -14,8 +14,6 @@ if (cpURL == 'https://stibarc.gq/' || cpURL == 'https://stibarc.gq/index.html') 
 	rptn = 'https://savaka2.github.io/astiw/user.html' + cpURL.substring(28);
 } else if (cpURL == 'https://stibarc.gq/login.html') {
 	rptn = 'https://savaka2.github.io/astiw/login.html';
-} else if (cpURL == 'https://stibarc.gq/register.html') {
-	rptn = 'https://savaka2.github.io/astiw/register.html';
 } else if (cpURL.indexOf('https://stibarc.gq/passwd.html') == 0) {
 	rptn = 'https://savaka2.github.io/astiw/changepassword.html';
 } else if (cpURL == 'https://messenger.stibarc.gq/' || cpURL == 'https://messenger.stibarc.gq/index.html') {
@@ -35,10 +33,6 @@ if (cpURL == 'https://stibarc.gq/' || cpURL == 'https://stibarc.gq/index.html') 
 } else if (cpURL == 'https://savaka2.github.io/astiw/login.html') {
 	if (confirm('Target page may not be relevant, continue anyway?')) {
 		rptn = 'https://stibarc.gq/login.html';
-	}
-} else if (cpURL == 'https://savaka2.github.io/astiw/register.html') {
-	if (confirm('Target page may not be relevant, continue anyway?')) {
-		rptn = 'https://stibarc.gq/register.html';
 	}
 } else if (cpURL == 'https://savaka2.github.io/astiw/changepassword.html') {
 	if (confirm('Target page may not be relevant, continue anyway?')) {

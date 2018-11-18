@@ -62,11 +62,6 @@ main > h3 {
 	color: var(--content-bg);
 }
 
-#register:hover, #register:active {
-	background-color: var(--content);
-	color: var(--content-bg);
-}
-
 .lb:hover, .lb.active {
 	background-color: transparent;
 	text-decoration: none;

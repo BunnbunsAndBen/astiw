@@ -141,16 +141,6 @@ button.libut {
 	margin: 0 0 20px 20px;
 }
 
-#register {
-	background-color: var(--content);
-	color: var(--content-bg);
-}
-
-#register:hover, #register:active {
-	background-color: var(--other-rollover);
-	color: var(--probably-same-as-content-bg);
-}
-
 .ib {
 	display: none;
 }

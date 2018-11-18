@@ -109,14 +109,12 @@ function mobileButtons(buttonLogin) {
 		document.getElementById('messengerButton').style.display = 'none';
 		document.getElementById('search').style.display = 'none';
 		document.getElementById('mobileDivider').style.display = 'initial';
-		document.getElementById('register').style.display = 'none';
 		document.getElementById('loginTitleButton').style.display = 'none';
 		document.getElementById('usermenu').style.display = 'none';
 		document.getElementById('mobileMenuButton').style.display = 'initial';
 		document.getElementById('mobileSearchButton').style.display = 'initial';
 		if (buttonLogin) {
 			document.getElementById('mobileLogin').style.display = 'none';
-			document.getElementById('mobileRegister').style.display = 'none';
 			document.getElementById('mobileUserLink').innerHTML = document.getElementById('usermenu').innerHTML;
 			if (document.getElementById('usermenu').innerHTML == 'Anon') {
 				document.getElementById('mobileMessenger').style.display = 'none';
@@ -179,8 +177,6 @@ function switchta(cpURL) {
 		rptn = 'user.html' + cpURL.substring(28);
 	} else if (cpURL == 'https://stibarc.gq/login.html') {
 		rptn = 'login.html';
-	} else if (cpURL == 'https://stibarc.gq/register.html') {
-		rptn = 'register.html';
 	}
 	return rptn;
 };
