@@ -434,3 +434,13 @@ hr {
 	overflow: hidden;
 	white-space: nowrap;
 }
+
+#loginTitleButton {
+	background-color: var(--content);
+	color: var(--content-bg);
+}
+
+#loginTitleButton:hover, #loginTitleButton:active {
+	background-color: var(--other-rollover);
+	color: var(--probably-same-as-content-bg);
+}
