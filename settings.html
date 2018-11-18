@@ -82,7 +82,7 @@
 		};
 		
 		function clearData() {
-			if (confirm('Are you sure you want to clear local storage? This includes all signed in accounts, settings, chat options, read markings, and cached images')) {
+			if (confirm('Are you sure you want to clear local storage? This includes all signed in accounts, settings, chat options, and read markings')) {
 				localStorage.clear();
 				window.location.href = 'index.html';
 			}
@@ -124,7 +124,6 @@
 		
 		function checkSettings() {
 			var roi = localStorage.getItem('astiw_roi') == 'true';
-			var docache = localStorage.getItem('astiw_docache') == 'true';
 			var replacesl = localStorage.getItem('astiw_replacesl') == 'true';
 			var showsess = localStorage.getItem('astiw_showsess') == 'true';
 			var markread = localStorage.getItem('astiw_markread') == 'true';
@@ -161,8 +160,6 @@
 			var checkMark = (onMobile ? '<b style="font-weight:bold; font-size:1.3em;">&times;</b>' : '&#x2714;&#xFE0E;');
 			document.getElementById('roi').innerHTML = (!roi ? checkMark : '');
 			document.getElementById('roi').style.backgroundColor = (!roi ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
-			document.getElementById('docache').innerHTML = (!docache ? checkMark : '');
-			document.getElementById('docache').style.backgroundColor = (!docache ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('markread').innerHTML = (!markread ? checkMark : '');
 			document.getElementById('markread').style.backgroundColor = (!markread ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('replacesl').innerHTML = (replacesl ? checkMark : '');
@@ -228,15 +225,6 @@
 			var sound = new Audio(soundName);
 			sound.play();
 		};
-		
-		function clearCache() {
-			for (key in localStorage) {
-				if (key.indexOf('astiw_cache') == 0) {
-					localStorage.removeItem(key);
-				}
-			}
-			alert('Cache cleared!');
-		}
 		
 		function switchTab(tab) {
 			document.getElementById('tabAbout').style.display = (tab == 'about' ? 'block' : 'none');
@@ -467,10 +455,6 @@
 					<button class="cb" id="autoloadimg" onclick="toggleSetting('autoloadimg');"></button><p style="margin-bottom:9px;">Show images on load</p>
 					<p class="small">Load images automatically instead of by clicking a button</p>
 				</div>
-				<div>
-					<button class="cb" id="docache" onclick="toggleSetting('docache');"></button><p style="margin-bottom:9px;">Cache images</p>
-					<p class="small">Save images to your browser to not have to load them again (turning this off does not delete already cached images; go to Advanced to do that)</p>
-				</div>
 			</div>
 			<div id="tabMessenger" class="tab">
 				<h3>Messenger settings</h3>
@@ -497,9 +481,6 @@
 				<h3>Advanced settings</h3>
 				<hr>
 				<h4>Data</h4>
-				<div style="margin-top:16px;">
-					<button class="othbut" onclick="clearCache();">Clear image cache</button>
-				</div>
 				<div style="margin-top:16px; margin-bottom:16px;">
 					<button class="othbut" onclick="clearData();">Clear all data</button>
 				</div>

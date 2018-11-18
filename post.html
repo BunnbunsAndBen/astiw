@@ -314,47 +314,25 @@
 		function loadImg() {
 			var imgId = stuf.attachment;
 			document.getElementById('viewImg').style.display = 'none';
-			if (!isSet(localStorage.getItem('astiw_cache' + imgId))) {
-				var ldr = document.createElement('div');
-				ldr.className = 'loader';
-				ldr.id = 'loader3';
-				ldr.style.margin = 'auto';
-				document.getElementById('imgThing').appendChild(ldr);
-				var jsonurl = 'https://api.stibarc.gq/v2/getimage.sjs?id=' + imgId;
-				var r = new XMLHttpRequest();
-				r.addEventListener('load', function() {
-					var img = document.createElement('img');
-					img.src = r.responseText;
-					img.style.display = 'block';
-					img.style.margin = 'auto';
-					img.style.maxWidth = '100%';
-					var tmp = r.responseText.split('');
-					tmp = tmp[0] + tmp[1] + tmp[2] + tmp[3] + tmp[4];
-					var cachefail = false;
-					if (tmp == 'data:' && localStorage.getItem('astiw_docache') != 'true') {
-						try {
-							localStorage.setItem('astiw_cache' + imgId, r.responseText);
-						} catch (err) {
-							cachefail = true;
-						}
-					}
-					document.getElementById('imgThing').removeChild(document.getElementById('loader3'));
-					document.getElementById('imgThing').appendChild(img);
-					if (cachefail) {
-						alert('Image could not be cached because local storage is full; go to Advanced settings to clear cache');
-					}
-				});
-				r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
-				r.open('get', jsonurl, true);
-				r.send();
-			} else {
+			var ldr = document.createElement('div');
+			ldr.className = 'loader';
+			ldr.id = 'loader3';
+			ldr.style.margin = 'auto';
+			document.getElementById('imgThing').appendChild(ldr);
+			var jsonurl = 'https://api.stibarc.gq/v2/getimage.sjs?id=' + imgId;
+			var r = new XMLHttpRequest();
+			r.addEventListener('load', function() {
 				var img = document.createElement('img');
-				img.src = localStorage.getItem('astiw_cache' + imgId);
+				img.src = r.responseText;
 				img.style.display = 'block';
 				img.style.margin = 'auto';
 				img.style.maxWidth = '100%';
+				document.getElementById('imgThing').removeChild(document.getElementById('loader3'));
 				document.getElementById('imgThing').appendChild(img);
-			}
+			});
+			r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
+			r.open('get', jsonurl, true);
+			r.send();
 		};
 		
 		function editPost() {
