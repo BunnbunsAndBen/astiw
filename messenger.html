@@ -40,7 +40,7 @@
 		var doEncr = false;
 		var mac;
 		
-		function load() {
+		function importantLoad() {
 			if (onMobile) {
 				document.getElementById('rightSide').style.width = '100%';
 				document.getElementById('leftSide').style.width = '100%';
@@ -60,6 +60,9 @@
 			if (isSet(sesses) && JSON.parse(sesses).length > 0 && myName != 'Anon') {} else {
 				window.location.replace('login.html');
 			}
+		}
+		
+		function load() {
 			mySess = JSON.parse(sesses)[0];
 			document.getElementById('messages').onscroll = function(e) {
 				var msgBox = document.getElementById('messages');

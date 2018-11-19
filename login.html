@@ -44,11 +44,14 @@
 			}
 		};
 		
-		function load() {
+		function importantLoad() {
 			var sesses = localStorage.getItem('astiw_sesses');
 			if (isSet(sesses) && JSON.parse(sesses).length > 0) {
 				window.location.replace('index.html');
 			}
+		}
+		
+		function load() {
 			document.getElementById('rm').removeChild(document.getElementById('loader2'));
 			document.getElementById('eugh').style.display = '';
 			document.getElementById('main').style.display = 'block';
