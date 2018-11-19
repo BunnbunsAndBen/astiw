@@ -82,7 +82,7 @@
 		};
 		
 		function clearData() {
-			if (confirm('Are you sure you want to clear local storage? This includes all signed in accounts, settings, chat options, and read markings')) {
+			if (confirm('Are you sure you want to clear local storage? This includes the signed in account, settings, chat options, and read markings')) {
 				localStorage.clear();
 				window.location.href = 'index.html';
 			}
@@ -262,13 +262,7 @@
 			<p style="margin:8px 0;"><a class="classic noanon" href="changepassword.html">Change password</a></p>
 			<p style="margin:8px 0;"><a class="classic noanon" href="mailto:herronjo110@gmail.com?subject=STiBaRC%20User%20Verification%20Request">Request user verification</a></p>
 			<hr style="margin:20px 0;">
-			<div id="accountSwitcher" style="display:none;">
-				<h4 style="margin-top:20px;">Switch account</h4>
-				<ul style="padding:0 0 0 20px;" id="accounts">
-				</ul>
-				<hr style="margin:20px 0;">
-			</div>
-			<div style="margin-top:16px;"><a class="othbut" href="login.html" style="margin-right:8px;">Add account</a><a class="othbut" href="javascript:logoutCurrentUser();" id="lobut">Log out</a></div>
+			<div style="margin-top:16px;"><a class="othbut" href="javascript:logoutCurrentUser();" id="lobut">Log out</a></div>
 		</div>
 	</div>
 	<div class="dbg" id="mobileSearch">
@@ -491,8 +485,8 @@
 				<hr>
 				<h4>Developer</h4>
 				<div>
-					<button class="cb" id="showsess" onclick="toggleSetting('showsess');"></button><p style="margin-bottom:9px;">Show sesses in user menu</p>
-					<p class="small">Show session keys of logins in the user menu</p>
+					<button class="cb" id="showsess" onclick="toggleSetting('showsess');"></button><p style="margin-bottom:9px;">Show sess in user menu</p>
+					<p class="small">Show session key of login in the user menu</p>
 				</div>
 			</div>
 		</div>

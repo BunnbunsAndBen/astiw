@@ -18,10 +18,8 @@
 		r.addEventListener('load', function() {
 			var sesses = JSON.parse(localStorage.getItem('astiw_sesses'));
 			var usernames = JSON.parse(localStorage.getItem('astiw_usernames'));
-			sesses.splice(0, 1);
-			usernames.splice(0, 1);
-			localStorage.setItem('astiw_sesses', JSON.stringify(sesses));
-			localStorage.setItem('astiw_usernames', JSON.stringify(usernames));
+			localStorage.setItem('astiw_sesses', JSON.stringify([]));
+			localStorage.setItem('astiw_usernames', JSON.stringify([]));
 			window.location.replace('index.html');
 		});
 		r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});

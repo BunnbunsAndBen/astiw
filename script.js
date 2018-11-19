@@ -232,23 +232,12 @@ function checkSess(sess) {
 
 function openUserMenu() {
 	if (!sessHasChanged()) {
-		var accounts = document.getElementById('accounts');
-		accounts.innerHTML = '';
 		var me = document.getElementById('currentUserName');
 		var showsess = localStorage.getItem('astiw_showsess') == 'true';
 		var sesses = JSON.parse(localStorage.getItem('astiw_sesses'));
 		var usernames = JSON.parse(localStorage.getItem('astiw_usernames'));
 		document.getElementById('userMenuProfButton').href = 'user.html?id=' + encodeURIComponent(usernames[0]);
 		me.innerHTML = usernames[0] + (showsess ? ' (' + sesses[0] + ')' : '');
-		var oof;
-		for (i = 1; i < usernames.length; i++) {
-			document.getElementById('accountSwitcher').style.display = '';
-			document.getElementById('lobut').innerHTML = 'Log out this account';
-			oof = document.createElement('li');
-			oof.innerHTML = '<a class="classic" href="javascript:switchUser(' + i.toString() + ')">' + usernames[i] + '</a>' + (showsess ? ' (' + sesses[i] + ')' : '');
-			oof.style.marginTop = '0.5em';
-			accounts.appendChild(oof);
-		}
 		modal.style.display = 'initial';
 	} else {
 		sayToReload();
@@ -287,35 +276,6 @@ function logoutCurrentUser() {
 		window.location.href = 'logout.html';
 	} else {
 		sayToReload();
-	}
-};
-
-function switchUser(n) {
-	var sessesStorage = JSON.parse(localStorage.getItem('astiw_sesses'));
-	var sessesHaveChanged = false;
-	if (!(sessesStorage.length == sessesAtLoad.length)) {
-		sessesHaveChanged = true;
-	} else {
-		for (i = 0; i < sessesAtLoad.length; i++) {
-			if (sessesAtLoad[i] != sessesStorage[i]) {
-				sessesHaveChanged = true;
-			}
-		}
-	}
-	if (!sessesHaveChanged) {
-		var sesses = JSON.parse(localStorage.getItem('astiw_sesses'));
-		var usernames = JSON.parse(localStorage.getItem('astiw_usernames'));
-		var wantedSess = sesses[n];
-		var wantedUsername = usernames[n];
-		sesses.splice(n, 1);
-		usernames.splice(n, 1);
-		sesses.splice(0, 0, wantedSess);
-		usernames.splice(0, 0, wantedUsername);
-		localStorage.setItem('astiw_sesses', JSON.stringify(sesses));
-		localStorage.setItem('astiw_usernames', JSON.stringify(usernames));
-		window.location.reload();
-	} else {
-		alert('The logged in accounts have changed, please reload the page');
 	}
 };
 

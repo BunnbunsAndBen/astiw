@@ -11,95 +11,47 @@
 	<link rel="stylesheet" href="themes/dark.css" id="themer">
 	<script src="script.js"></script>
 	<script>
+		var loginClicked = false;
+		
 		function login(isanon) {
 			if (!sessHasChanged()) {
-				document.getElementById('bad').style.display = 'none';
-				document.getElementById('empty').style.display = 'none';
-				document.getElementById('already').style.display = 'none';
-				if (isanon) {
-					var username = 'Anon';
-					var password = 'anon';
-				} else {
-					var username = document.getElementById('username').value;
-					var password = document.getElementById('password').value;
-				}
-				if (isSet(username) && isSet(password)) {
-					var tthtdwun = localStorage.getItem('astiw_usernames');
-					if (!isSet(tthtdwun) || JSON.parse(tthtdwun).indexOf(username) == -1) {
+				var loginpopup = window.open('https://stibarc.gq/login/', '', 'menubar=no,location=no,resizable=no,scrollbars=yes,status=yes,height=360,width=500');
+				window.addEventListener('message', function(e) {
+			  		if (!loginClicked && e.data != 'Cancelled') {
+						loginClicked = true;
 						document.getElementById('login').style.display = 'none';
-						document.getElementById('username').disabled = true;
-						document.getElementById('password').disabled = true;
-						document.getElementById('anon').style.cursor = 'default';
 						var ldr = document.createElement('div');
 						ldr.className = 'loader';
 						ldr.id = 'loader';
-						ldr.style.margin = '0 0 16px 0';
+						ldr.style.margin = '16px 0';
 						document.getElementById('contain').appendChild(ldr);
-						var jsonurl = 'https://api.stibarc.gq/v2/createsess.sjs';
 						var r = new XMLHttpRequest();
 						r.addEventListener('load', function() {
-							sess = r.responseText;
-							if (sess != 'Invalid username or password\n') {
-								var sesses = JSON.parse(localStorage.getItem('astiw_sesses'));
-								var usernames = JSON.parse(localStorage.getItem('astiw_usernames'));
-								if (!isSet(sesses)) {
-									sesses = [];
-								}
-								if (!isSet(usernames)) {
-									usernames = [];
-								}
-								sesses.splice(0, 0, sess.split('\n')[0]);
-								usernames.splice(0, 0, username);
-								localStorage.setItem('astiw_sesses', JSON.stringify(sesses));
-								localStorage.setItem('astiw_usernames', JSON.stringify(usernames));
-								window.location.href = 'index.html';
-							} else {
-								document.getElementById('username').disabled = false;
-								document.getElementById('password').disabled = false;
-								document.getElementById('anon').style.cursor = '';
-								document.getElementById('bad').style.display = '';
-								document.getElementById('contain').removeChild(document.getElementById('loader'));
-								document.getElementById('login').style.display = '';
-							}
+							localStorage.setItem('astiw_sesses', JSON.stringify([e.data]));
+							localStorage.setItem('astiw_usernames', JSON.stringify([r.responseText.split('\n')[0]]));
+							loginpopup.close();
+							window.location.href = 'index.html';
 						});
 						r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
-						r.open('post', jsonurl, true);
-						r.send('username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password));
+						r.open('post', 'https://api.stibarc.gq/v2/getusername.sjs', true);
+						r.send('sess=' + e.data);
 					} else {
-						document.getElementById('already').style.display = '';
+						loginpopup.close();
 					}
-				} else {
-					document.getElementById('empty').style.display = '';
-				}
+				});
 			} else {
 				sayToReload();
 			}
 		};
 		
 		function load() {
-			document.getElementById('username').addEventListener('keydown', function(e) {
-				if (e.keyCode == 13) {
-					if (e.ctrlKey) {
-						login(false);
-					} else {
-						document.getElementById('password').focus();
-					}
-				}
-			});
-			document.getElementById('password').addEventListener('keydown', function(e) {
-				if (e.keyCode == 13 && document.getElementById('login').style.display != 'none') {
-					login(false);
-				}
-			});
+			var sesses = localStorage.getItem('astiw_sesses');
+			if (isSet(sesses) && JSON.parse(sesses).length > 0) {
+				window.location.replace('index.html');
+			}
 			document.getElementById('rm').removeChild(document.getElementById('loader2'));
 			document.getElementById('eugh').style.display = '';
 			document.getElementById('main').style.display = 'block';
-		};
-		
-		function anon() {
-			if (document.getElementById('login').style.display != 'none') {
-				login(true);
-			}
 		};
 	</script>
 </head>
@@ -114,13 +66,7 @@
 			<p style="margin:8px 0;"><a class="classic noanon" href="changepassword.html">Change password</a></p>
 			<p style="margin:8px 0;"><a class="classic noanon" href="mailto:herronjo110@gmail.com?subject=STiBaRC%20User%20Verification%20Request">Request user verification</a></p>
 			<hr style="margin:20px 0;">
-			<div id="accountSwitcher" style="display:none;">
-				<h4 style="margin-top:20px;">Switch account</h4>
-				<ul style="padding:0 0 0 20px;" id="accounts">
-				</ul>
-				<hr style="margin:20px 0;">
-			</div>
-			<div style="margin-top:16px;"><a class="othbut" href="login.html" style="margin-right:8px;">Add account</a><a class="othbut" href="javascript:logoutCurrentUser();" id="lobut">Log out</a></div>
+			<div style="margin-top:16px;"><a class="othbut" href="javascript:logoutCurrentUser();" id="lobut">Log out</a></div>
 		</div>
 	</div>
 	<div class="dbg" id="mobileSearch">
@@ -155,16 +101,7 @@
 	<main id="rm">
 		<h3 id="eugh" style="display:none;">Log in</h3>
 		<div class="stdc" style="display:none;" id="main">
-			<p>Use your STiBaRC username and password</p>
-			<p class="tfl">Username</p>
-			<input type="text" autofocus spellcheck="false" id="username" class="txf" placeholder="Username" style="display:block; margin-bottom:16px;">
-			<p class="tfl">Password</p>
-			<input type="password" id="password" class="txf" placeholder="Password" style="display:block; margin-bottom:16px;">
-			<div id="contain"><button id="login" onclick="login(false);" class="libut" style="display:block; margin-bottom:16px;">LOG IN</button></div>
-			<p class="small" style="color:var(--red); display:none;" id="bad">Incorrect username or password</p>
-			<p class="small" style="color:var(--red); display:none;" id="empty">Please fill both fields</p>
-			<p class="small" style="color:var(--red); display:none;" id="already">Account already added</p>
-			<p>Or you can <a class="classic" id="anon" href="javascript:anon();">log in anonymously</a></p>
+			<div id="contain"><button id="login" onclick="login();" class="libut" style="display:block; margin:16px 0;">Log in with STiBaRC</button></div>
 			<p>ASTiW connects to the STiBaRC service; by using it you agree to the STiBaRC <a href="https://stibarc.gq/tos.html" target="_blank" class="classic">Terms of Service</a> and <a href="https://stibarc.gq/privacy.html" target="_blank" class="classic">Privacy Policy</a></p>
 		</div>
 		<div class="loader" id="loader2"></div>
