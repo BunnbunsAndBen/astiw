@@ -144,6 +144,8 @@
 			var onmobile = localStorage.getItem('astiw_onmobile') == 'true';
 			var view = localStorage.getItem('astiw_view');
 			var titlelink = localStorage.getItem('astiw_titlelink');
+			var autoplayaudio = localStorage.getItem('astiw_autoplayaudio');
+			var autoplayvideo = localStorage.getItem('astiw_autoplayvideo');
 			if (!isSet(theme)) {
 				theme = 'dark.css';
 			}
@@ -152,6 +154,9 @@
 			}
 			if (!isSet(view)) {
 				view = 'm';
+			}
+			if (!isSet(autoplayvideo)) {
+				autoplayvideo = 'muted';
 			}
 			var customtheme = localStorage.getItem('astiw_customtheme');
 			if (!isSet(customtheme)) {
@@ -170,6 +175,8 @@
 			document.getElementById('splitcomments').style.backgroundColor = (splitcomments ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('scrolltocomment').innerHTML = (scrolltocomment ? checkMark : '');
 			document.getElementById('scrolltocomment').style.backgroundColor = (scrolltocomment ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('autoplayaudio').innerHTML = (autoplayaudio ? checkMark : '');
+			document.getElementById('autoplayaudio').style.backgroundColor = (autoplayaudio ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('hidedownvoted').innerHTML = (hidedownvoted ? checkMark : '');
 			document.getElementById('hidedownvoted').style.backgroundColor = (hidedownvoted ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('autoload').innerHTML = (!autoload ? checkMark : '');
@@ -196,6 +203,7 @@
 			document.getElementById('changetitlelink').style.backgroundColor = (changetitlelink ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('theme').value = theme;
 			document.getElementById('view').value = view;
+			document.getElementById('autoplayvideo').value = autoplayvideo;
 			document.getElementById('customtheme').value = customtheme;
 			document.getElementById('titlelink').value = titlelink;
 			setCbAbility('scrolltocomment', !topbuttons, false);
@@ -371,6 +379,25 @@
 			<div id="tabFeatures" class="tab">
 				<h3>Features</h3>
 				<hr>
+				<h4>Attachments</h4>
+				<div>
+					<select id="autoplayvideo" onchange="applySetting('autoplayvideo');">
+						<option value="on">On</option>
+						<option value="muted">Muted</option>
+						<option value="off">Off</option>
+					</select>
+					<p style="margin-bottom:9px;">Autoplay video</p>
+					<p class="small">Play video attachments when they are loaded</p>
+				</div>
+				<div>
+					<button class="cb" id="autoplayaudio" onclick="toggleSetting('autoplayaudio');"></button><p style="margin-bottom:9px;">Autoplay audio</p>
+					<p class="small">Play audio attachments when they are loaded</p>
+				</div>
+				<div>
+					<button class="cb" id="autoloadimg" onclick="toggleSetting('autoloadimg');"></button><p style="margin-bottom:9px;">Show attachments on load</p>
+					<p class="small">Load attachments automatically instead of by clicking a button</p>
+				</div>
+				<hr>
 				<h4>Links</h4>
 				<div>
 					<button class="cb" id="replacesl" onclick="toggleSetting('replacesl');"></button><p style="margin-bottom:9px;">Replace STiBaRC links with ASTiW links</p>
@@ -436,12 +463,6 @@
 					<p style="margin-bottom:9px;">Title link</p>
 					<p class="small">Enter a URL for the title link</p>
 					<input type="text" autocomplete="off" spellcheck="false" id="titlelink" class="txf" onchange="applySetting('titlelink');" placeholder="Title link URL" style="display:block; margin-bottom:16px;">
-				</div>
-				<hr>
-				<h4>Attachments</h4>
-				<div>
-					<button class="cb" id="autoloadimg" onclick="toggleSetting('autoloadimg');"></button><p style="margin-bottom:9px;">Show attachments on load</p>
-					<p class="small">Load attachments automatically instead of by clicking a button</p>
 				</div>
 			</div>
 			<div id="tabMessenger" class="tab">

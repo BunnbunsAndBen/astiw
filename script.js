@@ -555,14 +555,19 @@ function generateAttachmentElement(data, inEditor) {
 	} else if (type == 'video' || (type == 'application' && format == 'mp4')) {
 		var el = document.createElement('video');
 		el.controls = true;
-		if (!inEditor) {
+		if (!inEditor && localStorage.getItem('astiw_autoplayvideo') != 'off') {
 			el.autoplay = true;
 		}
-		el.muted = true;
+		if (localStorage.getItem('astiw_autoplayvideo') != 'on' && localStorage.getItem('astiw_autoplayvideo') != 'off') {
+			el.muted = true;
+		}
 		el.src = data;
 	} else if (type == 'audio' || (type == 'application' && (format == 'mp3' || format == 'wav'))) {
 		var el = document.createElement('audio');
 		el.controls = true;
+		if (localStorage.getItem('astiw_autoplayaudio') == 'true') {
+			el.autoplay = true;
+		}
 		el.src = data;
 	} else {
 		var el = document.createElement('div');
