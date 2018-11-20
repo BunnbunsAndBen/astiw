@@ -376,7 +376,7 @@ function addRecent(id, item) {
 		menulist.push(localStorage.getItem('astiw_viewed' + id) == 'true' ? '<a class="classic" id="prms' + id + '" href="javascript:markPost(' + id + ', false, ' + (view != 's').toString() + ');">' + markText(true, view != 's') + '</a>' : '<a class="classic" id="prms' + id + '" href="javascript:markPost(' + id + ', true, ' + (view != 's').toString() + ');">' + markText(false, view != 's') + '</a>');
 	}
 	if (isSet(item.attachment) && item.attachment != 'none') {
-		menulist.push(view == 's' ? 'Image' : 'Image attached');
+		menulist.push('Attachment');
 	}
 	var totalVotes = item.upvotes + item.downvotes;
 	if (localStorage.getItem('astiw_percentinlist') != 'true') {
@@ -545,3 +545,39 @@ function vote(postid, dir) {
 		}
 	}
 };
+
+function generateAttachmentElement(data, inEditor) {
+	var type = data.split(':', 2)[1].split('/', 2)[0];
+	var format = data.split('/', 2)[1].split(';', 2)[0];
+	if (type == 'image') {
+		var el = document.createElement('img');
+		el.src = data;
+	} else if (type == 'video' || (type == 'application' && format == 'mp4')) {
+		var el = document.createElement('video');
+		el.controls = true;
+		if (!inEditor) {
+			el.autoplay = true;
+		}
+		el.muted = true;
+		el.src = data;
+	} else if (type == 'audio' || (type == 'application' && (format == 'mp3' || format == 'wav'))) {
+		var el = document.createElement('audio');
+		el.controls = true;
+		el.src = data;
+	} else {
+		var el = document.createElement('div');
+		el.style.textAlign = 'center';
+		if (inEditor) {
+			el.style.width = 'fit-content';
+			el.innerHTML = '<p style="color:var(--red); margin-top:0;">This file type is not supported</p><p class="small">Only images, videos, and audio are supported.<br/>You can upload this file, but no preview will be shown, and it will not necessarily display correctly on clients other than ASTiW.</p>';
+		} else {
+			el.innerHTML = '<p style="color:var(--red); margin-top:0;">No preview available</p><a class="classic" target="_blank" href="' + data + '">View file</a><p class="small">If you cannot view the file by clicking the link, try right clicking the link, copying the link address, and pasting it in the address bar</p>';
+		}
+	}
+	el.style.display = 'block';
+	if (!inEditor) {
+		el.style.margin = 'auto';
+	}
+	el.style.maxWidth = '100%';
+	return el;
+}

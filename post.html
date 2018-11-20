@@ -322,11 +322,7 @@
 			var jsonurl = 'https://api.stibarc.gq/v2/getimage.sjs?id=' + imgId;
 			var r = new XMLHttpRequest();
 			r.addEventListener('load', function() {
-				var img = document.createElement('img');
-				img.src = r.responseText;
-				img.style.display = 'block';
-				img.style.margin = 'auto';
-				img.style.maxWidth = '100%';
+				var img = generateAttachmentElement(r.responseText, false);
 				document.getElementById('imgThing').removeChild(document.getElementById('loader3'));
 				document.getElementById('imgThing').appendChild(img);
 			});
@@ -571,7 +567,7 @@
 			<textarea class="txf" id="editText" style="height:108px; min-height:calc(1em + 3px); width:calc(100% - 34px); margin-bottom:16px; display:none;" placeholder="Text"></textarea>
 			<div id="contain2" style="display:none;"><button id="save" onclick="saveEdit();" class="libut" style="margin-bottom:16px; margin-right:16px;">SAVE</button><button id="cancel" onclick="cancelEdit();" class="othbut" style="margin-bottom:16px;">CANCEL</button></div>
 			<p class="small" style="color:var(--red); display:none; margin-top:0;" id="editEmpty">A title and text are required</p>
-			<div id="imgThing" style="display:none; text-align:center;"><button id="viewImg" onclick="loadImg();" class="othbut widebut" style="margin:0; display:initial;">SHOW IMAGE</button></div>
+			<div id="imgThing" style="display:none; text-align:center;"><button id="viewImg" onclick="loadImg();" class="othbut widebut" style="margin:0; display:initial;">SHOW ATTACHMENT</button></div>
 			<b><p class="small" id="postMenu"></p></b>
 			<p id="youArentLoggedIn" style="margin-top:0;"><a href="login.html" class="classic">Log in</a> to leave a comment!</p>
 			<p id="banned" style="display:none; margin-top:0; color:var(--red);">You have been banned from STiBaRC. You cannot submit content at this time.</p>

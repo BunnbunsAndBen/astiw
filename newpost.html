@@ -132,8 +132,8 @@
 		
 		function removeImageFunction() {
 			acquiredContents = '';
-			var img = document.getElementById('imgToUpload')
-			img.src = '';
+			var img = document.getElementById('filePreviewContainer')
+			img.innerHTML = '';
 			img.style.display = 'none';
 			document.getElementById('removeimage').style.display = 'none';
 			replaceFilePicker();
@@ -175,7 +175,7 @@
 			var fileid;
 			var imageloader = document.createElement('div');
 			imageloader.style = 'flex-grow:1; height:36px; margin-left:16px; background-color:var(--cb-off);';
-			imageloader.innerHTML = '<div style="position:absolute; line-height:36px; padding: 0 8px; color:var(--opposing);">Uploading image...</div><div id="progresser" style="width:0; height:100%; background-color:var(--link);"></div>'
+			imageloader.innerHTML = '<div style="position:absolute; line-height:36px; padding: 0 8px; color:var(--opposing);">Uploading file...</div><div id="progresser" style="width:0; height:100%; background-color:var(--link);"></div>'
 			imageloader.id = 'imageloader';
 			document.getElementById('contain').appendChild(imageloader);
 			var r = new XMLHttpRequest();
@@ -230,26 +230,26 @@
 			var newPicker = document.createElement('input');
 			newPicker.type = 'file';
 			newPicker.id = 'file';
-			newPicker.accept = 'image/*';
 			cont.appendChild(newPicker);
 			document.getElementById('file').addEventListener('change', acquireFile, false);
 		};
 		
 		function acquireFile(e) {
 			var f = e.target.files[0];
-			var img = document.getElementById('imgToUpload');
+			var img = document.getElementById('filePreviewContainer');
 			if (f) {
 				var reader = new FileReader();
 				reader.onload = function(e2) {
 					acquiredContents = e2.target.result;
-					img.src = acquiredContents;
+					img.innerHTML = '';
+					img.appendChild(generateAttachmentElement(acquiredContents, true));
 					img.style.display = 'block';
 					document.getElementById('removeimage').style.display = '';
 				}
 				reader.readAsDataURL(f);
 			} else {
 				acquiredContents = '';
-				img.src = '';
+				img.innerHTML = '';
 				img.style.display = 'none';
 				document.getElementById('removeimage').style.display = 'none';
 			}
@@ -390,18 +390,18 @@
 		<div id="main" class="stdc ntbom" style="display:none;">
 			<input type="text" autocomplete="off" id="postTitle" class="txf" placeholder="Title" style="width:calc(100% - 34px); display:block; margin-top:16px; margin-bottom:16px;">
 			<textarea class="txf" id="postText" style="height:108px; min-height:calc(1em + 3px); width:calc(100% - 34px);" placeholder="Text"></textarea>
-			<h4>Add image</h4>
+			<h4>Attach file</h4>
 			<!-- begin image thing -->
 			<div>
-				<div id="pickerContainer" style="margin-bottom:16px;"><input type="file" id="file" accept="image/*"></div>
-				<button id="removeimage" class="othbut" onclick="removeImageFunction();" style="margin-bottom:16px; display:none;">Remove image</button>
-				<img id="imgToUpload" style="display:none; max-width:100%; margin-bottom:16px;">
+				<div id="pickerContainer" style="margin-bottom:16px;"><input type="file" id="file"></div>
+				<button id="removeimage" class="othbut" onclick="removeImageFunction();" style="margin-bottom:16px; display:none;">Remove attachment</button>
+				<div id="filePreviewContainer" style="display:none; margin-bottom:16px;"></div>
 			</div>
 			<!-- end image thing -->
 			<div id="contain"  style="display:flex; margin-top:19px;"><button id="post" onclick="post();" class="libut" style="display:block; margin-bottom:16px;">POST</button></div>
 			<p class="small" style="color:var(--red); display:none; margin:0 0 9px 0;" id="wait">You can post again in [seconds] seconds</p>
 			<p class="small" style="color:var(--red); display:none; margin:0 0 9px 0;" id="empty">A title and text are required</p>
-			<p id="fileError" class="small" style="color:var(--red); display:none; margin:0 0 9px 0;">Image upload failed</p>
+			<p id="fileError" class="small" style="color:var(--red); display:none; margin:0 0 9px 0;">File upload failed</p>
 		</div>
 		<div class="loader" id="loader2"></div>
 	</main>
