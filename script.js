@@ -565,7 +565,7 @@ function generateAttachmentElement(data, inEditor) {
 	} else if (type == 'audio' || (type == 'application' && (format == 'mp3' || format == 'wav'))) {
 		var el = document.createElement('audio');
 		el.controls = true;
-		if (localStorage.getItem('astiw_autoplayaudio') == 'true') {
+		if (localStorage.getItem('astiw_autoplaysound') == 'true') {
 			el.autoplay = true;
 		}
 		el.src = data;

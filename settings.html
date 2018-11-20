@@ -144,7 +144,7 @@
 			var onmobile = localStorage.getItem('astiw_onmobile') == 'true';
 			var view = localStorage.getItem('astiw_view');
 			var titlelink = localStorage.getItem('astiw_titlelink');
-			var autoplayaudio = localStorage.getItem('astiw_autoplayaudio');
+			var autoplaysound = localStorage.getItem('astiw_autoplaysound');
 			var autoplayvideo = localStorage.getItem('astiw_autoplayvideo');
 			if (!isSet(theme)) {
 				theme = 'dark.css';
@@ -175,8 +175,8 @@
 			document.getElementById('splitcomments').style.backgroundColor = (splitcomments ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('scrolltocomment').innerHTML = (scrolltocomment ? checkMark : '');
 			document.getElementById('scrolltocomment').style.backgroundColor = (scrolltocomment ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
-			document.getElementById('autoplayaudio').innerHTML = (autoplayaudio ? checkMark : '');
-			document.getElementById('autoplayaudio').style.backgroundColor = (autoplayaudio ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
+			document.getElementById('autoplaysound').innerHTML = (autoplaysound ? checkMark : '');
+			document.getElementById('autoplaysound').style.backgroundColor = (autoplaysound ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('hidedownvoted').innerHTML = (hidedownvoted ? checkMark : '');
 			document.getElementById('hidedownvoted').style.backgroundColor = (hidedownvoted ? 'var(--probably-same-as-link)' : 'var(--cb-off)');
 			document.getElementById('autoload').innerHTML = (!autoload ? checkMark : '');
@@ -390,7 +390,7 @@
 					<p class="small">Play video attachments when they are loaded</p>
 				</div>
 				<div>
-					<button class="cb" id="autoplayaudio" onclick="toggleSetting('autoplayaudio');"></button><p style="margin-bottom:9px;">Autoplay audio</p>
+					<button class="cb" id="autoplaysound" onclick="toggleSetting('autoplaysound');"></button><p style="margin-bottom:9px;">Autoplay audio</p>
 					<p class="small">Play audio attachments when they are loaded</p>
 				</div>
 				<div>
