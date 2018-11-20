@@ -569,9 +569,9 @@ function generateAttachmentElement(data, inEditor) {
 		el.style.textAlign = 'center';
 		el.style.width = 'fit-content';
 		if (inEditor) {
-			el.innerHTML = '<hr><p style="color:var(--red); margin-top:0;">This file type is not supported</p><p class="small">Only images, videos, and audio are supported.<br/>You can upload this file, but no preview will be shown, and it will not necessarily display correctly on clients other than ASTiW.</p><hr>';
+			el.innerHTML = '<hr><p style="color:var(--red); margin-top:0;">This file type is not supported</p><p class="small" style="margin-bottom:0;">Only images, videos, and audio are supported.<br/>You can upload this file, but no preview will be shown, and it will not necessarily display correctly on clients other than ASTiW.</p><hr>';
 		} else {
-			el.innerHTML = '<hr><p style="color:var(--red); margin-top:0;">No preview available</p><a class="classic" target="_blank" href="' + data + '">View file</a><p class="small">If you cannot view the file by clicking the link, try right clicking the link and choosing "Open in new tab" (or equivalent)</p><hr>';
+			el.innerHTML = '<hr><p style="color:var(--red); margin-top:0;">No preview available</p><a class="classic" target="_blank" href="' + data + '">View file</a><p class="small" style="margin-bottom:0;">If you cannot view the file by clicking the link, try right clicking the link and choosing "Open in new tab" (or equivalent)</p><hr>';
 		}
 	}
 	el.style.display = 'block';
