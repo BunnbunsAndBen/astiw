@@ -379,35 +379,6 @@
 			<div id="tabFeatures" class="tab">
 				<h3>Features</h3>
 				<hr>
-				<h4>Attachments</h4>
-				<div>
-					<select id="autoplayvideo" onchange="applySetting('autoplayvideo');">
-						<option value="on">On</option>
-						<option value="muted">Muted</option>
-						<option value="off">Off</option>
-					</select>
-					<p style="margin-bottom:9px;">Autoplay video</p>
-					<p class="small">Play video attachments when they are loaded</p>
-				</div>
-				<div>
-					<button class="cb" id="autoplaysound" onclick="toggleSetting('autoplaysound');"></button><p style="margin-bottom:9px;">Autoplay audio</p>
-					<p class="small">Play audio attachments when they are loaded</p>
-				</div>
-				<div>
-					<button class="cb" id="autoloadimg" onclick="toggleSetting('autoloadimg');"></button><p style="margin-bottom:9px;">Show attachments on load</p>
-					<p class="small">Load attachments automatically instead of by clicking a button</p>
-				</div>
-				<hr>
-				<h4>Links</h4>
-				<div>
-					<button class="cb" id="replacesl" onclick="toggleSetting('replacesl');"></button><p style="margin-bottom:9px;">Replace STiBaRC links with ASTiW links</p>
-					<p class="small">Replace user-created links to STiBaRC content on the STiBaRC website with links to the same content on ASTiW</p>
-				</div>
-				<div>
-					<button class="cb" id="newtab" onclick="toggleSetting('newtab');"></button><p style="margin-bottom:9px;">Open links in new tabs</p>
-					<p class="small">Always open links in user created content in a new tab</p>
-				</div>
-				<hr>
 				<h4>Posts and Lists</h4>
 				<div id="viewSettingItem">
 					<select id="view" onchange="applySetting('view');">
@@ -444,6 +415,35 @@
 				<div>
 					<button class="cb" id="percentinlist" onclick="toggleSetting('percentinlist');"></button><p style="margin-bottom:9px;">Show percent upvoted on home page</p>
 					<p class="small">Show the percent of votes that are upvotes on posts in the list</p>
+				</div>
+				<hr>
+				<h4>Links</h4>
+				<div>
+					<button class="cb" id="replacesl" onclick="toggleSetting('replacesl');"></button><p style="margin-bottom:9px;">Replace STiBaRC links with ASTiW links</p>
+					<p class="small">Replace user-created links to STiBaRC content on the STiBaRC website with links to the same content on ASTiW</p>
+				</div>
+				<div>
+					<button class="cb" id="newtab" onclick="toggleSetting('newtab');"></button><p style="margin-bottom:9px;">Open links in new tabs</p>
+					<p class="small">Always open links in user created content in a new tab</p>
+				</div>
+				<hr>
+				<h4>Attachments</h4>
+				<div>
+					<select id="autoplayvideo" onchange="applySetting('autoplayvideo');">
+						<option value="on">On</option>
+						<option value="muted">Muted</option>
+						<option value="off">Off</option>
+					</select>
+					<p style="margin-bottom:9px;">Autoplay video</p>
+					<p class="small">Play video attachments when they are loaded</p>
+				</div>
+				<div>
+					<button class="cb" id="autoplaysound" onclick="toggleSetting('autoplaysound');"></button><p style="margin-bottom:9px;">Autoplay audio</p>
+					<p class="small">Play audio attachments when they are loaded</p>
+				</div>
+				<div>
+					<button class="cb" id="autoloadimg" onclick="toggleSetting('autoloadimg');"></button><p style="margin-bottom:9px;">Show attachments on load</p>
+					<p class="small">Load attachments automatically instead of by clicking a button</p>
 				</div>
 				<hr>
 				<h4>Navigation</h4>
