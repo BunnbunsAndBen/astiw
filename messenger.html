@@ -101,7 +101,7 @@
 				}
 			});
 			document.getElementById('messageBox').addEventListener('keydown', function(e) {
-				if (e.keyCode == 13 && !e.shiftKey) {
+				if (e.keyCode == 13 && !e.shiftKey && !onMobile) {
 					e.preventDefault();
 					submitMessage();
 				}
