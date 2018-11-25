@@ -12,33 +12,21 @@
 	<script src="script.js"></script>
 	<script>
 		var loginClicked = false;
+		var loginpopup;
+		
+		window.onbeforeunload = function() {
+			if (loginpopup != undefined && loginpopup.closed == false) {
+				loginpopup.close();
+			}
+		};
 		
 		function login(isanon) {
 			if (!sessHasChanged()) {
-				var loginpopup = window.open('https://stibarc.gq/login/', '', 'menubar=no,location=no,resizable=no,scrollbars=yes,status=yes,height=360,width=500');
-				window.addEventListener('message', function(e) {
-			  		if (!loginClicked && e.data != 'Cancelled') {
-						loginClicked = true;
-						document.getElementById('login').style.display = 'none';
-						var ldr = document.createElement('div');
-						ldr.className = 'loader';
-						ldr.id = 'loader';
-						ldr.style.margin = '16px 0';
-						document.getElementById('contain').appendChild(ldr);
-						var r = new XMLHttpRequest();
-						r.addEventListener('load', function() {
-							localStorage.setItem('astiw_sesses', JSON.stringify([e.data]));
-							localStorage.setItem('astiw_usernames', JSON.stringify([r.responseText.split('\n')[0]]));
-							loginpopup.close();
-							window.location.href = 'index.html';
-						});
-						r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
-						r.open('post', 'https://api.stibarc.gq/v2/getusername.sjs', true);
-						r.send('sess=' + e.data);
-					} else {
-						loginpopup.close();
-					}
-				});
+				if (loginpopup == undefined || loginpopup.closed == true) {
+					loginpopup = window.open('https://stibarc.gq/login/', '', 'menubar=no,location=no,resizable=no,scrollbars=yes,status=yes,height=360,width=500');
+				} else {
+					loginpopup.focus();
+				}
 			} else {
 				sayToReload();
 			}
@@ -52,6 +40,29 @@
 		}
 		
 		function load() {
+			window.addEventListener('message', function(e) {
+				if (!loginClicked && e.data != 'Cancelled') {
+					loginClicked = true;
+					loginpopup.close();
+					document.getElementById('login').style.display = 'none';
+					var ldr = document.createElement('div');
+					ldr.className = 'loader';
+					ldr.id = 'loader';
+					ldr.style.margin = '16px 0';
+					document.getElementById('contain').appendChild(ldr);
+					var r = new XMLHttpRequest();
+					r.addEventListener('load', function() {
+						localStorage.setItem('astiw_sesses', JSON.stringify([e.data]));
+						localStorage.setItem('astiw_usernames', JSON.stringify([r.responseText.split('\n')[0]]));
+						window.location.href = 'index.html';
+					});
+					r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
+					r.open('post', 'https://api.stibarc.gq/v2/getusername.sjs', true);
+					r.send('sess=' + e.data);
+				} else {
+					loginpopup.close();
+				}
+			});
 			document.getElementById('rm').removeChild(document.getElementById('loader2'));
 			document.getElementById('eugh').style.display = '';
 			document.getElementById('main').style.display = 'block';
