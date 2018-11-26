@@ -546,7 +546,11 @@ function vote(postid, dir) {
 	}
 };
 
-function generateAttachmentElement(data, inEditor) {
+function generateAttachmentElement(data, usage) {
+	var msgEditor = usage == 'msgEditor';
+	if (msgEditor) {
+		usage = 'editor';
+	}
 	var type = data.split(':', 2)[1].split('/', 2)[0];
 	var format = data.split('/', 2)[1].split(';', 2)[0];
 	if (type == 'image') {
@@ -555,32 +559,49 @@ function generateAttachmentElement(data, inEditor) {
 	} else if (type == 'video' || (type == 'application' && format == 'mp4')) {
 		var el = document.createElement('video');
 		el.controls = true;
-		if (!inEditor && localStorage.getItem('astiw_autoplayvideo') != 'off') {
-			el.autoplay = true;
-		}
-		if (localStorage.getItem('astiw_autoplayvideo') != 'on' && localStorage.getItem('astiw_autoplayvideo') != 'off') {
-			el.muted = true;
+		if (usage != 'message') {
+			if (usage != 'editor' && localStorage.getItem('astiw_autoplayvideo') != 'off') {
+				el.autoplay = true;
+			}
+			if (localStorage.getItem('astiw_autoplayvideo') != 'on' && localStorage.getItem('astiw_autoplayvideo') != 'off') {
+				el.muted = true;
+			}
 		}
 		el.src = data;
 	} else if (type == 'audio' || (type == 'application' && (format == 'mp3' || format == 'wav'))) {
 		var el = document.createElement('audio');
 		el.controls = true;
-		if (localStorage.getItem('astiw_autoplaysound') == 'true') {
+		if (usage != 'message' && localStorage.getItem('astiw_autoplaysound') == 'true') {
 			el.autoplay = true;
 		}
 		el.src = data;
 	} else {
 		var el = document.createElement('div');
-		el.style.textAlign = 'center';
-		el.style.width = 'fit-content';
-		if (inEditor) {
-			el.innerHTML = '<hr><p style="color:var(--red); margin-top:0;">This file type is not supported</p><p class="small" style="margin-bottom:0;">Only images, videos, and audio are supported.<br/>You can upload this file, but no preview will be shown, and it will not necessarily display correctly on clients other than ASTiW.</p><hr>';
+		if (usage == 'message') {
+			el.style.display = 'inline-block';
 		} else {
-			el.innerHTML = '<hr><p style="color:var(--red); margin-top:0;">No preview available</p><a class="classic" target="_blank" href="' + data + '">View file</a><p class="small" style="margin-bottom:0;">If you cannot view the file by clicking the link, try right clicking the link and choosing "Open in new tab" (or equivalent)</p><hr>';
+			el.style.textAlign = 'center';
+		}
+		el.style.width = 'fit-content';
+		if (usage == 'editor') {
+			if (msgEditor) {
+				el.innerHTML = '<hr><p class="small" style="margin:0;">This file cannot be previewed</p><hr>';
+			} else {
+				el.innerHTML = '<hr><p style="color:var(--red); margin-top:0;">This file type is not supported</p><p class="small" style="margin-bottom:0;">Only images, videos, and audio are supported.<br/>You can upload this file, but no preview will be shown, and it will not necessarily display correctly on clients other than ASTiW.</p><hr>';
+			}
+		} else if (usage == 'message') {
+			el.innerHTML = '<hr><a class="classic" target="_blank" style="margin-top:0;" href="' + data + '">Open file</a><p class="small" style="margin-bottom:0;">If you cannot view the file by clicking the link, try right clicking the link and choosing "Open in new tab" (or equivalent)</p><hr>';
+		} else {
+			el.innerHTML = '<hr><p style="color:var(--red); margin-top:0;">No preview available</p><a class="classic" target="_blank" href="' + data + '">Open file</a><p class="small" style="margin-bottom:0;">If you cannot view the file by clicking the link, try right clicking the link and choosing "Open in new tab" (or equivalent)</p><hr>';
 		}
 	}
-	el.style.display = 'block';
-	if (!inEditor) {
+	if (usage != 'message') {
+		el.style.display = 'block';
+	}
+	if (usage == 'message') {
+		el.style.verticalAlign = 'top';
+	}
+	if (usage == 'post') {
 		el.style.margin = 'auto';
 	}
 	el.style.maxWidth = '100%';

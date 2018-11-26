@@ -242,7 +242,7 @@
 				reader.onload = function(e2) {
 					acquiredContents = e2.target.result;
 					img.innerHTML = '';
-					img.appendChild(generateAttachmentElement(acquiredContents, true));
+					img.appendChild(generateAttachmentElement(acquiredContents, 'editor'));
 					img.style.display = 'block';
 					document.getElementById('removeimage').style.display = '';
 				}

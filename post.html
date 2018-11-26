@@ -322,7 +322,7 @@
 			var jsonurl = 'https://api.stibarc.gq/v2/getimage.sjs?id=' + imgId;
 			var r = new XMLHttpRequest();
 			r.addEventListener('load', function() {
-				var img = generateAttachmentElement(r.responseText, false);
+				var img = generateAttachmentElement(r.responseText, 'post');
 				document.getElementById('imgThing').removeChild(document.getElementById('loader3'));
 				document.getElementById('imgThing').appendChild(img);
 			});
