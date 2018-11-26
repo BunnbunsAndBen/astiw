@@ -789,12 +789,14 @@
 					img.innerHTML = '';
 					img.appendChild(generateAttachmentElement(acquiredContents, 'msgEditor'));
 					img.style.display = 'block';
+					document.getElementById('sendFile').style.display = 'block';
 				}
 				reader.readAsDataURL(f);
 			} else {
 				acquiredContents = '';
 				img.innerHTML = '';
 				img.style.display = 'none';
+				document.getElementById('sendFile').style.display = 'none';
 			}
 		};
 		
@@ -803,6 +805,7 @@
 			var img = document.getElementById('filePreviewContainer')
 			img.innerHTML = '';
 			img.style.display = 'none';
+			document.getElementById('sendFile').style.display = 'none';
 			replaceFilePicker();
 		};
 		
@@ -989,7 +992,7 @@
 			<p>Recipient must be using ASTiW to view file</p>
 			<div id="pickerContainer" style="margin-bottom:16px;"><input type="file" id="file"></div>
 			<div id="filePreviewContainer" style="display:none; margin-bottom:16px;"></div>
-			<button onclick="sendFile();" class="libut" style="display:block;">SEND</button>
+			<button id="sendFile" onclick="sendFile();" class="libut" style="display:none;">SEND</button>
 		</div>
 	</div>
 	<div class="dbg" id="chatOptions">
