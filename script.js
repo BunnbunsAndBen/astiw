@@ -596,7 +596,7 @@ function generateAttachmentElement(data, usage) {
 			el.style.borderRadius = '18.5px';
 			el.style.backgroundColor = 'var(--content-bg)';
 		} else {
-			el.innerHTML = '<hr><p style="color:var(--red); margin-top:0;">No preview available</p><a class="classic" target="_blank" href="' + data + '">Open file</a><p class="small" style="margin-bottom:0;">If you cannot view the file by clicking the link, try right clicking the link and choosing "Open in new tab" (or equivalent)</p><hr>';
+			el.innerHTML = '<hr><p style="color:var(--red); margin-top:0;">No preview available</p><h3 style="margin:0;"><a class="classic" target="_blank" href="' + data + '">Open file</a></h3><p class="small" style="margin-bottom:0;">If you cannot view the file by clicking the link, try right clicking the link and choosing "Open in new tab" (or equivalent)</p><hr>';
 		}
 	}
 	if (usage != 'message') {
