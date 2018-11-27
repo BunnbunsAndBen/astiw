@@ -590,7 +590,11 @@ function generateAttachmentElement(data, usage) {
 				el.innerHTML = '<hr><p style="color:var(--red); margin-top:0;">This file type is not supported</p><p class="small" style="margin-bottom:0;">Only images, videos, and audio are supported.<br/>You can upload this file, but no preview will be shown, and it will not necessarily display correctly on clients other than ASTiW.</p><hr>';
 			}
 		} else if (usage == 'message') {
-			el.innerHTML = '<hr><a class="classic" target="_blank" style="margin-top:0;" href="' + data + '">Open file</a><p class="small" style="margin-bottom:0;">If you cannot view the file by clicking the link, try right clicking the link and choosing "Open in new tab" (or equivalent)</p><hr>';
+			el.innerHTML = '<a class="classic" target="_blank" style="margin-top:0;" href="' + data + '">Open file</a><p class="small" style="margin-bottom:0;">If you cannot view the file by clicking the link, try right clicking the link and choosing "Open in new tab" (or equivalent)</p>';
+			el.style.padding = '8px 18.5px';
+			el.style.border = '1px solid var(--border)';
+			el.style.borderRadius = '18.5px';
+			el.style.backgroundColor = 'var(--content-bg)';
 		} else {
 			el.innerHTML = '<hr><p style="color:var(--red); margin-top:0;">No preview available</p><a class="classic" target="_blank" href="' + data + '">Open file</a><p class="small" style="margin-bottom:0;">If you cannot view the file by clicking the link, try right clicking the link and choosing "Open in new tab" (or equivalent)</p><hr>';
 		}
