@@ -175,7 +175,7 @@
 			var fileid;
 			var imageloader = document.createElement('div');
 			imageloader.style = 'flex-grow:1; height:36px; margin-left:16px; background-color:var(--cb-off);';
-			imageloader.innerHTML = '<div style="position:absolute; line-height:36px; padding: 0 8px; color:var(--opposing);">Uploading file...</div><div id="progresser" style="width:0; height:100%; background-color:var(--link);"></div>'
+			imageloader.innerHTML = '<div style="position:absolute; line-height:36px; padding: 0 8px; color:var(--opposing);" id="uploadingFileText">Uploading file...</div><div id="progresser" style="width:0; height:100%; background-color:var(--link);"></div>'
 			imageloader.id = 'imageloader';
 			document.getElementById('contain').appendChild(imageloader);
 			var r = new XMLHttpRequest();
@@ -190,7 +190,7 @@
 						setProgress(uploadi, totalParts);
 						if (uploadi == totalParts) {
 							attachedfile = fileid;
-							document.getElementById('contain').removeChild(document.getElementById('imageloader'));
+							document.getElementById('uploadingFileText').innerHTML = 'File uploaded!';
 							sendPost();
 						} else {
 							r.open('post', 'https://api.stibarc.gq/v2/uploadparts.sjs', true);
