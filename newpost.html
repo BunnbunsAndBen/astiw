@@ -172,6 +172,7 @@
 			var stuff = contents.match(/.{1,98000}/g);
 			var totalParts = stuff.length;
 			var uploadi = 0;
+			var secondTry = false;
 			var fileid;
 			var imageloader = document.createElement('div');
 			imageloader.style = 'flex-grow:1; height:36px; margin-left:16px; background-color:var(--cb-off);';
@@ -186,6 +187,7 @@
 						fileid = ans;
 					}
 					if (uploadi == 0 ? isSet(ans) && ans != 'ERR' : ans == 'GOOD') {
+						secondTry = false;
 						uploadi++;
 						setProgress(uploadi, totalParts);
 						if (uploadi == totalParts) {
@@ -197,7 +199,13 @@
 							r.send('cont=true&file=' + fileid + '&content=' + encodeURIComponent(stuff[uploadi]));
 						}
 					} else {
-						imageError();
+						if (secondTry) {
+							imageError();
+						} else {
+							secondTry = true;
+							r.open('post', 'https://api.stibarc.gq/v2/uploadparts.sjs', true);
+							r.send('cont=true&file=' + fileid + '&content=' + encodeURIComponent(stuff[uploadi]));
+						}
 					}
 				} else {
 					imageError();
