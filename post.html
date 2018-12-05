@@ -348,8 +348,8 @@
 					var r = new XMLHttpRequest();
 					r.addEventListener('load', function() {
 						var goodContent  = JSON.parse(r.responseText);
-						if (stuf.poster == 'savaka' && stuf.title.substring(0, 7) == '[ASTiW]') {
-							stuf.title = stuf.title.substring(7);
+						if (goodContent.poster == 'savaka' && goodContent.title.substring(0, 7) == '[ASTiW]') {
+							goodContent.title = goodContent.title.substring(7);
 						}
 						document.getElementById('editTitle').value = goodContent.title;
 						document.getElementById('editText').value = goodContent.content;
