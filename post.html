@@ -106,7 +106,7 @@
 						document.title = stuf.title + ' - ASTiW';
 						var currentUser = getCurrentUser();
 						document.getElementById('metaThing').innerHTML = 'Posted by <a class="classic" ' + (stuf.poster == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(stuf.poster) + '">' + stuf.poster + '</a><span id="verified"> ' + (onMobile ? '(Verified)' : '&#x2611;&#xFE0E;') + '</span>' + officialMark + ' at ' + stuf.postdate + (stuf.edited ? ' (edited)' : '');
-						document.getElementById('postText').innerHTML = putLinksInText(stuf.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'), false);
+						document.getElementById('postText').innerHTML = putLinksInText(replaceInPostText(stuf.content, stuf.poster), false);
 						var jsonurlv = 'https://api.stibarc.gq/v2/checkverify.sjs?id=' + stuf.poster;
 						rv.open('get', jsonurlv, true);
 						rv.send();
@@ -390,7 +390,7 @@
 						if (holdmyverification) {
 							document.getElementById('verified').style.display = 'initial';
 						}
-						document.getElementById('postText').innerHTML = putLinksInText(stuf.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>'), false);
+						document.getElementById('postText').innerHTML = putLinksInText(replaceInPostText(stuf.content, stuf.poster), false);
 						document.getElementById('editLink').innerHTML = '<a class="classic" href="javascript:editPost();">&#x270E;&#xFE0E; Edit</a>';
 						document.getElementById('oof').removeChild(document.getElementById('loader4'));
 						document.getElementById('nameThing').style.display = '';
@@ -509,6 +509,15 @@
 			window.scrollTo(0, document.getElementById('commentBox').offsetTop - 58);
 			document.getElementById('commentBox').focus();
 		};
+		
+		function replaceInPostText(s, creator) {
+			var allowed = ['herronjo', 'savaka', '-Verso-', 'Aldeenyo'];
+			if (allowed.indexOf(creator) > -1) {
+				return s.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>');
+			} else {
+				return s.replace(/\r\n/g, '<br/>');
+			}
+		}
 	</script>
 </head>
 <body>
