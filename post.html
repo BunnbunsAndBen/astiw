@@ -513,9 +513,9 @@
 		function replaceInPostText(s, creator) {
 			var allowed = ['herronjo', 'savaka', '-Verso-', 'Aldeenyo'];
 			if (allowed.indexOf(creator) > -1) {
-				return s.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>');
-			} else {
 				return s.replace(/\r\n/g, '<br/>');
+			} else {
+				return s.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>');
 			}
 		}
 	</script>
