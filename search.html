@@ -45,7 +45,7 @@
 						document.getElementById('scrollerContain').style.display = 'none';
 					}
 				}
-				document.getElementById('nameThing').innerHTML = 'Search results for "' + term.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '"';
+				document.getElementById('nameThing').innerHTML = 'Search results for "' + term.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/&/g, '&amp;') + '"';
 				var jsonurl = 'https://api.stibarc.gq/postsearch.sjs?q=' + encodeURIComponent(term);
 				var r = new XMLHttpRequest();
 				var ru = new XMLHttpRequest();
@@ -68,7 +68,7 @@
 				ru.addEventListener('load', function() {
 					var messenge = document.getElementById('messenge');
 					if (isSet(ru.responseText)) {
-						messenge.innerHTML = 'There is a user named <a class="classic" href="user.html?id=' + encodeURIComponent(term) + '">' + term.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</a>'
+						messenge.innerHTML = 'There is a user named <a class="classic" href="user.html?id=' + encodeURIComponent(term) + '">' + term.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/&/g, '&amp;') + '</a>'
 						document.getElementById('info').style.display = '';
 					} else if (nores) {
 						messenge.innerHTML = 'There are no results';

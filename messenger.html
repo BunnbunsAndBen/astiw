@@ -202,7 +202,7 @@
 				}
 				msgId = chatslist[eg][0];
 				msgDetail = chatslist[eg][1];
-				elInside = '<div id="chatItem' + msgId + '" class="recent nosides' + (msgId == highlightChat ? ' selectedChatItem' : '') + '"><div style="display:flex;"><b style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex-grow:1;">' + msgDetail.user.replace(/</g, '&lt;').replace(/>/g, '&gt;') +'</b>' + (isSet(msgDetail.lastmessage) && isSet(msgDetail.lastmessage.time) && msgDetail.lastmessage.time != 'unknown' ? '<div style="margin:3.5px 0 0 8px; text-align:right; white-space:nowrap;" class="small">' + generateTS(msgDetail.lastmessage.time, 0) + '</div>' : '') + '</div>' + (isSet(msgDetail.lastmessage) ? '<p class="small" style="margin-bottom:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + (onMobile ? '' : (msgDetail.lastmessage.sender == myName ? '&#x2197;&#xFE0E;' : '&#x2199;&#xFE0E;') + ' ') + (msgDetail.lastmessage.message.indexOf('[Encrypted] ') == 0 && msgDetail.lastmessage.message.length > 12 ? '[Encrypted message]' : msgDetail.lastmessage.message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, ' ') + '</p>') : '') + '</div>';
+				elInside = '<div id="chatItem' + msgId + '" class="recent nosides' + (msgId == highlightChat ? ' selectedChatItem' : '') + '"><div style="display:flex;"><b style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex-grow:1;">' + msgDetail.user.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/&/g, '&amp;') +'</b>' + (isSet(msgDetail.lastmessage) && isSet(msgDetail.lastmessage.time) && msgDetail.lastmessage.time != 'unknown' ? '<div style="margin:3.5px 0 0 8px; text-align:right; white-space:nowrap;" class="small">' + generateTS(msgDetail.lastmessage.time, 0) + '</div>' : '') + '</div>' + (isSet(msgDetail.lastmessage) ? '<p class="small" style="margin-bottom:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + (onMobile ? '' : (msgDetail.lastmessage.sender == myName ? '&#x2197;&#xFE0E;' : '&#x2199;&#xFE0E;') + ' ') + (msgDetail.lastmessage.message.indexOf('[Encrypted] ') == 0 && msgDetail.lastmessage.message.length > 12 ? '[Encrypted message]' : msgDetail.lastmessage.message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/&/g, '&amp;').replace(/\n/g, ' ') + '</p>') : '') + '</div>';
 				els += '<a href="javascript:openChat(' + msgId + ', \'' + msgDetail.user.replace(/'/g, '\\\'') + '\', false)" class="recentLinks">' + elInside + '</a>';
 			}
 			main.innerHTML = els;
@@ -321,7 +321,7 @@
 							document.getElementById('encryptionMarker').style.color = 'var(--border)';
 						}
 						var msgs = generateMsgs(ri.responseText, 'start');
-						document.getElementById('chatPersonUsername').innerHTML = thePerson.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+						document.getElementById('chatPersonUsername').innerHTML = thePerson.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/&/g, '&amp;');
 						otherPerson = thePerson;
 						document.getElementById('chatPersonUsername').href = 'user.html?id=' + encodeURIComponent(thePerson);
 						var msgBox = document.getElementById('messages');
@@ -413,7 +413,7 @@
 						currentMessage = tmp[ind].message;
 						encryptionStatus = 0;
 					}
-					msgs = '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';"><div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? generateTS(tmp[ind].time, 1) : '') + (encryptionStatus > 0 ? ' <span style="color:var(--verified);">' + (mac || onMobile ? 'S' : '&#x1f512;&#xfe0e;') + '</span>' : '') + '</div>' + (isData(currentMessage) ? '' : '<div ' + (itsMe ? 'class="specialty" ' : '') + 'style="max-width:calc(100% - 39px); display:inline-block; word-wrap:break-word; ' + (encryptionStatus == 2 ? 'color:var(--red)' : 'padding:8px 18.5px; border-radius:18.5px; border:1px solid var(--border); ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);')) + '">' + putLinksInText(currentMessage.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>'), true) + '</div>') + insertImage(currentMessage) + '</div>' + msgs;
+					msgs = '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';"><div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? generateTS(tmp[ind].time, 1) : '') + (encryptionStatus > 0 ? ' <span style="color:var(--verified);">' + (mac || onMobile ? 'S' : '&#x1f512;&#xfe0e;') + '</span>' : '') + '</div>' + (isData(currentMessage) ? '' : '<div ' + (itsMe ? 'class="specialty" ' : '') + 'style="max-width:calc(100% - 39px); display:inline-block; word-wrap:break-word; ' + (encryptionStatus == 2 ? 'color:var(--red)' : 'padding:8px 18.5px; border-radius:18.5px; border:1px solid var(--border); ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);')) + '">' + putLinksInText(currentMessage.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/&/g, '&amp;').replace(/\n/g, '<br/>'), true) + '</div>') + insertImage(currentMessage) + '</div>' + msgs;
 					if (ind == Object.keys(tmp).length - 1 && inputind == 'start') {
 						mostRecentTime = (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? tmp[ind].time : 0);
 					}
@@ -540,7 +540,7 @@
 									currentMessage = tmp[ind].message;
 									encryptionStatus = 0;
 								}
-								msgs += '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';"><div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? generateTS(tmp[ind].time, 1) : '') + (encryptionStatus > 0 ? ' <span style="color:var(--verified);">' + (mac || onMobile ? 'S' : '&#x1f512;&#xfe0e;') + '</span>' : '') + '</div>' + (isData(currentMessage) ? '' : '<div ' + (itsMe ? 'class="specialty" ' : '') + 'style="max-width:calc(100% - 39px); display:inline-block; word-wrap:break-word; ' + (encryptionStatus == 2 ? 'color:var(--red)' : 'padding:8px 18.5px; border-radius:18.5px; border:1px solid var(--border); ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);')) + '">' + putLinksInText(currentMessage.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>'), true) + '</div>') + insertImage(currentMessage) + '</div>';
+								msgs += '<div style="margin:16px; text-align:' + (itsMe ? 'right' : 'left') + ';"><div class="small" style="margin:0 2px 4px 2px; vertical-align:bottom;">' + (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? generateTS(tmp[ind].time, 1) : '') + (encryptionStatus > 0 ? ' <span style="color:var(--verified);">' + (mac || onMobile ? 'S' : '&#x1f512;&#xfe0e;') + '</span>' : '') + '</div>' + (isData(currentMessage) ? '' : '<div ' + (itsMe ? 'class="specialty" ' : '') + 'style="max-width:calc(100% - 39px); display:inline-block; word-wrap:break-word; ' + (encryptionStatus == 2 ? 'color:var(--red)' : 'padding:8px 18.5px; border-radius:18.5px; border:1px solid var(--border); ' + (itsMe ? 'background-color:var(--link); color:var(--opposing);' : 'background-color:var(--content-bg);')) + '">' + putLinksInText(currentMessage.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/&/g, '&amp;').replace(/\n/g, '<br/>'), true) + '</div>') + insertImage(currentMessage) + '</div>';
 								mostRecentTime = (isSet(tmp[ind].time) && tmp[ind].time != 'unknown' ? tmp[ind].time : 0);
 								ind++;
 							}
@@ -677,7 +677,7 @@
 			pinner.parentElement.href = (pinned ? 'javascript:setPin(\'false\');' : 'javascript:setPin(\'true\');');
 			hider.getElementsByTagName('b')[0].innerHTML = (hid ? 'Unhide chat' : 'Hide chat');
 			hider.parentElement.href = (hid ? 'javascript:setHide(false);' : 'javascript:setHide(true);');
-			blocker.getElementsByTagName('b')[0].innerHTML = 'Block ' + otherPerson.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+			blocker.getElementsByTagName('b')[0].innerHTML = 'Block ' + otherPerson.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/&/g, '&amp;');
 			pinner.getElementsByTagName('p')[0].innerHTML = (pinned ? 'Stop displaying this chat above other chats in the list' : 'Display this chat above other chats in the list');
 			hider.getElementsByTagName('p')[0].innerHTML = (hid ? 'Show this chat in the list' : 'Temporarily hide this chat from the list (until there is new activity)');
 			pinner.style.backgroundColor = '';

@@ -32,7 +32,7 @@
 					document.getElementById('scrollerContain').style.display = 'none';
 				}
 			}
-			document.getElementById('username').innerHTML = term.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '<span id="verified"> ' + (onMobile ? '(Verified)' : '&#x2611;&#xFE0E;') + '</span>';
+			document.getElementById('username').innerHTML = term.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/&/g, '&amp;') + '<span id="verified"> ' + (onMobile ? '(Verified)' : '&#x2611;&#xFE0E;') + '</span>';
 			myName = getCurrentUser();
 			if (term == myName && myName != 'Anon') {
 				var editproflink = document.createElement('p');
@@ -48,10 +48,10 @@
 			r.addEventListener('load', function() {
 				if (isSet(r.responseText)) {
 					var rsp = JSON.parse(r.responseText);
-					var rank = rsp.rank.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-					var name = rsp.name.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-					var email = rsp.email.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-					var birthday = rsp.birthday.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+					var rank = rsp.rank.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/&/g, '&amp;');
+					var name = rsp.name.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/&/g, '&amp;');
+					var email = rsp.email.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/&/g, '&amp;');
+					var birthday = rsp.birthday.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/&/g, '&amp;');
 					document.getElementById('rank').innerHTML = 'Rank: ' + rank;
 					if (name != 'Not shown' && name != 'Not set') {
 						document.getElementById('name').innerHTML = 'Name: ' + name;
@@ -69,7 +69,7 @@
 						document.getElementById('detailList').removeChild(document.getElementById('birthday'));
 					}
 					if (isSet(rsp.bio)) {
-						var bio = rsp.bio.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r\n/g, '<br/>');
+						var bio = rsp.bio.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/&/g, '&amp;').replace(/\r\n/g, '<br/>');
 						document.getElementById('bio').innerHTML = putLinksInText(bio, false);
 					} else {
 						document.getElementById('detail').removeChild(document.getElementById('bio'));
