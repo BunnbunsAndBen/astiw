@@ -62,7 +62,7 @@
 				for (i = 0; i < blocksArr.length; i++) {
 					noone = false;
 					thign = document.createElement('li');
-					thign.innerHTML = '<a class="classic" href="javascript:unblock(' + i + ');">' + blocksArr[i].replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/&/g, '&amp;'); + '</a>';
+					thign.innerHTML = '<a class="classic" href="javascript:unblock(' + i + ');">' + blocksArr[i].replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); + '</a>';
 					thign.style.marginTop = '0.5em';
 					blocks.appendChild(thign);
 				}
