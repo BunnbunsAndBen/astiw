@@ -105,7 +105,7 @@
 				document.getElementById('username').style.display = '';
 				document.getElementById('detail').style.display = 'block';
 				for (i = 1; i < ans.length; i++) {
-					addRecentBasic(ans[i], i == 1);
+					addRecentBasic(ans[i], i == 1, term == 'savaka');
 				}
 				if (ans.length <= 1) {
 					document.getElementById('noposts').style.display = '';

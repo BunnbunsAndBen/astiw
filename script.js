@@ -314,11 +314,14 @@ function getAllUrlParams(url) {
 	return obj;
 };
 
-function addRecentBasic(item, b) {
+function addRecentBasic(item, b, removeTag) {
 	var i = item.indexOf(':');
 	var splits = [item.slice(0, i), item.slice(i + 1)];
 	var id = splits[0];
 	var title = splits[1];
+	if (removeTag && title.substring(0, 7) == '[ASTiW]') {
+		title = title.substring(7);
+	}
 	var main = document.getElementById('main');
 	var el = document.createElement('a');
 	el.id = 'postItem' + id;
