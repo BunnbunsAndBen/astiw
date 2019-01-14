@@ -52,6 +52,10 @@
 					var name = rsp.name.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 					var email = rsp.email.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 					var birthday = rsp.birthday.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+					if (!onMobile) {
+						var pfp = rsp.pfp;
+						document.getElementById('pfp').src = pfp;
+					}
 					document.getElementById('rank').innerHTML = 'Rank: ' + rank;
 					if (name != 'Not shown' && name != 'Not set') {
 						document.getElementById('name').innerHTML = 'Name: ' + name;
@@ -95,6 +99,9 @@
 				var ans = rp.responseText.split('\n');
 				ans.reverse();
 				document.getElementById('rm').removeChild(document.getElementById('loader'));
+				if (!onMobile) {
+					document.getElementById('pfp').style.display = 'block';
+				}
 				document.getElementById('username').style.display = '';
 				document.getElementById('detail').style.display = 'block';
 				for (i = 1; i < ans.length; i++) {
@@ -165,6 +172,7 @@
 		</div>
 	</div>
 	<main id="rm">
+		<img id="pfp" style="height:80px; width:80px; border-radius:50%; display:none;">
 		<h3 id="username" style="display:none;"></h3>
 		<div id="notauser" class="stdc" style="display:none;"><p style="color:var(--border); text-align:center;">This user does not exist</p></div>
 		<div id="detail" style="display:none;" class="stdc">
