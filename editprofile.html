@@ -45,7 +45,7 @@
 				ldr.style.margin = '0 0 16px 0';
 				document.getElementById('contain').appendChild(ldr);
 				var sess = JSON.parse(localStorage.getItem('astiw_sesses'))[0];
-				var jsonurl = 'https://api.stibarc.gq/v2/updateprofile.sjs';
+				var jsonurl = 'https://api.stibarc.com/v2/updateprofile.sjs';
 				var r = new XMLHttpRequest();
 				r.addEventListener('load', function() {
 					ans = r.responseText;
@@ -102,7 +102,7 @@
 					}
 				});
 				var sess = JSON.parse(localStorage.getItem('astiw_sesses'))[0];
-				var jsonurl = 'https://api.stibarc.gq/userinfo.sjs?sess=' + sess;
+				var jsonurl = 'https://api.stibarc.com/userinfo.sjs?sess=' + sess;
 				var r = new XMLHttpRequest();
 				r.addEventListener('load', function() {
 					var obj = JSON.parse(r.responseText);
@@ -200,7 +200,7 @@
 			<div style="display:block; margin-bottom:10px;"><textarea id="bio" class="txf e" placeholder="Bio" style="margin-bottom:6px; height:108px; min-height:calc(1em + 3px); width:calc(100% - 34px);"></textarea><div style="display:inline-block; vertical-align:top;"><button id="showbio" class="cb" onclick="toggleShow('bio');" style="margin-bottom:6px;"></button><p class="whateverthisis">Make bio public</p></div></div>
 			<div id="contain"><button id="save" onclick="save();" class="libut" style="display:block; margin-bottom:16px;">SAVE</button></div>
 			<p class="small" style="color:var(--red); display:none;" id="bad">Edit failed</p>
-			<p>You can <a class="classic" target="_blank" href="https://stibarc.gq/editprofile.html">edit your profile picture on the STiBaRC website</a></p>
+			<p>You can <a class="classic" target="_blank" href="https://stibarc.com/editprofile.html">edit your profile picture on the STiBaRC website</a></p>
 		</div>
 		<div class="loader" id="loader2"></div>
 	</main>

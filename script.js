@@ -167,15 +167,15 @@ function putLinksInText(inp, noot) {
 
 function switchta(cpURL) {
 	var rptn = 'bad';
-	if (cpURL.indexOf('https://stibarc.gq/post.html') == 0) {
+	if (cpURL.indexOf('https://stibarc.com/post.html') == 0) {
 		rptn = 'post.html' + cpURL.substring(28);
-	} else if (cpURL == 'https://stibarc.gq/newpost.html') {
+	} else if (cpURL == 'https://stibarc.com/newpost.html') {
 		rptn = 'newpost.html';
-	} else if (cpURL == 'https://stibarc.gq/search.html') {
+	} else if (cpURL == 'https://stibarc.com/search.html') {
 		rptn = 'search.html';
-	} else if (cpURL.indexOf('https://stibarc.gq/user.html') == 0) {
+	} else if (cpURL.indexOf('https://stibarc.com/user.html') == 0) {
 		rptn = 'user.html' + cpURL.substring(28);
-	} else if (cpURL == 'https://stibarc.gq/login.html') {
+	} else if (cpURL == 'https://stibarc.com/login.html') {
 		rptn = 'login.html';
 	}
 	return rptn;
@@ -226,7 +226,7 @@ function checkSess(sess) {
 		}
 	});
 	xmlHttp.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
-	xmlHttp.open('get', 'https://api.stibarc.gq/v2/checksess.sjs?sess=' + sess, true);
+	xmlHttp.open('get', 'https://api.stibarc.com/v2/checksess.sjs?sess=' + sess, true);
 	xmlHttp.send();
 };
 
@@ -502,8 +502,8 @@ function vote(postid, dir) {
 			upvoteLink.style = '';
 			downvoteLink.style = '';
 			var qsp = 'id=' + postid + '&sess=' + JSON.parse(localStorage.getItem('astiw_sesses'))[0];
-			var jsonurlvote = 'https://api.stibarc.gq/' + (dir ? 'up' : 'down') + 'vote.sjs';
-			var jsonurlp = 'https://api.stibarc.gq/v2/getpost.sjs?' + qsp;
+			var jsonurlvote = 'https://api.stibarc.com/' + (dir ? 'up' : 'down') + 'vote.sjs';
+			var jsonurlp = 'https://api.stibarc.com/v2/getpost.sjs?' + qsp;
 			var rvote = new XMLHttpRequest();
 			var rp = new XMLHttpRequest();
 			rvote.addEventListener('load', function() {

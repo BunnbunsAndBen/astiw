@@ -49,8 +49,8 @@
 					loadMore();
 				}
 			}
-			var jsonurlu = 'https://api.stibarc.gq/v2/getuser.sjs?id=' + encodeURIComponent(myName);
-			var jsonurl = 'https://api.stibarc.gq/v2/getposts.sjs' + sessPart;
+			var jsonurlu = 'https://api.stibarc.com/v2/getuser.sjs?id=' + encodeURIComponent(myName);
+			var jsonurl = 'https://api.stibarc.com/v2/getposts.sjs' + sessPart;
 			var ru = new XMLHttpRequest();
 			var r = new XMLHttpRequest();
 			ru.addEventListener('load', function() {
@@ -100,7 +100,7 @@
 				ldr.className = 'loader';
 				ldr.id = 'loader';
 				document.getElementById('rm').appendChild(ldr);
-				var jsonurl = 'https://api.stibarc.gq/v2/getposts.sjs?id=' + lastid + sessPart2;
+				var jsonurl = 'https://api.stibarc.com/v2/getposts.sjs?id=' + lastid + sessPart2;
 				var r = new XMLHttpRequest();
 				r.addEventListener('load', function() {
 					if (isSet(r.responseText)) {
@@ -134,7 +134,7 @@
 		};
 		
 		function checkNewPosts() {
-			var jsonurl = 'https://api.stibarc.gq/v2/getposts.sjs' + sessPart;
+			var jsonurl = 'https://api.stibarc.com/v2/getposts.sjs' + sessPart;
 			var r = new XMLHttpRequest();
 			r.addEventListener('load', function() {
 				var thingy = JSON.parse(r.responseText).totalposts;

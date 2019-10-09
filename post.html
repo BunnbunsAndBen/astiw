@@ -88,7 +88,7 @@
 			commentProperty = paramsObj.comment;
 			newCommentProperty = paramsObj.newComment;
 			doEdit = paramsObj.edit;
-			var jsonurl = 'https://api.stibarc.gq/v2/getpost.sjs?id=' + id + sessPart;
+			var jsonurl = 'https://api.stibarc.com/v2/getpost.sjs?id=' + id + sessPart;
 			var r = new XMLHttpRequest();
 			var rv = new XMLHttpRequest();
 			var ru = new XMLHttpRequest();
@@ -107,7 +107,7 @@
 						var currentUser = getCurrentUser();
 						document.getElementById('metaThing').innerHTML = 'Posted by <a class="classic" ' + (stuf.poster == currentUser ? 'style="color:var(--you);" ' : '') + 'href="user.html?id=' + encodeURIComponent(stuf.poster) + '">' + stuf.poster + '</a><span id="verified"> ' + (onMobile ? '(Verified)' : '&#x2611;&#xFE0E;') + '</span>' + officialMark + ' at ' + stuf.postdate + (stuf.edited ? ' (edited)' : '');
 						document.getElementById('postText').innerHTML = putLinksInText(replaceInPostText(stuf.content, stuf.poster), false);
-						var jsonurlv = 'https://api.stibarc.gq/v2/checkverify.sjs?id=' + stuf.poster;
+						var jsonurlv = 'https://api.stibarc.com/v2/checkverify.sjs?id=' + stuf.poster;
 						rv.open('get', jsonurlv, true);
 						rv.send();
 					} else {
@@ -130,16 +130,16 @@
 				}
 				var mnbtfotontso = getCurrentUser();
 				if (isSet(mnbtfotontso)) {
-					ru.open('get', 'https://api.stibarc.gq/v2/getuser.sjs?id=' + encodeURIComponent(mnbtfotontso), true);
+					ru.open('get', 'https://api.stibarc.com/v2/getuser.sjs?id=' + encodeURIComponent(mnbtfotontso), true);
 					ru.send();
 				} else {
-					rc.open('get', 'https://api.stibarc.gq/v2/getcomments.sjs?id=' + id, true);
+					rc.open('get', 'https://api.stibarc.com/v2/getcomments.sjs?id=' + id, true);
 					rc.send();
 				}
 			});
 			ru.addEventListener('load', function() {
 				myRank = JSON.parse(ru.responseText).rank;
-				rc.open('get', 'https://api.stibarc.gq/v2/getcomments.sjs?id=' + id, true);
+				rc.open('get', 'https://api.stibarc.com/v2/getcomments.sjs?id=' + id, true);
 				rc.send();
 			});
 			rc.addEventListener('load', function() {
@@ -282,7 +282,7 @@
 							var n = new Date().getTime() + 15000;
 							localStorage.setItem('astiw_cancommentagain', n);
 							var sess = JSON.parse(localStorage.getItem('astiw_sesses'))[0];
-							var jsonurl = 'https://api.stibarc.gq/v2/newcomment.sjs';
+							var jsonurl = 'https://api.stibarc.com/v2/newcomment.sjs';
 							var r = new XMLHttpRequest();
 							r.addEventListener('load', function() {
 								if (r.responseText != 'Error\n') {
@@ -319,7 +319,7 @@
 			ldr.id = 'loader3';
 			ldr.style.margin = 'auto';
 			document.getElementById('imgThing').appendChild(ldr);
-			var jsonurl = 'https://api.stibarc.gq/v2/getimage.sjs?id=' + imgId;
+			var jsonurl = 'https://api.stibarc.com/v2/getimage.sjs?id=' + imgId;
 			var r = new XMLHttpRequest();
 			r.addEventListener('load', function() {
 				var img = generateAttachmentElement(r.responseText, 'post');
@@ -344,7 +344,7 @@
 					ldr.id = 'loader4';
 					ldr.style.margin = '0 auto 1em auto';
 					document.getElementById('oof').appendChild(ldr);
-					var jsonurl = 'https://api.stibarc.gq/v2/getpost.sjs?id=' + id;
+					var jsonurl = 'https://api.stibarc.com/v2/getpost.sjs?id=' + id;
 					var r = new XMLHttpRequest();
 					r.addEventListener('load', function() {
 						var goodContent  = JSON.parse(r.responseText);
@@ -382,7 +382,7 @@
 					ldr.id = 'loader4';
 					ldr.style.margin = '0 auto 1em auto';
 					document.getElementById('oof').appendChild(ldr);
-					var jsonurl = 'https://api.stibarc.gq/v2/getpost.sjs?id=' + id;
+					var jsonurl = 'https://api.stibarc.com/v2/getpost.sjs?id=' + id;
 					var r = new XMLHttpRequest();
 					r.addEventListener('load', function() {
 						stuf = JSON.parse(r.responseText);
@@ -429,7 +429,7 @@
 						ldr.id = 'loader5';
 						ldr.style.margin = '0 0 25px 0';
 						document.getElementById('contain2').appendChild(ldr);
-						var jsonurl = 'https://api.stibarc.gq/v2/editpost.sjs';
+						var jsonurl = 'https://api.stibarc.com/v2/editpost.sjs';
 						var r = new XMLHttpRequest();
 						r.addEventListener('load', function() {
 							if (r.responseText != 'Error\n') {
@@ -453,8 +453,8 @@
 		};
 		
 		function checkNewComms() {
-			var jsonurl = 'https://api.stibarc.gq/v2/getcomments.sjs?id=' + id;
-			var jsonurl4e = 'https://api.stibarc.gq/v2/getpost.sjs?id=' + id;
+			var jsonurl = 'https://api.stibarc.com/v2/getcomments.sjs?id=' + id;
+			var jsonurl4e = 'https://api.stibarc.com/v2/getpost.sjs?id=' + id;
 			var r = new XMLHttpRequest();
 			var r4e = new XMLHttpRequest();
 			r.addEventListener('load', function() {

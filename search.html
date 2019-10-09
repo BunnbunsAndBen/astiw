@@ -46,7 +46,7 @@
 					}
 				}
 				document.getElementById('nameThing').innerHTML = 'Search results for "' + term.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '"';
-				var jsonurl = 'https://api.stibarc.gq/postsearch.sjs?q=' + encodeURIComponent(term);
+				var jsonurl = 'https://api.stibarc.com/postsearch.sjs?q=' + encodeURIComponent(term);
 				var r = new XMLHttpRequest();
 				var ru = new XMLHttpRequest();
 				// get rank
@@ -61,7 +61,7 @@
 					} else {
 						nores = true;
 					}
-					var jsonurlu = 'https://api.stibarc.gq/v2/getuser.sjs?id=' + encodeURIComponent(term);
+					var jsonurlu = 'https://api.stibarc.com/v2/getuser.sjs?id=' + encodeURIComponent(term);
 					ru.open('get', jsonurlu, true);
 					ru.send();
 				});

@@ -23,7 +23,7 @@
 		function login(isanon) {
 			if (!sessHasChanged()) {
 				if (loginpopup == undefined || loginpopup.closed == true) {
-					loginpopup = window.open('https://stibarc.gq/login/', '', 'menubar=no,location=no,resizable=no,scrollbars=yes,status=yes,height=360,width=500');
+					loginpopup = window.open('https://stibarc.com/login/', '', 'menubar=no,location=no,resizable=no,scrollbars=yes,status=yes,height=360,width=500');
 				} else {
 					loginpopup.focus();
 				}
@@ -57,7 +57,7 @@
 						window.location.href = 'index.html';
 					});
 					r.addEventListener('error', function() {alert('Could not connect to STiBaRC, please reload the page and try again')});
-					r.open('post', 'https://api.stibarc.gq/v2/getusername.sjs', true);
+					r.open('post', 'https://api.stibarc.com/v2/getusername.sjs', true);
 					r.send('sess=' + e.data);
 				} else {
 					loginpopup.close();
@@ -116,7 +116,7 @@
 		<h3 id="eugh" style="display:none;">Log in</h3>
 		<div class="stdc" style="display:none;" id="main">
 			<div id="contain"><button id="login" onclick="login();" class="libut" style="display:block; margin:16px 0;">Log in with STiBaRC</button></div>
-			<p>ASTiW connects to the STiBaRC service; by using it you agree to the STiBaRC <a href="https://stibarc.gq/tos.html" target="_blank" class="classic">Terms of Service</a> and <a href="https://stibarc.gq/privacy.html" target="_blank" class="classic">Privacy Policy</a></p>
+			<p>ASTiW connects to the STiBaRC service; by using it you agree to the STiBaRC <a href="https://stibarc.com/tos.html" target="_blank" class="classic">Terms of Service</a> and <a href="https://stibarc.com/privacy.html" target="_blank" class="classic">Privacy Policy</a></p>
 		</div>
 		<div class="loader" id="loader2"></div>
 	</main>

@@ -133,7 +133,7 @@
 			document.getElementById('file').addEventListener('change', acquireFile, false);
 			noPreviews = localStorage.getItem('astiw_showpreviews') == 'true';
 			oldDate = new Date().getDate();
-			var jsonurl = 'https://messenger.stibarc.gq/api/v2/getuserchats.sjs';
+			var jsonurl = 'https://messenger.stibarc.com/api/v2/getuserchats.sjs';
 			var r = new XMLHttpRequest();
 			r.addEventListener('load', function() {
 				var ok = true;
@@ -300,7 +300,7 @@
 				document.getElementById('rightSide').appendChild(ldr);
 				document.getElementById('chatItem' + chatid).className = 'recent selectedChatItem nosides';
 				highlightChat = chatid;
-				var jsonurli = 'https://messenger.stibarc.gq/api/v2/getuserchat.sjs';
+				var jsonurli = 'https://messenger.stibarc.com/api/v2/getuserchat.sjs';
 				var ri = new XMLHttpRequest();
 				ri.addEventListener('load', function() {
 					var ok = true;
@@ -428,8 +428,8 @@
 		};
 		
 		function repeater() {
-			var jsonurl = 'https://messenger.stibarc.gq/api/v2/getuserchats.sjs';
-			var jsonurli = 'https://messenger.stibarc.gq/api/v2/getuserchat.sjs';
+			var jsonurl = 'https://messenger.stibarc.com/api/v2/getuserchats.sjs';
+			var jsonurli = 'https://messenger.stibarc.com/api/v2/getuserchat.sjs';
 			var r = new XMLHttpRequest();
 			var ri = new XMLHttpRequest();
 			r.addEventListener('load', function() {
@@ -615,7 +615,7 @@
 				if (isSet(encryptionKey) && doEncr) {
 					message = '[Encrypted] ' + encryptStr(message, encryptionKey);
 				}
-				var jsonurl = 'https://messenger.stibarc.gq/api/postchat.sjs';
+				var jsonurl = 'https://messenger.stibarc.com/api/postchat.sjs';
 				var r = new XMLHttpRequest();
 				r.addEventListener('load', function() {
 					if (localStorage.getItem('astiw_sendsound') != 'true') {
@@ -840,7 +840,7 @@
 					ldr.id = 'loader3';
 					ldr.style.margin = '0';
 					document.getElementById('contain').appendChild(ldr);
-					var jsonurl = 'https://messenger.stibarc.gq/api/newchat.sjs';
+					var jsonurl = 'https://messenger.stibarc.com/api/newchat.sjs';
 					var r = new XMLHttpRequest();
 					r.addEventListener('load', function() {
 						var tmp = r.responseText.split('\n');
